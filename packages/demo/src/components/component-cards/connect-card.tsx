@@ -19,10 +19,10 @@ const IMPLEMENTATION_CODE = `import { Connect } from "@onflow/react-sdk"
       vaultIdentifier: "A.1654653399040a61.FlowToken.Vault",
     },
     {
-      symbol: "USDC",
-      name: "USD Coin",
-      vaultIdentifier: "A.1e4aa0b87d10b141.USDCFlow.Vault",
-      erc20Address: "0xF1815bd50389c46847f0Bda824eC8da914045D14",
+      symbol: "USDF",
+      name: "USDF (PYUSD)",
+      vaultIdentifier: "A.1e4aa0b87d10b141.EVMVMBridgedToken_2aabea2058b5ac2d339b163c6ab6f2b6d53aabed.Vault",
+      erc20Address: "0x2aaBea2058b5aC2D339b163C6Ab6f2b6d53aabED",
     },
   ]}
   balanceType="combined"
@@ -96,23 +96,20 @@ export function ConnectCard() {
       name: "Flow Token",
       vaultIdentifier: `A.${getFlowTokenAddress().replace("0x", "")}.FlowToken.Vault`,
     },
-    // Only show USDC and USDT on testnet and mainnet
+    // Only show USDF (PYUSD) on testnet and mainnet
     ...(!isEmulator
       ? [
           {
-            symbol: "USDC",
-            name: "USD Coin",
-            vaultIdentifier: `A.${chainId === "testnet" ? "b7ace0a920d2c37d" : "1e4aa0b87d10b141"}.USDCFlow.Vault`,
+            symbol: "USDF",
+            name: "USDF (PYUSD)",
+            vaultIdentifier:
+              chainId === "testnet"
+                ? "A.dfc20aee650fcbdf.EVMVMBridgedToken_f2e5a325f7d678da511e66b1c0ad7d5ba4df93d3.Vault"
+                : "A.1e4aa0b87d10b141.EVMVMBridgedToken_2aabea2058b5ac2d339b163c6ab6f2b6d53aabed.Vault",
             erc20Address:
               chainId === "testnet"
-                ? undefined
-                : "0xF1815bd50389c46847f0Bda824eC8da914045D14",
-          },
-          {
-            symbol: "USDT",
-            name: "Tether USD",
-            vaultIdentifier: "A.1e4aa0b87d10b141.USDTFlow.Vault",
-            erc20Address: "0x674843C06FF83502ddb4D37c2E09C01cdA38cbc8",
+                ? "0xf2E5A325f7D678DA511E66B1c0Ad7D5ba4dF93D3"
+                : "0x2aaBea2058b5aC2D339b163C6Ab6f2b6d53aabED",
           },
         ]
       : []),
@@ -161,7 +158,7 @@ export function ConnectCard() {
               Multi-Token
             </h4>
             <p className={`text-sm ${darkMode ? "text-white" : "text-black"}`}>
-              FLOW, USDC, USDT
+              FLOW, USDF
             </p>
           </div>
 
