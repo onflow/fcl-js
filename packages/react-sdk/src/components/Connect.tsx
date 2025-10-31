@@ -143,18 +143,10 @@ export const Connect: React.FC<ConnectProps> = ({
 
   const flowscanUrl = getFlowscanAccountUrl(user?.addr || "", chainId)
 
-  const hasData = balanceData && typeof balanceData !== "string"
-
-  // Helper to format balance with max 4 decimals, removing trailing zeros
-  const formatBalance = (value: string) => {
-    const num = parseFloat(value)
-    return num.toFixed(4).replace(/\.?0+$/, "")
-  }
-
   // Get balance for the selected type
   const displayBalance =
-    hasData && balanceData[balanceType]
-      ? formatBalance(balanceData[balanceType].formatted)
+    balanceData && typeof balanceData !== "string"
+      ? `${Number(balanceData[balanceType].formatted).toLocaleString()}`
       : "0"
 
   const handleButtonClick = async () => {
