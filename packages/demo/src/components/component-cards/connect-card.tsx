@@ -3,6 +3,7 @@ import {Connect, useFlowChainId} from "@onflow/react-sdk"
 import {useDarkMode} from "../flow-provider-wrapper"
 import {DemoCard, type PropDefinition} from "../ui/demo-card"
 import {PlusGridIcon} from "../ui/plus-grid"
+import {CONTRACT_ADDRESSES} from "../../constants"
 
 const IMPLEMENTATION_CODE = `import { Connect } from "@onflow/react-sdk"
 
@@ -80,27 +81,41 @@ export function ConnectCard() {
     "cadence" | "evm" | "combined"
   >("cadence")
 
+  const getFlowTokenAddress = () => {
+    if (chainId === "emulator" || chainId === "local") {
+      return CONTRACT_ADDRESSES.FlowToken.emulator
+    }
+    return chainId === "testnet"
+      ? CONTRACT_ADDRESSES.FlowToken.testnet
+      : CONTRACT_ADDRESSES.FlowToken.mainnet
+  }
+
   const multiTokens = [
     {
       symbol: "FLOW",
       name: "Flow Token",
-      vaultIdentifier: `A.${chainId === "testnet" ? "7e60df042a9c0868" : "1654653399040a61"}.FlowToken.Vault`,
+      vaultIdentifier: `A.${getFlowTokenAddress().replace("0x", "")}.FlowToken.Vault`,
     },
-    {
-      symbol: "USDC",
-      name: "USD Coin",
-      vaultIdentifier: `A.${chainId === "testnet" ? "b7ace0a920d2c37d" : "1e4aa0b87d10b141"}.USDCFlow.Vault`,
-      erc20Address:
-        chainId === "testnet"
-          ? undefined
-          : "0xF1815bd50389c46847f0Bda824eC8da914045D14",
-    },
-    {
-      symbol: "USDT",
-      name: "Tether USD",
-      vaultIdentifier: "A.1e4aa0b87d10b141.USDTFlow.Vault",
-      erc20Address: "0x674843C06FF83502ddb4D37c2E09C01cdA38cbc8",
-    },
+    // Only show USDC and USDT on testnet and mainnet
+    ...(!isEmulator
+      ? [
+          {
+            symbol: "USDC",
+            name: "USD Coin",
+            vaultIdentifier: `A.${chainId === "testnet" ? "b7ace0a920d2c37d" : "1e4aa0b87d10b141"}.USDCFlow.Vault`,
+            erc20Address:
+              chainId === "testnet"
+                ? undefined
+                : "0xF1815bd50389c46847f0Bda824eC8da914045D14",
+          },
+          {
+            symbol: "USDT",
+            name: "Tether USD",
+            vaultIdentifier: "A.1e4aa0b87d10b141.USDTFlow.Vault",
+            erc20Address: "0x674843C06FF83502ddb4D37c2E09C01cdA38cbc8",
+          },
+        ]
+      : []),
   ]
 
   return (
