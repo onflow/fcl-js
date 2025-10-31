@@ -19,6 +19,7 @@ import {CopyIcon} from "../icons/CopyIcon"
 import {LogOutIcon} from "../icons/LogOutIcon"
 import {ExternalLinkIcon} from "../icons/ExternalLink"
 import {ScheduledTransactionList} from "./ScheduledTransactionList"
+import {CONTRACT_ADDRESSES} from "../constants"
 
 type BalanceType = keyof UseCrossVmTokenBalanceData
 
@@ -62,8 +63,16 @@ export const Connect: React.FC<ConnectProps> = ({
   const defaultTokens: TokenConfig[] = useMemo(() => {
     if (!chainId) return [{symbol: "FLOW", name: "Flow Token"}]
 
-    const address =
-      chainId === "testnet" ? "7e60df042a9c0868" : "1654653399040a61"
+    const getFlowTokenAddress = () => {
+      if (chainId === "emulator" || chainId === "local") {
+        return CONTRACT_ADDRESSES.local.FlowToken
+      }
+      return chainId === "testnet"
+        ? CONTRACT_ADDRESSES.testnet.FlowToken
+        : CONTRACT_ADDRESSES.mainnet.FlowToken
+    }
+
+    const address = getFlowTokenAddress().replace("0x", "")
     return [
       {
         symbol: "FLOW",
