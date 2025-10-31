@@ -34,6 +34,13 @@ const PROPS: PropDefinition[] = [
     description: "Type of balance to display (from cross-VM token balance)",
     defaultValue: '"cadence"',
   },
+  {
+    name: "modalConfig",
+    type: "ConnectModalConfig",
+    required: false,
+    description:
+      "Configuration for the profile modal (like show scheduled transactions, filter handler types)",
+  },
 ]
 
 export function ConnectCard() {

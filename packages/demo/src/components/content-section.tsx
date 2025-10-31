@@ -33,6 +33,7 @@ import {TransactionButtonCard} from "./component-cards/transaction-button-card"
 import {TransactionDialogCard} from "./component-cards/transaction-dialog-card"
 import {TransactionLinkCard} from "./component-cards/transaction-link-card"
 import {DemoNftCard} from "./component-cards/demo-nft-card"
+import {ScheduledTransactionListDemo} from "./component-cards/scheduled-transaction-list-demo"
 
 export function ContentSection() {
   return (
@@ -71,6 +72,7 @@ export function ContentSection() {
             <TransactionDialogCard />
             <TransactionLinkCard />
             <DemoNftCard />
+            <ScheduledTransactionListDemo />
           </div>
 
           <div className="mb-12 md:mb-24">

@@ -48,6 +48,12 @@ const sidebarItems: SidebarItem[] = [
     category: "components",
     description: "NFT card component",
   },
+  {
+    id: "scheduledtransactionlist",
+    label: "Scheduled Transaction List",
+    category: "components",
+    description: "List of scheduled transactions",
+  },
 
   // Hooks section
   {
