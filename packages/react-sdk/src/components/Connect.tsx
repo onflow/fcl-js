@@ -154,7 +154,10 @@ export const Connect: React.FC<ConnectProps> = ({
     balanceData &&
     typeof balanceData !== "string" &&
     balanceData[balanceType]?.formatted
-      ? `${Number(balanceData[balanceType].formatted).toLocaleString()}`
+      ? Number(balanceData[balanceType].formatted).toLocaleString(undefined, {
+          maximumFractionDigits: 4,
+          minimumFractionDigits: 0,
+        })
       : "0"
 
   const handleButtonClick = async () => {
