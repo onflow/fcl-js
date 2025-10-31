@@ -63,8 +63,9 @@ export const Connect: React.FC<ConnectProps> = ({
 
   // Default token configuration for FlowToken - memoized to avoid recreation
   const defaultTokens: TokenConfig[] = useMemo(() => {
+    if (!chainId) return []
+
     const getFlowTokenAddress = () => {
-      if (!chainId) return CONTRACT_ADDRESSES.mainnet.FlowToken
       if (chainId === "emulator" || chainId === "local")
         return CONTRACT_ADDRESSES.local.FlowToken
       return chainId === "testnet"
@@ -96,7 +97,12 @@ export const Connect: React.FC<ConnectProps> = ({
 
   // Update selectedToken when availableTokens changes (when chainId loads or balanceTokens prop changes)
   useEffect(() => {
-    setSelectedToken(prev => {
+    setSelectedToken((prev: any) => {
+      // If no tokens available yet, return undefined
+      if (!availableTokens || availableTokens.length === 0) return undefined
+      // If prev is undefined (first load), return first available token
+      if (!prev) return availableTokens[0]
+
       // Find the same token in the new list (match by symbol)
       const updatedToken = availableTokens.find(t => t.symbol === prev.symbol)
 
@@ -132,7 +138,7 @@ export const Connect: React.FC<ConnectProps> = ({
         !!user?.addr &&
         !!chainId &&
         !!selectedToken &&
-        (!!selectedToken.vaultIdentifier || !!selectedToken.erc20Address),
+        (!!selectedToken?.vaultIdentifier || !!selectedToken?.erc20Address),
     },
   })
 
@@ -145,7 +151,9 @@ export const Connect: React.FC<ConnectProps> = ({
 
   // Get balance for the selected type
   const displayBalance =
-    balanceData && typeof balanceData !== "string"
+    balanceData &&
+    typeof balanceData !== "string" &&
+    balanceData[balanceType]?.formatted
       ? `${Number(balanceData[balanceType].formatted).toLocaleString()}`
       : "0"
 
