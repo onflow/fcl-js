@@ -62,6 +62,13 @@ const PROPS: PropDefinition[] = [
     description:
       "Array of tokens with dropdown selector (first token is default). Each token needs symbol, name, and vaultIdentifier or erc20Address",
   },
+  {
+    name: "modalConfig",
+    type: "ConnectModalConfig",
+    required: false,
+    description:
+      "Configuration for the profile modal (like show scheduled transactions, filter handler types)",
+  },
 ]
 
 export function ConnectCard() {
@@ -214,8 +221,8 @@ export function ConnectCard() {
               <div>
                 {showMultiToken ? (
                   <Connect
-                    balanceTokens={multiTokens}
                     balanceType={balanceType}
+                    balanceTokens={multiTokens}
                   />
                 ) : (
                   <Connect balanceType={balanceType} />
