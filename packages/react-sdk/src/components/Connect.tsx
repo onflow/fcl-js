@@ -24,12 +24,13 @@ import {getFlowscanAccountUrl} from "../utils/flowscan"
 
 type BalanceType = keyof UseCrossVmTokenBalanceData
 
-export interface TokenConfig {
+export type TokenConfig = {
   symbol: string
   name: string
-  vaultIdentifier?: string
-  erc20Address?: string
-}
+} & (
+  | {vaultIdentifier: string; erc20Address?: never}
+  | {vaultIdentifier?: never; erc20Address: string}
+)
 
 export interface ConnectModalConfig {
   scheduledTransactions?: {
@@ -62,12 +63,10 @@ export const Connect: React.FC<ConnectProps> = ({
 
   // Default token configuration for FlowToken - memoized to avoid recreation
   const defaultTokens: TokenConfig[] = useMemo(() => {
-    if (!chainId) return [{symbol: "FLOW", name: "Flow Token"}]
-
     const getFlowTokenAddress = () => {
-      if (chainId === "emulator" || chainId === "local") {
+      if (!chainId) return CONTRACT_ADDRESSES.mainnet.FlowToken
+      if (chainId === "emulator" || chainId === "local")
         return CONTRACT_ADDRESSES.local.FlowToken
-      }
       return chainId === "testnet"
         ? CONTRACT_ADDRESSES.testnet.FlowToken
         : CONTRACT_ADDRESSES.mainnet.FlowToken

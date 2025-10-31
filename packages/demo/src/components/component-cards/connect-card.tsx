@@ -11,6 +11,7 @@ const IMPLEMENTATION_CODE = `import { Connect } from "@onflow/react-sdk"
 <Connect />
 
 // With multiple tokens - dropdown selector, first token is default
+// Note: Provide only ONE identifier per token (the bridge derives the other)
 <Connect
   balanceTokens={[
     {
@@ -22,7 +23,6 @@ const IMPLEMENTATION_CODE = `import { Connect } from "@onflow/react-sdk"
       symbol: "USDF",
       name: "USDF (PYUSD)",
       vaultIdentifier: "A.1e4aa0b87d10b141.EVMVMBridgedToken_2aabea2058b5ac2d339b163c6ab6f2b6d53aabed.Vault",
-      erc20Address: "0x2aaBea2058b5aC2D339b163C6Ab6f2b6d53aabED",
     },
   ]}
   balanceType="combined"
@@ -61,7 +61,7 @@ const PROPS: PropDefinition[] = [
     type: "TokenConfig[]",
     required: false,
     description:
-      "Array of tokens with dropdown selector (first token is default). Each token needs symbol, name, and vaultIdentifier or erc20Address",
+      "Array of tokens with dropdown selector (first token is default). Each token needs symbol, name, and EXACTLY ONE of: vaultIdentifier OR erc20Address (the bridge derives the other automatically)",
   },
   {
     name: "modalConfig",
@@ -97,6 +97,7 @@ export function ConnectCard() {
       vaultIdentifier: `A.${getFlowTokenAddress().replace("0x", "")}.FlowToken.Vault`,
     },
     // Only show USDF (PYUSD) on testnet and mainnet
+    // Note: Only vaultIdentifier provided - EVM address is derived by the bridge
     ...(!isEmulator
       ? [
           {
@@ -106,10 +107,6 @@ export function ConnectCard() {
               chainId === "testnet"
                 ? "A.dfc20aee650fcbdf.EVMVMBridgedToken_f2e5a325f7d678da511e66b1c0ad7d5ba4df93d3.Vault"
                 : "A.1e4aa0b87d10b141.EVMVMBridgedToken_2aabea2058b5ac2d339b163c6ab6f2b6d53aabed.Vault",
-            erc20Address:
-              chainId === "testnet"
-                ? "0xf2E5A325f7D678DA511E66B1c0Ad7D5ba4dF93D3"
-                : "0x2aaBea2058b5aC2D339b163C6Ab6f2b6d53aabED",
           },
         ]
       : []),
@@ -145,7 +142,7 @@ export function ConnectCard() {
           </div>
 
           <div
-            className={`relative p-4 rounded-lg border ${
+            className={`relative col-span-2 p-4 rounded-lg border ${
               darkMode
                 ? "bg-gray-900/50 border-white/10"
                 : "bg-gray-50 border-black/5"
@@ -155,28 +152,14 @@ export function ConnectCard() {
             <h4
               className={`text-xs font-medium mb-1 ${darkMode ? "text-gray-500" : "text-gray-500"}`}
             >
-              Multi-Token
+              Multi-Token Cross-VM
             </h4>
-            <p className={`text-sm ${darkMode ? "text-white" : "text-black"}`}>
-              FLOW, USDF
-            </p>
-          </div>
-
-          <div
-            className={`relative p-4 rounded-lg border ${
-              darkMode
-                ? "bg-gray-900/50 border-white/10"
-                : "bg-gray-50 border-black/5"
-              }`}
-          >
-            <PlusGridIcon placement="top right" className="absolute" />
-            <h4
-              className={`text-xs font-medium mb-1 ${darkMode ? "text-gray-500" : "text-gray-500"}`}
+            <p
+              className={`text-xs ${darkMode ? "text-gray-400" : "text-gray-600"}`}
             >
-              Cross-VM
-            </h4>
-            <p className={`text-sm ${darkMode ? "text-white" : "text-black"}`}>
-              Cadence + EVM
+              Multi-token support with cross-VM bridge integration. Provide only
+              a vaultIdentifier or an erc20Address and the bridge derives the
+              other automatically.
             </p>
           </div>
         </div>

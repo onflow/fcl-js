@@ -124,7 +124,6 @@ const ScheduledTransactionCard: React.FC<ScheduledTransactionCardProps> = ({
     (transaction.status === ScheduledTransactionStatus.Pending ||
       transaction.status === ScheduledTransactionStatus.Processing)
 
-
   return (
     <div
       className={twMerge(
