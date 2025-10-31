@@ -155,18 +155,6 @@ export const Connect: React.FC<ConnectProps> = ({
     return num.toFixed(4).replace(/\.?0+$/, "")
   }
 
-  const cadenceBalance =
-    hasData && selectedToken?.vaultIdentifier && balanceData.cadence
-      ? formatBalance(balanceData.cadence.formatted)
-      : null
-
-  const evmBalance =
-    hasData && selectedToken?.erc20Address && balanceData.evm
-      ? formatBalance(balanceData.evm.formatted)
-      : null
-
-  const showBreakdown = cadenceBalance !== null && evmBalance !== null
-
   // Get balance for the selected type
   const displayBalance =
     hasData && balanceData[balanceType]
@@ -365,57 +353,6 @@ export const Connect: React.FC<ConnectProps> = ({
                   </div>
                 </div>
               </div>
-
-              {showBreakdown && balanceType !== "combined" && (
-                <div className="flow-grid flow-grid-cols-2 flow-gap-3">
-                  <div
-                    className="flow-rounded-md flow-bg-slate-50 dark:flow-bg-slate-800/50 flow-border
-                      flow-border-slate-200 dark:flow-border-slate-700 flow-px-3 flow-py-2 flow-flex
-                      flow-items-center flow-justify-between"
-                  >
-                    <div className="flow-flex flow-items-center flow-gap-1.5">
-                      <svg
-                        className="flow-w-3.5 flow-h-3.5 flow-text-slate-600 dark:flow-text-slate-400"
-                        fill="currentColor"
-                        viewBox="0 0 20 20"
-                      >
-                        <path
-                          fillRule="evenodd"
-                          d="M10 18a8 8 0 100-16 8 8 0 000 16zm.75-11.25a.75.75 0 00-1.5 0v4.59L7.3 13.24a.75.75 0 101.06 1.06l2.25-2.25a.75.75 0 00.22-.53v-4.77z"
-                          clipRule="evenodd"
-                        />
-                      </svg>
-                      <span className="flow-text-xs flow-font-medium flow-text-slate-600 dark:flow-text-slate-400">
-                        Cadence
-                      </span>
-                    </div>
-                    <div className="flow-text-sm flow-font-semibold flow-text-slate-900 dark:flow-text-slate-100">
-                      {cadenceBalance}
-                    </div>
-                  </div>
-                  <div
-                    className="flow-rounded-md flow-bg-slate-50 dark:flow-bg-slate-800/50 flow-border
-                      flow-border-slate-200 dark:flow-border-slate-700 flow-px-3 flow-py-2 flow-flex
-                      flow-items-center flow-justify-between"
-                  >
-                    <div className="flow-flex flow-items-center flow-gap-1.5">
-                      <svg
-                        className="flow-w-3.5 flow-h-3.5 flow-text-slate-600 dark:flow-text-slate-400"
-                        fill="currentColor"
-                        viewBox="0 0 20 20"
-                      >
-                        <path d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z" />
-                      </svg>
-                      <span className="flow-text-xs flow-font-medium flow-text-slate-600 dark:flow-text-slate-400">
-                        EVM
-                      </span>
-                    </div>
-                    <div className="flow-text-sm flow-font-semibold flow-text-slate-900 dark:flow-text-slate-100">
-                      {evmBalance}
-                    </div>
-                  </div>
-                </div>
-              )}
             </div>
 
             <div className="flow-flex flow-gap-3 flow-w-full flow-mt-6">
