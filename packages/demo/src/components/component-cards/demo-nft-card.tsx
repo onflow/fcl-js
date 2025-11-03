@@ -1,4 +1,4 @@
-import {NftCard, useFlowChainId} from "@onflow/react-sdk"
+import {NftCard, type NftCardAction, useFlowChainId} from "@onflow/react-sdk"
 import {useState} from "react"
 import {useDarkMode} from "../flow-provider-wrapper"
 import {DemoCard, type PropDefinition} from "../ui/demo-card"
@@ -13,6 +13,28 @@ const IMPLEMENTATION_CODE = `import { NftCard } from "@onflow/react-sdk"
   publicPathIdentifier="exampleNFTCollection"
   showTraits={true}
   showExtra={true}
+  actions={[
+    {
+      title: "Transfer",
+      onClick: async () => {
+        // Handle transfer logic
+        console.log("Transfer NFT")
+      }
+    },
+    {
+      title: "List for Sale",
+      onClick: () => {
+        // Handle listing logic
+        console.log("List NFT for sale")
+      }
+    },
+    {
+      title: "View on Explorer",
+      onClick: () => {
+        window.open("https://flowscan.io", "_blank")
+      }
+    }
+  ]}
 />`
 
 const PROPS: PropDefinition[] = [
@@ -49,6 +71,13 @@ const PROPS: PropDefinition[] = [
       "Show additional metadata like serial number, rarity, and external links (default: false)",
   },
   {
+    name: "actions",
+    type: "NftCardAction[]",
+    required: false,
+    description:
+      "Array of custom action buttons to display in a 3-dot menu. Each action has a title and onClick handler.",
+  },
+  {
     name: "className",
     type: "string",
     required: false,
@@ -72,6 +101,7 @@ export function DemoNftCard() {
   const [publicPath, setPublicPath] = useState("")
   const [showTraits, setShowTraits] = useState(true)
   const [showExtra, setShowExtra] = useState(true)
+  const [showActions, setShowActions] = useState(true)
 
   const isEmulator = chainId === "emulator" || chainId === "local"
   const isTestnet = chainId === "testnet"
@@ -93,7 +123,7 @@ export function DemoNftCard() {
       docsUrl="https://developers.flow.com/build/tools/react-sdk/components#nftcard"
     >
       <div className="space-y-6">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div
             className={`relative p-4 rounded-lg border ${
               darkMode
@@ -127,6 +157,23 @@ export function DemoNftCard() {
             </h4>
             <p className={`text-sm ${darkMode ? "text-white" : "text-black"}`}>
               Shows traits and attributes
+            </p>
+          </div>
+
+          <div
+            className={`relative p-4 rounded-lg border ${
+              darkMode
+                ? "bg-gray-900/50 border-white/10"
+                : "bg-gray-50 border-black/5"
+              }`}
+          >
+            <h4
+              className={`text-xs font-medium mb-1 ${darkMode ? "text-gray-500" : "text-gray-500"}`}
+            >
+              Custom Actions
+            </h4>
+            <p className={`text-sm ${darkMode ? "text-white" : "text-black"}`}>
+              Extensible 3-dot menu
             </p>
           </div>
         </div>
@@ -282,6 +329,50 @@ export function DemoNftCard() {
                       publicPathIdentifier={displayPublicPath}
                       showTraits={showTraits}
                       showExtra={showExtra}
+                      actions={
+                        showActions
+                          ? [
+                              {
+                                title: "Transfer",
+                                onClick: async () => {
+                                  alert(
+                                    "Transfer action clicked! In a real app, this would open a transfer dialog."
+                                  )
+                                },
+                              },
+                              {
+                                title: "List for Sale",
+                                onClick: () => {
+                                  alert(
+                                    "List for Sale action clicked! In a real app, this would open a listing dialog."
+                                  )
+                                },
+                              },
+                              {
+                                title: "View on FlowDiver",
+                                onClick: () => {
+                                  const network =
+                                    chainId === "mainnet"
+                                      ? "mainnet"
+                                      : "testnet"
+                                  window.open(
+                                    `https://www.flowdiver.io/account/${displayAddress}`,
+                                    "_blank"
+                                  )
+                                },
+                              },
+                              {
+                                title: "Copy Token ID",
+                                onClick: () => {
+                                  navigator.clipboard.writeText(displayTokenId)
+                                  alert(
+                                    `Token ID ${displayTokenId} copied to clipboard!`
+                                  )
+                                },
+                              },
+                            ]
+                          : undefined
+                      }
                     />
                   </div>
                 </div>
@@ -366,6 +457,35 @@ export function DemoNftCard() {
                           className={`text-xs leading-relaxed ${darkMode ? "text-gray-400" : "text-gray-600"}`}
                         >
                           Serial number, rarity, and external links
+                        </div>
+                      </div>
+                    </label>
+
+                    <div
+                      className={`h-px ${darkMode ? "bg-gray-800" : "bg-gray-200"}`}
+                    ></div>
+
+                    <label
+                      className={`flex items-start gap-3 cursor-pointer p-3 rounded-lg transition-colors ${
+                        darkMode ? "hover:bg-gray-800/50" : "hover:bg-gray-50" }`}
+                    >
+                      <input
+                        type="checkbox"
+                        checked={showActions}
+                        onChange={e => setShowActions(e.target.checked)}
+                        className="w-5 h-5 mt-0.5 rounded border-gray-300 text-flow-primary focus:ring-flow-primary
+                          focus:ring-offset-0"
+                      />
+                      <div className="flex-1">
+                        <div
+                          className={`text-sm font-medium mb-0.5 ${darkMode ? "text-white" : "text-gray-900"}`}
+                        >
+                          Show Actions
+                        </div>
+                        <div
+                          className={`text-xs leading-relaxed ${darkMode ? "text-gray-400" : "text-gray-600"}`}
+                        >
+                          Display custom action menu with 3-dot button
                         </div>
                       </div>
                     </label>

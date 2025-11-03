@@ -1,4 +1,4 @@
-import React from "react"
+import React, {useEffect} from "react"
 import {
   useFlowNftMetadata,
   type NftViewResult,
@@ -8,8 +8,14 @@ import {ImageIcon} from "../icons/ImageIcon"
 import {ExternalLinkIcon} from "../icons/ExternalLink"
 import {AlertCircleIcon} from "../icons/AlertCircleIcon"
 import {LoaderCircleIcon} from "../icons/LoaderCircleIcon"
+import {MoreVerticalIcon} from "../icons/MoreVerticalIcon"
 import {Dialog} from "./internal/Dialog"
 import {twMerge} from "tailwind-merge"
+
+export interface NftCardAction {
+  title: string
+  onClick: () => Promise<void> | void
+}
 
 interface NftCardProps {
   accountAddress: string
@@ -17,6 +23,7 @@ interface NftCardProps {
   publicPathIdentifier: string
   showTraits?: boolean
   showExtra?: boolean
+  actions?: NftCardAction[]
   className?: string
   style?: React.CSSProperties
 }
@@ -27,10 +34,14 @@ export const NftCard: React.FC<NftCardProps> = ({
   publicPathIdentifier,
   showTraits = false,
   showExtra = false,
+  actions,
   className,
   style,
 }) => {
   const [showTraitsModal, setShowTraitsModal] = React.useState(false)
+  const [actionLoading, setActionLoading] = React.useState<number | null>(null)
+  const [isDropdownOpen, setIsDropdownOpen] = React.useState(false)
+  const dropdownRef = React.useRef<HTMLDivElement>(null)
 
   const {
     data: nft,
@@ -52,47 +63,147 @@ export const NftCard: React.FC<NftCardProps> = ({
   const totalTraits =
     !hasError && nft?.traits ? Object.keys(nft.traits).length : 0
 
+  // Click outside to close dropdown
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
+        setIsDropdownOpen(false)
+      }
+    }
+
+    const handleEscapeKey = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setIsDropdownOpen(false)
+      }
+    }
+
+    if (isDropdownOpen) {
+      document.addEventListener("mousedown", handleClickOutside)
+      document.addEventListener("keydown", handleEscapeKey)
+    }
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside)
+      document.removeEventListener("keydown", handleEscapeKey)
+    }
+  }, [isDropdownOpen])
+
   return (
     <StyleWrapper>
       <div
         className={twMerge(
-          "flow-w-full flow-rounded-xl flow-bg-white dark:flow-bg-slate-900",
-          "flow-overflow-hidden flow-shadow-lg hover:flow-shadow-xl flow-transition-shadow",
+          `flow-w-full flow-rounded-lg flow-bg-white dark:flow-bg-slate-900
+          flow-overflow-hidden`,
+          "flow-shadow-lg hover:flow-shadow-xl flow-transition-shadow",
           "flow-duration-300 flow-border flow-border-slate-200 dark:flow-border-slate-800",
           className
         )}
         style={style}
       >
-        <div
-          className="flow-relative flow-w-full flow-aspect-square flow-bg-slate-100
-            dark:flow-bg-slate-800 flow-overflow-hidden"
-        >
-          {isLoading ? (
-            <div className="flow-absolute flow-inset-0 flow-flex flow-items-center flow-justify-center">
-              <LoaderCircleIcon
-                className="flow-h-16 flow-w-16 flow-text-slate-400 dark:flow-text-slate-600
-                  flow-animate-spin"
+        <div className="flow-relative">
+          <div
+            className="flow-relative flow-w-full flow-aspect-square flow-bg-slate-100
+              dark:flow-bg-slate-800 flow-overflow-hidden"
+          >
+            {isLoading ? (
+              <div className="flow-absolute flow-inset-0 flow-flex flow-items-center flow-justify-center">
+                <LoaderCircleIcon
+                  className="flow-h-16 flow-w-16 flow-text-slate-400 dark:flow-text-slate-600
+                    flow-animate-spin"
+                />
+              </div>
+            ) : hasError ? (
+              <div
+                className="flow-absolute flow-inset-0 flow-flex flow-flex-col flow-items-center
+                  flow-justify-center flow-gap-3"
+              >
+                <AlertCircleIcon className="flow-h-16 flow-w-16 flow-text-slate-400 dark:flow-text-slate-600" />
+                <p className="flow-text-sm flow-text-slate-500 dark:flow-text-slate-500 flow-font-medium">
+                  Failed to load NFT
+                </p>
+              </div>
+            ) : hasImage ? (
+              <img
+                src={getThumbnailUrl(nft)!}
+                alt={nft.name || `NFT #${tokenId}`}
+                className="flow-absolute flow-inset-0 flow-w-full flow-h-full flow-object-cover"
               />
-            </div>
-          ) : hasError ? (
-            <div
-              className="flow-absolute flow-inset-0 flow-flex flow-flex-col flow-items-center
-                flow-justify-center flow-gap-3"
-            >
-              <AlertCircleIcon className="flow-h-16 flow-w-16 flow-text-slate-400 dark:flow-text-slate-600" />
-              <p className="flow-text-sm flow-text-slate-500 dark:flow-text-slate-500 flow-font-medium">
-                Failed to load NFT
-              </p>
-            </div>
-          ) : hasImage ? (
-            <img
-              src={getThumbnailUrl(nft)!}
-              alt={nft.name || `NFT #${tokenId}`}
-              className="flow-absolute flow-inset-0 flow-w-full flow-h-full flow-object-cover"
-            />
-          ) : (
-            <div className="flow-absolute flow-inset-0 flow-flex flow-items-center flow-justify-center">
-              <ImageIcon className="flow-h-16 flow-w-16 flow-text-slate-400 dark:flow-text-slate-600" />
+            ) : (
+              <div className="flow-absolute flow-inset-0 flow-flex flow-items-center flow-justify-center">
+                <ImageIcon className="flow-h-16 flow-w-16 flow-text-slate-400 dark:flow-text-slate-600" />
+              </div>
+            )}
+          </div>
+
+          {actions && actions.length > 0 && (
+            <div className="flow-absolute flow-top-2 flow-right-2 flow-z-[2]">
+              <div
+                ref={dropdownRef}
+                className="flow-relative flow-inline-block"
+              >
+                <button
+                  onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                  onKeyDown={e => {
+                    if (e.key === "Enter" || e.key === " ") {
+                      e.preventDefault()
+                      setIsDropdownOpen(!isDropdownOpen)
+                    }
+                  }}
+                  className="flow-p-2 flow-rounded-full flow-bg-white/80 dark:flow-bg-slate-900/80
+                    flow-backdrop-blur-sm flow-border flow-border-slate-200
+                    dark:flow-border-slate-700 hover:flow-bg-white dark:hover:flow-bg-slate-900
+                    flow-transition-colors flow-shadow-sm hover:flow-shadow-md
+                    focus:flow-outline-none"
+                  aria-label="Actions menu"
+                  aria-expanded={isDropdownOpen}
+                >
+                  <MoreVerticalIcon className="flow-h-4 flow-w-4 flow-text-slate-700 dark:flow-text-slate-300" />
+                </button>
+
+                {isDropdownOpen && (
+                  <div
+                    className="flow-absolute flow-top-full flow-mt-2 flow-w-52 flow-rounded-lg flow-bg-white
+                      dark:flow-bg-slate-900 flow-shadow-sm hover:flow-shadow-md flow-border
+                      flow-border-slate-200 dark:flow-border-slate-800 flow-p-1 flow-origin-top-right"
+                    style={{right: "0px"}}
+                  >
+                    {actions.map((action, index) => (
+                      <button
+                        key={index}
+                        onClick={async e => {
+                          e.stopPropagation()
+                          setActionLoading(index)
+                          try {
+                            await action.onClick()
+                            setIsDropdownOpen(false)
+                          } finally {
+                            setActionLoading(null)
+                          }
+                        }}
+                        disabled={actionLoading !== null}
+                        className="flow-w-full flow-text-left flow-px-3 flow-py-2.5 flow-text-sm flow-font-medium
+                          flow-transition-all flow-duration-150 flow-flex flow-items-center
+                          flow-justify-between flow-gap-2 flow-text-slate-700 dark:flow-text-slate-300
+                          hover:flow-bg-slate-100 dark:hover:flow-bg-slate-700/50
+                          hover:flow-text-slate-900 dark:hover:flow-text-white focus:flow-bg-slate-100
+                          dark:focus:flow-bg-slate-700/50 focus:flow-text-slate-900
+                          dark:focus:flow-text-white focus:flow-outline-none disabled:flow-opacity-50
+                          disabled:flow-cursor-not-allowed flow-rounded-lg"
+                      >
+                        <span className="flow-truncate">{action.title}</span>
+                        {actionLoading === index && (
+                          <LoaderCircleIcon
+                            className="flow-h-4 flow-w-4 flow-flex-shrink-0 flow-animate-spin flow-text-slate-500
+                              dark:flow-text-slate-400"
+                          />
+                        )}
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
             </div>
           )}
         </div>
