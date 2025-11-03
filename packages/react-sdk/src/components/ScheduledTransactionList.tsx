@@ -16,6 +16,7 @@ import {ExternalLinkIcon} from "../icons/ExternalLink"
 import {twMerge} from "tailwind-merge"
 import {useFlowQueryClient} from "../provider/FlowQueryClient"
 import {useFlowChainId} from "../hooks/useFlowChainId"
+import {getFlowscanScheduledTxUrl} from "../utils/flowscan"
 
 const getPriorityLabel = (priority: ScheduledTransactionPriority): string => {
   switch (priority) {
@@ -122,14 +123,6 @@ const ScheduledTransactionCard: React.FC<ScheduledTransactionCardProps> = ({
     cancelEnabled &&
     (transaction.status === ScheduledTransactionStatus.Pending ||
       transaction.status === ScheduledTransactionStatus.Processing)
-
-  const getFlowscanUrl = (txId: string) => {
-    const baseUrl =
-      chainId === "mainnet"
-        ? "https://flowscan.io"
-        : "https://testnet.flowscan.io"
-    return `${baseUrl}/scheduled/${txId}`
-  }
 
   return (
     <div
@@ -290,7 +283,7 @@ const ScheduledTransactionCard: React.FC<ScheduledTransactionCardProps> = ({
           )}
 
           <a
-            href={getFlowscanUrl(transaction.id)}
+            href={getFlowscanScheduledTxUrl(transaction.id, chainId) || "#"}
             target="_blank"
             rel="noopener noreferrer"
             className="flow-h-6 flow-w-6 flow-p-0 flow-rounded-full flow-flex flow-items-center
