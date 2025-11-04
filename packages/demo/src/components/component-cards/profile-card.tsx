@@ -1,18 +1,19 @@
 import {useState} from "react"
-import {Connect, useFlowChainId} from "@onflow/react-sdk"
+import {Profile, useFlowChainId} from "@onflow/react-sdk"
 import {useDarkMode} from "../flow-provider-wrapper"
 import {DemoCard, type PropDefinition} from "../ui/demo-card"
 import {PlusGridIcon} from "../ui/plus-grid"
 import {CONTRACT_ADDRESSES} from "../../constants"
 
-const IMPLEMENTATION_CODE = `import { Connect } from "@onflow/react-sdk"
+const IMPLEMENTATION_CODE = `import { Profile } from "@onflow/react-sdk"
 
-// Basic usage - shows FLOW by default
-<Connect />
+// Basic usage - standalone profile display
+<Profile />
 
-// With multiple tokens - dropdown selector, first token is default
-// Note: Provide only ONE identifier per token (the bridge derives the other)
-<Connect
+// With custom configuration
+<Profile
+  balanceType="combined"
+  onDisconnect={() => console.log("User disconnected")}
   balanceTokens={[
     {
       symbol: "FLOW",
@@ -25,23 +26,15 @@ const IMPLEMENTATION_CODE = `import { Connect } from "@onflow/react-sdk"
       vaultIdentifier: "A.1e4aa0b87d10b141.EVMVMBridgedToken_2aabea2058b5ac2d339b163c6ab6f2b6d53aabed.Vault",
     },
   ]}
-  balanceType="combined"
+  profileConfig={{
+    scheduledTransactions: {
+      show: true,
+      filterHandlerTypes: ["A.123.Contract.Handler"],
+    }
+  }}
 />`
 
 const PROPS: PropDefinition[] = [
-  {
-    name: "variant",
-    type: '"primary" | "secondary" | "outline" | "link"',
-    required: false,
-    description: "The visual style variant of the connect button",
-    defaultValue: '"primary"',
-  },
-  {
-    name: "onConnect",
-    type: "() => void",
-    required: false,
-    description: "Callback function called when user connects their wallet",
-  },
   {
     name: "onDisconnect",
     type: "() => void",
@@ -64,28 +57,32 @@ const PROPS: PropDefinition[] = [
       "Array of tokens with dropdown selector (first token is default). Each token needs symbol, name, and EXACTLY ONE of: vaultIdentifier OR erc20Address (the bridge derives the other automatically)",
   },
   {
-    name: "modalConfig",
-    type: "ConnectModalConfig",
+    name: "profileConfig",
+    type: "ProfileConfig",
     required: false,
     description:
-      "Configuration for the profile modal (like show scheduled transactions, filter handler types)",
+      "Configuration for the profile (like show scheduled transactions, filter handler types)",
   },
   {
-    name: "modalEnabled",
-    type: "boolean",
+    name: "className",
+    type: "string",
     required: false,
-    description:
-      "Controls whether the profile modal opens on click when connected. Set to false to manage the profile display externally.",
-    defaultValue: "true",
+    description: "Additional CSS classes to apply to the profile container",
+  },
+  {
+    name: "style",
+    type: "React.CSSProperties",
+    required: false,
+    description: "Inline styles to apply to the profile container",
   },
 ]
 
-export function ConnectCard() {
+export function ProfileCard() {
   const {darkMode} = useDarkMode()
   const {data: chainId, isLoading} = useFlowChainId()
   const isEmulator = chainId === "emulator" || chainId === "local"
   const [showMultiToken, setShowMultiToken] = useState(false)
-  const [modalEnabled, setModalEnabled] = useState(true)
+  const [showScheduledTxs, setShowScheduledTxs] = useState(false)
   const [balanceType, setBalanceType] = useState<
     "cadence" | "evm" | "combined"
   >("cadence")
@@ -106,7 +103,6 @@ export function ConnectCard() {
       vaultIdentifier: `A.${getFlowTokenAddress().replace("0x", "")}.FlowToken.Vault`,
     },
     // Only show USDF (PYUSD) on testnet and mainnet
-    // Note: Only vaultIdentifier provided - EVM address is derived by the bridge
     ...(!isEmulator
       ? [
           {
@@ -123,12 +119,12 @@ export function ConnectCard() {
 
   return (
     <DemoCard
-      id="connect"
-      title="<Connect />"
-      description="A ready-to-use wallet connection component with built-in styling and authentication flow."
+      id="profile"
+      title="<Profile />"
+      description="A standalone profile component that displays wallet information, balance, and actions. Can be used independently or with Connect component."
       code={IMPLEMENTATION_CODE}
       props={PROPS}
-      docsUrl="https://developers.flow.com/build/tools/react-sdk/components#connect"
+      docsUrl="https://developers.flow.com/build/tools/react-sdk/components#profile"
     >
       <div className="space-y-6">
         <div className="grid grid-cols-3 gap-4">
@@ -143,15 +139,15 @@ export function ConnectCard() {
             <h4
               className={`text-xs font-medium mb-1 ${darkMode ? "text-gray-500" : "text-gray-500"}`}
             >
-              Authentication
+              Standalone
             </h4>
             <p className={`text-sm ${darkMode ? "text-white" : "text-black"}`}>
-              Built-in wallet flow
+              Reusable anywhere
             </p>
           </div>
 
           <div
-            className={`relative col-span-2 p-4 rounded-lg border ${
+            className={`relative p-4 rounded-lg border ${
               darkMode
                 ? "bg-gray-900/50 border-white/10"
                 : "bg-gray-50 border-black/5"
@@ -161,29 +157,44 @@ export function ConnectCard() {
             <h4
               className={`text-xs font-medium mb-1 ${darkMode ? "text-gray-500" : "text-gray-500"}`}
             >
+              Auto-detects State
+            </h4>
+            <p className={`text-sm ${darkMode ? "text-white" : "text-black"}`}>
+              Shows connected/not connected
+            </p>
+          </div>
+
+          <div
+            className={`relative p-4 rounded-lg border ${
+              darkMode
+                ? "bg-gray-900/50 border-white/10"
+                : "bg-gray-50 border-black/5"
+              }`}
+          >
+            <PlusGridIcon placement="bottom left" className="absolute" />
+            <h4
+              className={`text-xs font-medium mb-1 ${darkMode ? "text-gray-500" : "text-gray-500"}`}
+            >
               Multi-Token Cross-VM
             </h4>
             <p
               className={`text-xs ${darkMode ? "text-gray-400" : "text-gray-600"}`}
             >
-              Multi-token support with cross-VM bridge integration. Provide only
-              a vaultIdentifier or an erc20Address and the bridge derives the
-              other automatically.
+              Cross-VM balance with token selector
             </p>
           </div>
         </div>
 
         <div className="flex gap-4">
           <div
-            className={`relative flex-1 p-8 rounded-lg border flex items-center justify-center
-              min-h-[200px] ${
+            className={`relative flex-1 rounded-lg border flex items-center justify-center ${
               darkMode
-                  ? "bg-gray-900/50 border-white/10"
-                  : "bg-gray-50 border-black/5"
+                ? "bg-gray-900/50 border-white/10"
+                : "bg-gray-50 border-black/5"
               }`}
           >
             {isLoading ? (
-              <div className="text-center">
+              <div className="text-center py-12">
                 <div
                   className={`inline-block animate-spin rounded-full h-8 w-8 border-b-2 ${
                     darkMode ? "border-white" : "border-black" }`}
@@ -191,7 +202,7 @@ export function ConnectCard() {
               </div>
             ) : isEmulator ? (
               <div
-                className={`text-center py-4 px-6 rounded-lg border ${
+                className={`text-center py-8 px-6 m-6 rounded-lg border ${
                   darkMode
                     ? "bg-orange-900/20 border-orange-800/50"
                     : "bg-orange-50 border-orange-200"
@@ -218,23 +229,25 @@ export function ConnectCard() {
                 <p
                   className={`text-xs mt-1 ${darkMode ? "text-orange-400/70" : "text-orange-600/70"}`}
                 >
-                  Connect component requires testnet or mainnet
+                  Profile component requires testnet or mainnet
                 </p>
               </div>
             ) : (
-              <div>
-                {showMultiToken ? (
-                  <Connect
-                    balanceType={balanceType}
-                    balanceTokens={multiTokens}
-                    modalEnabled={modalEnabled}
-                  />
-                ) : (
-                  <Connect
-                    balanceType={balanceType}
-                    modalEnabled={modalEnabled}
-                  />
-                )}
+              <div className="w-full p-6">
+                <Profile
+                  balanceType={balanceType}
+                  balanceTokens={showMultiToken ? multiTokens : undefined}
+                  profileConfig={
+                    showScheduledTxs
+                      ? {
+                          scheduledTransactions: {
+                            show: true,
+                          },
+                        }
+                      : {}
+                  }
+                  onDisconnect={() => console.log("User disconnected")}
+                />
               </div>
             )}
           </div>
@@ -300,12 +313,12 @@ export function ConnectCard() {
                 <label
                   className={`text-xs font-medium mb-2 block ${darkMode ? "text-gray-500" : "text-gray-500"}`}
                 >
-                  Profile Modal
+                  Scheduled Transactions
                 </label>
                 <button
-                  onClick={() => setModalEnabled(!modalEnabled)}
+                  onClick={() => setShowScheduledTxs(!showScheduledTxs)}
                   className={`w-full text-sm px-3 py-2 rounded-lg transition-colors ${
-                  modalEnabled
+                  showScheduledTxs
                       ? darkMode
                         ? "bg-blue-600 hover:bg-blue-700 text-white"
                         : "bg-blue-500 hover:bg-blue-600 text-white"
@@ -314,7 +327,7 @@ export function ConnectCard() {
                         : "bg-white hover:bg-gray-100 text-black border border-black/10"
                   }`}
                 >
-                  {modalEnabled ? "Enabled" : "Disabled"}
+                  {showScheduledTxs ? "Enabled" : "Disabled"}
                 </button>
               </div>
             </div>

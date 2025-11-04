@@ -25,6 +25,12 @@ const sidebarItems: SidebarItem[] = [
     description: "Wallet connection component",
   },
   {
+    id: "profile",
+    label: "Profile",
+    category: "components",
+    description: "Standalone profile display",
+  },
+  {
     id: "transactionbutton",
     label: "Transaction Button",
     category: "components",
