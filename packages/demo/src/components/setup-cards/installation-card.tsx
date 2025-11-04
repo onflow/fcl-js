@@ -118,7 +118,7 @@ function Root() {
   return (
     <FlowProvider
       config={{
-        accessNodeUrl: "https://access-mainnet.onflow.org",
+        accessNodeUrl: "https://rest-mainnet.onflow.org",
         flowNetwork: "mainnet",
         appDetailTitle: "My Flow App",
         appDetailIcon: "https://example.com/icon.png",
@@ -152,7 +152,7 @@ export default Root`}
                 <div
                   className={`font-mono text-xs ${darkMode ? "text-green-300" : "text-green-700"}`}
                 >
-                  https://access-mainnet.onflow.org
+                  https://rest-mainnet.onflow.org
                 </div>
               </div>
 
