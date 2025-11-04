@@ -1,4 +1,4 @@
-import {type ReactNode, memo, useState} from "react"
+import {type ReactNode, memo, useState, useRef, useEffect} from "react"
 import {PlusGridItem, PlusGridIcon} from "./plus-grid"
 import {useDarkMode} from "../flow-provider-wrapper"
 import {CodeViewer} from "./code-viewer"
@@ -36,6 +36,27 @@ export const DemoCard = memo<DemoCardProps>(function DemoCard({
   const {darkMode} = useDarkMode()
   const [showCode, setShowCode] = useState(false)
   const [showProps, setShowProps] = useState(false)
+  const codeRef = useRef<HTMLDivElement>(null)
+  const propsRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    if (showCode && codeRef.current) {
+      setTimeout(() => {
+        codeRef.current?.scrollIntoView({behavior: "smooth", block: "nearest"})
+      }, 100)
+    }
+  }, [showCode])
+
+  useEffect(() => {
+    if (showProps && propsRef.current) {
+      setTimeout(() => {
+        propsRef.current?.scrollIntoView({
+          behavior: "smooth",
+          block: "nearest",
+        })
+      }, 100)
+    }
+  }, [showProps])
 
   return (
     <div id={id} className={`scroll-mt-[60px] ${className}`}>
@@ -192,6 +213,7 @@ export const DemoCard = memo<DemoCardProps>(function DemoCard({
 
           {showCode && code && (
             <div
+              ref={codeRef}
               className={`border-t ${darkMode ? "border-white/10" : "border-black/5"}`}
             >
               <CodeViewer code={code} noBorder />
@@ -200,6 +222,7 @@ export const DemoCard = memo<DemoCardProps>(function DemoCard({
 
           {showProps && props && (
             <div
+              ref={propsRef}
               className={`border-t ${darkMode ? "border-white/10" : "border-black/5"}`}
             >
               <PropsViewer props={props} />
