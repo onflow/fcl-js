@@ -121,7 +121,7 @@ export function ProfileCard() {
     <DemoCard
       id="profile"
       title="<Profile />"
-      description="A standalone profile component that displays wallet information, balance, and actions. Can be used independently or with Connect component."
+      description="A standalone profile component that displays wallet information, balance, and actions. Can be used independently or with the Connect component."
       code={IMPLEMENTATION_CODE}
       props={PROPS}
       docsUrl="https://developers.flow.com/build/tools/react-sdk/components#profile"
