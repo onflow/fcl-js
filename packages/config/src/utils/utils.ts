@@ -176,9 +176,9 @@ const mapDeploymentsToNetworkAddress =
       if (!accountAddress) return c
 
       // Create an object assigning the address to the contract name.
-      return value.reduce((c, contract) => {
-        return {...c, [contract]: accountAddress}
-      }, {})
+      return value.reduce((acc, contract) => {
+        return {...acc, [contract]: accountAddress}
+      }, c)
     }, {})
   }
 
