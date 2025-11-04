@@ -1,4 +1,5 @@
 import {PlusGrid, PlusGridRow} from "./ui/plus-grid"
+import {StarterBanner} from "./starter-banner"
 
 // Import hook cards
 import {UseFlowCurrentUserCard} from "./hook-cards/use-flow-current-user-card"
@@ -31,6 +32,7 @@ import {ConnectCard} from "./component-cards/connect-card"
 import {TransactionButtonCard} from "./component-cards/transaction-button-card"
 import {TransactionDialogCard} from "./component-cards/transaction-dialog-card"
 import {TransactionLinkCard} from "./component-cards/transaction-link-card"
+import {ScheduledTransactionListDemo} from "./component-cards/scheduled-transaction-list-demo"
 
 export function ContentSection() {
   return (
@@ -47,6 +49,8 @@ export function ContentSection() {
                 on Flow.
               </p>
             </div>
+
+            <StarterBanner />
 
             <InstallationCard />
           </div>
@@ -66,6 +70,7 @@ export function ContentSection() {
             <TransactionButtonCard />
             <TransactionDialogCard />
             <TransactionLinkCard />
+            <ScheduledTransactionListDemo />
           </div>
 
           <div className="mb-12 md:mb-24">

@@ -117,7 +117,7 @@ describe("useCrossVmTokenBalance", () => {
           value: BigInt("200001"),
           precision: 4,
         },
-        total: {
+        combined: {
           formatted: "30.0011",
           value: BigInt("3000110000"),
           precision: 8,

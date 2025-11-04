@@ -66,7 +66,7 @@ y: Y
 
 ## Examples
 
-**Role your own graphql libary**
+**Role your own graphql library**
 
 ```javascript
 // gql.js
@@ -174,7 +174,7 @@ assert(rawr, {
       log("msg: woot woot im a boot")
     }
   `,
-  descrition: `
+  description: `
     the message: woot woot im a boot
   `,
 })
