@@ -12,7 +12,7 @@ import {
  *
  * Consider using 'fcl.tx(id)' instead of calling this method directly for real-time transaction monitoring.
  *
- * @param transactionId The id of the transaction to get the status of
+ * @param transactionId The transaction ID (256-bit hash as hex string) or scheduled transaction ID (UInt64 as decimal string)
  * @returns A function that processes an interaction object
  *
  * @example

@@ -6,7 +6,7 @@ import {useFlowQueryClient} from "../provider/FlowQueryClient"
 import {useFlowClient} from "./useFlowClient"
 
 export interface UseFlowTransactionArgs {
-  /** Flow transaction ID to fetch */
+  /** The transaction ID (256-bit hash as hex string) or scheduled transaction ID (UInt64 as decimal string) to fetch */
   txId?: string
   /** React Query settings (staleTime, retry, enabled, select, etc.) */
   query?: Omit<
@@ -20,7 +20,7 @@ export interface UseFlowTransactionArgs {
 /**
  * Fetches a Flow transaction by ID.
  *
- * @param args.txId - Flow transaction ID
+ * @param args.txId - The transaction ID (256-bit hash as hex string) or scheduled transaction ID (UInt64 as decimal string)
  * @param args.query - Optional React Query options
  * @returns {UseQueryResult<Transaction | null, Error>} Transaction object or null
  */

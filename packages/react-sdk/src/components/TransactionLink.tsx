@@ -6,6 +6,7 @@ import {ExternalLinkIcon} from "../icons/ExternalLink"
 import {getFlowscanTxUrl} from "../utils/flowscan"
 
 interface TransactionLinkProps {
+  /** The transaction ID (256-bit hash as hex string) or scheduled transaction ID (UInt64 as decimal string) */
   txId: string
   variant?: ButtonProps["variant"]
 }
