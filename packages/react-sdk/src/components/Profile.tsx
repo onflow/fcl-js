@@ -4,6 +4,11 @@ import {
   ListboxButton,
   ListboxOption,
   ListboxOptions,
+  Tab,
+  TabGroup,
+  TabList,
+  TabPanel,
+  TabPanels,
 } from "@headlessui/react"
 import {useFlowCurrentUser} from "../hooks"
 import {
@@ -229,172 +234,382 @@ export const Profile: React.FC<ProfileProps> = ({
             </div>
           </div>
 
-          <div className="flow-w-full flow-space-y-3">
-            <div className="flow-flex flow-items-stretch flow-gap-3">
-              {availableTokens.length > 1 && (
-                <div className="flow-flex-shrink-0" style={{minWidth: "140px"}}>
-                  <Listbox value={selectedToken} onChange={setSelectedToken}>
-                    {({open}) => (
-                      <div className="flow-relative flow-h-full">
-                        <ListboxButton
-                          className="flow-relative flow-w-full flow-h-full flow-cursor-pointer flow-rounded-md
-                            flow-bg-white dark:flow-bg-slate-800 flow-py-2.5 flow-px-3 flow-text-left
-                            flow-border flow-border-slate-300 dark:flow-border-slate-600
-                            hover:flow-border-slate-400 dark:hover:flow-border-slate-500
-                            focus:flow-outline-none focus:flow-border-slate-400
-                            dark:focus:flow-border-slate-500 flow-transition-colors"
+          {showScheduledTransactions ? (
+            <TabGroup>
+              <TabList
+                className="flow-flex flow-gap-6 flow-border-b flow-border-slate-200
+                  dark:flow-border-slate-700"
+              >
+                <Tab
+                  className="flow-relative flow-py-3 flow-px-1 flow-text-sm flow-font-medium
+                    flow-text-slate-600 dark:flow-text-slate-400 hover:flow-text-slate-900
+                    dark:hover:flow-text-slate-100 focus:flow-outline-none flow-transition-colors
+                    data-[selected]:flow-text-slate-900 data-[selected]:dark:flow-text-slate-100"
+                >
+                  {({selected}) => (
+                    <>
+                      Home
+                      {selected && (
+                        <div
+                          className="flow-absolute flow-bottom-0 flow-left-0 flow-right-0 flow-h-0.5
+                            flow-bg-slate-900 dark:flow-bg-slate-100"
+                        />
+                      )}
+                    </>
+                  )}
+                </Tab>
+                <Tab
+                  className="flow-relative flow-py-3 flow-px-1 flow-text-sm flow-font-medium
+                    flow-text-slate-600 dark:flow-text-slate-400 hover:flow-text-slate-900
+                    dark:hover:flow-text-slate-100 focus:flow-outline-none flow-transition-colors
+                    data-[selected]:flow-text-slate-900 data-[selected]:dark:flow-text-slate-100"
+                >
+                  {({selected}) => (
+                    <>
+                      Scheduled Transactions
+                      {selected && (
+                        <div
+                          className="flow-absolute flow-bottom-0 flow-left-0 flow-right-0 flow-h-0.5
+                            flow-bg-slate-900 dark:flow-bg-slate-100"
+                        />
+                      )}
+                    </>
+                  )}
+                </Tab>
+              </TabList>
+
+              <TabPanels>
+                <TabPanel className="flow-pt-4 focus:flow-outline-none">
+                  <div className="flow-w-full flow-space-y-3">
+                    <div className="flow-flex flow-items-stretch flow-gap-3">
+                      {availableTokens.length > 1 && (
+                        <div
+                          className="flow-flex-shrink-0"
+                          style={{minWidth: "140px"}}
                         >
-                          <div className="flow-flex flow-flex-col flow-justify-center flow-h-full">
-                            <span
-                              className="flow-text-xs flow-font-medium flow-text-slate-500 dark:flow-text-slate-400
-                                flow-mb-1"
-                            >
-                              Token
-                            </span>
-                            <div className="flow-flex flow-items-center flow-justify-between flow-gap-2">
-                              <span
-                                className="flow-text-sm flow-font-semibold flow-text-slate-900 dark:flow-text-slate-100
-                                  flow-truncate"
-                              >
-                                {selectedToken?.symbol}
-                              </span>
-                              <svg
-                                className="flow-h-4 flow-w-4 flow-text-slate-400 dark:flow-text-slate-500
-                                  flow-flex-shrink-0"
-                                viewBox="0 0 20 20"
-                                fill="currentColor"
-                              >
-                                <path
-                                  fillRule="evenodd"
-                                  d="M10 3a.75.75 0 01.55.24l3.25 3.5a.75.75 0 11-1.1 1.02L10 4.852 7.3 7.76a.75.75 0 01-1.1-1.02l3.25-3.5A.75.75 0 0110 3zm-3.76 9.2a.75.75 0 011.06.04l2.7 2.908 2.7-2.908a.75.75 0 111.1 1.02l-3.25 3.5a.75.75 0 01-1.1 0l-3.25-3.5a.75.75 0 01.04-1.06z"
-                                  clipRule="evenodd"
-                                />
-                              </svg>
-                            </div>
-                          </div>
-                        </ListboxButton>
-                        {open && (
-                          <ListboxOptions
-                            static
-                            className="flow-absolute flow-z-10 flow-mt-2 flow-w-48 flow-overflow-auto flow-rounded-md
-                              flow-bg-white dark:flow-bg-slate-800 flow-py-2 flow-border flow-border-slate-300
-                              dark:flow-border-slate-600 focus:flow-outline-none flow-max-h-64"
+                          <Listbox
+                            value={selectedToken}
+                            onChange={setSelectedToken}
                           >
-                            {availableTokens.map((token: TokenConfig) => (
-                              <ListboxOption
-                                key={token.symbol}
-                                value={token}
-                                className="flow-relative flow-cursor-pointer flow-select-none flow-py-2.5 flow-px-4
-                                  data-[focus]:flow-bg-slate-100 data-[focus]:dark:flow-bg-slate-700
-                                  flow-text-slate-900 dark:flow-text-slate-100 flow-transition-colors"
-                              >
-                                {({selected}) => (
-                                  <div className="flow-flex flow-items-center flow-justify-between">
-                                    <div>
-                                      <div
-                                        className={`flow-text-sm ${selected ? "flow-font-semibold" : "flow-font-medium"}`}
+                            {({open}) => (
+                              <div className="flow-relative flow-h-full">
+                                <ListboxButton
+                                  className="flow-relative flow-w-full flow-h-full flow-cursor-pointer flow-rounded-md
+                                    flow-bg-white dark:flow-bg-slate-800 flow-py-2.5 flow-px-3 flow-text-left
+                                    flow-border flow-border-slate-300 dark:flow-border-slate-600
+                                    hover:flow-border-slate-400 dark:hover:flow-border-slate-500
+                                    focus:flow-outline-none focus:flow-border-slate-400
+                                    dark:focus:flow-border-slate-500 flow-transition-colors"
+                                >
+                                  <div className="flow-flex flow-flex-col flow-justify-center flow-h-full">
+                                    <span
+                                      className="flow-text-xs flow-font-medium flow-text-slate-500 dark:flow-text-slate-400
+                                        flow-mb-1"
+                                    >
+                                      Token
+                                    </span>
+                                    <div className="flow-flex flow-items-center flow-justify-between flow-gap-2">
+                                      <span
+                                        className="flow-text-sm flow-font-semibold flow-text-slate-900 dark:flow-text-slate-100
+                                          flow-truncate"
                                       >
-                                        {token.name}
-                                      </div>
-                                      <div className="flow-text-xs flow-text-slate-500 dark:flow-text-slate-400 flow-mt-0.5">
-                                        {token.symbol}
-                                      </div>
-                                    </div>
-                                    {selected && (
+                                        {selectedToken?.symbol}
+                                      </span>
                                       <svg
-                                        className="flow-h-5 flow-w-5 flow-text-slate-900 dark:flow-text-slate-100"
+                                        className="flow-h-4 flow-w-4 flow-text-slate-400 dark:flow-text-slate-500
+                                          flow-flex-shrink-0"
                                         viewBox="0 0 20 20"
                                         fill="currentColor"
                                       >
                                         <path
                                           fillRule="evenodd"
-                                          d="M16.704 4.153a.75.75 0 01.143 1.052l-8 10.5a.75.75 0 01-1.127.075l-4.5-4.5a.75.75 0 011.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 011.05-.143z"
+                                          d="M10 3a.75.75 0 01.55.24l3.25 3.5a.75.75 0 11-1.1 1.02L10 4.852 7.3 7.76a.75.75 0 01-1.1-1.02l3.25-3.5A.75.75 0 0110 3zm-3.76 9.2a.75.75 0 011.06.04l2.7 2.908 2.7-2.908a.75.75 0 111.1 1.02l-3.25 3.5a.75.75 0 01-1.1 0l-3.25-3.5a.75.75 0 01.04-1.06z"
                                           clipRule="evenodd"
                                         />
                                       </svg>
-                                    )}
+                                    </div>
                                   </div>
+                                </ListboxButton>
+                                {open && (
+                                  <ListboxOptions
+                                    static
+                                    className="flow-absolute flow-z-10 flow-mt-2 flow-w-48 flow-overflow-auto flow-rounded-md
+                                      flow-bg-white dark:flow-bg-slate-800 flow-py-2 flow-border flow-border-slate-300
+                                      dark:flow-border-slate-600 focus:flow-outline-none flow-max-h-64"
+                                  >
+                                    {availableTokens.map(
+                                      (token: TokenConfig) => (
+                                        <ListboxOption
+                                          key={token.symbol}
+                                          value={token}
+                                          className="flow-relative flow-cursor-pointer flow-select-none flow-py-2.5 flow-px-4
+                                            data-[focus]:flow-bg-slate-100 data-[focus]:dark:flow-bg-slate-700
+                                            flow-text-slate-900 dark:flow-text-slate-100 flow-transition-colors"
+                                        >
+                                          {({selected}) => (
+                                            <div className="flow-flex flow-items-center flow-justify-between">
+                                              <div>
+                                                <div
+                                                  className={`flow-text-sm ${selected ? "flow-font-semibold" : "flow-font-medium"}`}
+                                                >
+                                                  {token.name}
+                                                </div>
+                                                <div className="flow-text-xs flow-text-slate-500 dark:flow-text-slate-400 flow-mt-0.5">
+                                                  {token.symbol}
+                                                </div>
+                                              </div>
+                                              {selected && (
+                                                <svg
+                                                  className="flow-h-5 flow-w-5 flow-text-slate-900 dark:flow-text-slate-100"
+                                                  viewBox="0 0 20 20"
+                                                  fill="currentColor"
+                                                >
+                                                  <path
+                                                    fillRule="evenodd"
+                                                    d="M16.704 4.153a.75.75 0 01.143 1.052l-8 10.5a.75.75 0 01-1.127.075l-4.5-4.5a.75.75 0 011.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 011.05-.143z"
+                                                    clipRule="evenodd"
+                                                  />
+                                                </svg>
+                                              )}
+                                            </div>
+                                          )}
+                                        </ListboxOption>
+                                      )
+                                    )}
+                                  </ListboxOptions>
                                 )}
-                              </ListboxOption>
-                            ))}
-                          </ListboxOptions>
-                        )}
+                              </div>
+                            )}
+                          </Listbox>
+                        </div>
+                      )}
+
+                      <div
+                        className="flow-flex-1 flow-rounded-md flow-bg-slate-50 dark:flow-bg-slate-800/50
+                          flow-border flow-border-slate-200 dark:flow-border-slate-700 flow-px-4
+                          flow-py-2.5"
+                      >
+                        <div
+                          className="flow-text-xs flow-font-medium flow-text-slate-500 dark:flow-text-slate-400
+                            flow-mb-1"
+                        >
+                          Balance
+                        </div>
+                        <div
+                          className="flow-text-xl flow-font-semibold flow-text-slate-900 dark:flow-text-slate-100
+                            flow-leading-tight"
+                        >
+                          {displayBalance}{" "}
+                          <span className="flow-text-sm flow-font-medium flow-text-slate-600 dark:flow-text-slate-400">
+                            {selectedToken?.symbol}
+                          </span>
+                        </div>
                       </div>
-                    )}
-                  </Listbox>
-                </div>
-              )}
+                    </div>
+                  </div>
 
-              <div
-                className="flow-flex-1 flow-rounded-md flow-bg-slate-50 dark:flow-bg-slate-800/50
-                  flow-border flow-border-slate-200 dark:flow-border-slate-700 flow-px-4
-                  flow-py-2.5"
-              >
-                <div
-                  className="flow-text-xs flow-font-medium flow-text-slate-500 dark:flow-text-slate-400
-                    flow-mb-1"
-                >
-                  Balance
-                </div>
-                <div
-                  className="flow-text-xl flow-font-semibold flow-text-slate-900 dark:flow-text-slate-100
-                    flow-leading-tight"
-                >
-                  {displayBalance}{" "}
-                  <span className="flow-text-sm flow-font-medium flow-text-slate-600 dark:flow-text-slate-400">
-                    {selectedToken?.symbol}
-                  </span>
+                  <div className="flow-flex flow-gap-3 flow-w-full flow-mt-6">
+                    <Button
+                      variant="outline"
+                      className="flow-flex-1 flow-flex flow-items-center flow-justify-center flow-text-sm"
+                      onClick={handleCopy}
+                      disabled={copied}
+                    >
+                      {copied ? (
+                        <>
+                          <span className="flow-mr-2 flow-h-4 flow-w-4">✓</span>
+                          Copied!
+                        </>
+                      ) : (
+                        <>
+                          <CopyIcon className="flow-mr-2 flow-h-4 flow-w-4" />
+                          Copy Address
+                        </>
+                      )}
+                    </Button>
+                    <Button
+                      variant="outline"
+                      className="flow-flex-1 flow-flex flow-items-center flow-justify-center flow-text-sm"
+                      onClick={handleDisconnect}
+                    >
+                      <LogOutIcon className="flow-mr-2 flow-h-4 flow-w-4" />
+                      Disconnect
+                    </Button>
+                  </div>
+                </TabPanel>
+
+                <TabPanel className="flow-pt-4 focus:flow-outline-none">
+                  <div
+                    className="flow-overflow-y-auto flow-pr-2"
+                    style={{maxHeight: "250px", minHeight: "100px"}}
+                  >
+                    <ScheduledTransactionList
+                      address={user.addr || ""}
+                      filterHandlerTypes={
+                        profileConfig.scheduledTransactions?.filterHandlerTypes
+                      }
+                    />
+                  </div>
+                </TabPanel>
+              </TabPanels>
+            </TabGroup>
+          ) : (
+            <>
+              <div className="flow-w-full flow-space-y-3">
+                <div className="flow-flex flow-items-stretch flow-gap-3">
+                  {availableTokens.length > 1 && (
+                    <div
+                      className="flow-flex-shrink-0"
+                      style={{minWidth: "140px"}}
+                    >
+                      <Listbox
+                        value={selectedToken}
+                        onChange={setSelectedToken}
+                      >
+                        {({open}) => (
+                          <div className="flow-relative flow-h-full">
+                            <ListboxButton
+                              className="flow-relative flow-w-full flow-h-full flow-cursor-pointer flow-rounded-md
+                                flow-bg-white dark:flow-bg-slate-800 flow-py-2.5 flow-px-3 flow-text-left
+                                flow-border flow-border-slate-300 dark:flow-border-slate-600
+                                hover:flow-border-slate-400 dark:hover:flow-border-slate-500
+                                focus:flow-outline-none focus:flow-border-slate-400
+                                dark:focus:flow-border-slate-500 flow-transition-colors"
+                            >
+                              <div className="flow-flex flow-flex-col flow-justify-center flow-h-full">
+                                <span
+                                  className="flow-text-xs flow-font-medium flow-text-slate-500 dark:flow-text-slate-400
+                                    flow-mb-1"
+                                >
+                                  Token
+                                </span>
+                                <div className="flow-flex flow-items-center flow-justify-between flow-gap-2">
+                                  <span
+                                    className="flow-text-sm flow-font-semibold flow-text-slate-900 dark:flow-text-slate-100
+                                      flow-truncate"
+                                  >
+                                    {selectedToken?.symbol}
+                                  </span>
+                                  <svg
+                                    className="flow-h-4 flow-w-4 flow-text-slate-400 dark:flow-text-slate-500
+                                      flow-flex-shrink-0"
+                                    viewBox="0 0 20 20"
+                                    fill="currentColor"
+                                  >
+                                    <path
+                                      fillRule="evenodd"
+                                      d="M10 3a.75.75 0 01.55.24l3.25 3.5a.75.75 0 11-1.1 1.02L10 4.852 7.3 7.76a.75.75 0 01-1.1-1.02l3.25-3.5A.75.75 0 0110 3zm-3.76 9.2a.75.75 0 011.06.04l2.7 2.908 2.7-2.908a.75.75 0 111.1 1.02l-3.25 3.5a.75.75 0 01-1.1 0l-3.25-3.5a.75.75 0 01.04-1.06z"
+                                      clipRule="evenodd"
+                                    />
+                                  </svg>
+                                </div>
+                              </div>
+                            </ListboxButton>
+                            {open && (
+                              <ListboxOptions
+                                static
+                                className="flow-absolute flow-z-10 flow-mt-2 flow-w-48 flow-overflow-auto flow-rounded-md
+                                  flow-bg-white dark:flow-bg-slate-800 flow-py-2 flow-border flow-border-slate-300
+                                  dark:flow-border-slate-600 focus:flow-outline-none flow-max-h-64"
+                              >
+                                {availableTokens.map((token: TokenConfig) => (
+                                  <ListboxOption
+                                    key={token.symbol}
+                                    value={token}
+                                    className="flow-relative flow-cursor-pointer flow-select-none flow-py-2.5 flow-px-4
+                                      data-[focus]:flow-bg-slate-100 data-[focus]:dark:flow-bg-slate-700
+                                      flow-text-slate-900 dark:flow-text-slate-100 flow-transition-colors"
+                                  >
+                                    {({selected}) => (
+                                      <div className="flow-flex flow-items-center flow-justify-between">
+                                        <div>
+                                          <div
+                                            className={`flow-text-sm ${selected ? "flow-font-semibold" : "flow-font-medium"}`}
+                                          >
+                                            {token.name}
+                                          </div>
+                                          <div className="flow-text-xs flow-text-slate-500 dark:flow-text-slate-400 flow-mt-0.5">
+                                            {token.symbol}
+                                          </div>
+                                        </div>
+                                        {selected && (
+                                          <svg
+                                            className="flow-h-5 flow-w-5 flow-text-slate-900 dark:flow-text-slate-100"
+                                            viewBox="0 0 20 20"
+                                            fill="currentColor"
+                                          >
+                                            <path
+                                              fillRule="evenodd"
+                                              d="M16.704 4.153a.75.75 0 01.143 1.052l-8 10.5a.75.75 0 01-1.127.075l-4.5-4.5a.75.75 0 011.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 011.05-.143z"
+                                              clipRule="evenodd"
+                                            />
+                                          </svg>
+                                        )}
+                                      </div>
+                                    )}
+                                  </ListboxOption>
+                                ))}
+                              </ListboxOptions>
+                            )}
+                          </div>
+                        )}
+                      </Listbox>
+                    </div>
+                  )}
+
+                  <div
+                    className="flow-flex-1 flow-rounded-md flow-bg-slate-50 dark:flow-bg-slate-800/50
+                      flow-border flow-border-slate-200 dark:flow-border-slate-700 flow-px-4
+                      flow-py-2.5"
+                  >
+                    <div
+                      className="flow-text-xs flow-font-medium flow-text-slate-500 dark:flow-text-slate-400
+                        flow-mb-1"
+                    >
+                      Balance
+                    </div>
+                    <div
+                      className="flow-text-xl flow-font-semibold flow-text-slate-900 dark:flow-text-slate-100
+                        flow-leading-tight"
+                    >
+                      {displayBalance}{" "}
+                      <span className="flow-text-sm flow-font-medium flow-text-slate-600 dark:flow-text-slate-400">
+                        {selectedToken?.symbol}
+                      </span>
+                    </div>
+                  </div>
                 </div>
               </div>
-            </div>
-          </div>
 
-          <div className="flow-flex flow-gap-3 flow-w-full flow-mt-6">
-            <Button
-              variant="outline"
-              className="flow-flex-1 flow-flex flow-items-center flow-justify-center flow-text-sm"
-              onClick={handleCopy}
-              disabled={copied}
-            >
-              {copied ? (
-                <>
-                  <span className="flow-mr-2 flow-h-4 flow-w-4">✓</span>
-                  Copied!
-                </>
-              ) : (
-                <>
-                  <CopyIcon className="flow-mr-2 flow-h-4 flow-w-4" />
-                  Copy Address
-                </>
-              )}
-            </Button>
-            <Button
-              variant="outline"
-              className="flow-flex-1 flow-flex flow-items-center flow-justify-center flow-text-sm"
-              onClick={handleDisconnect}
-            >
-              <LogOutIcon className="flow-mr-2 flow-h-4 flow-w-4" />
-              Disconnect
-            </Button>
-          </div>
-
-          {showScheduledTransactions && (
-            <div className="flow-rounded-lg flow-bg-slate-50 dark:flow-bg-slate-900 flow-p-4 flow-mt-2">
-              <h3 className="flow-text-base flow-font-bold flow-text-slate-900 dark:flow-text-white flow-pb-2">
-                Scheduled Transactions
-              </h3>
-              <div
-                className="flow-overflow-y-auto flow-pr-2"
-                style={{maxHeight: "250px", minHeight: "100px"}}
-              >
-                <ScheduledTransactionList
-                  address={user.addr || ""}
-                  filterHandlerTypes={
-                    profileConfig.scheduledTransactions?.filterHandlerTypes
-                  }
-                />
+              <div className="flow-flex flow-gap-3 flow-w-full flow-mt-6">
+                <Button
+                  variant="outline"
+                  className="flow-flex-1 flow-flex flow-items-center flow-justify-center flow-text-sm"
+                  onClick={handleCopy}
+                  disabled={copied}
+                >
+                  {copied ? (
+                    <>
+                      <span className="flow-mr-2 flow-h-4 flow-w-4">✓</span>
+                      Copied!
+                    </>
+                  ) : (
+                    <>
+                      <CopyIcon className="flow-mr-2 flow-h-4 flow-w-4" />
+                      Copy Address
+                    </>
+                  )}
+                </Button>
+                <Button
+                  variant="outline"
+                  className="flow-flex-1 flow-flex flow-items-center flow-justify-center flow-text-sm"
+                  onClick={handleDisconnect}
+                >
+                  <LogOutIcon className="flow-mr-2 flow-h-4 flow-w-4" />
+                  Disconnect
+                </Button>
               </div>
-            </div>
+            </>
           )}
         </div>
       </div>
