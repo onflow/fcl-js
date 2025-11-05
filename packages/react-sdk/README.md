@@ -18,7 +18,7 @@ import flowJson from "../flow.json"
 
 <FlowProvider
   config={{
-    accessNodeUrl: "https://access-mainnet.onflow.org",
+    accessNodeUrl: "https://rest-mainnet.onflow.org",
     flowNetwork: "mainnet",
     appDetailTitle: "My On Chain App",
     appDetailIcon: "https://example.com/icon.png",

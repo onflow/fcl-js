@@ -205,7 +205,7 @@ export function ThemingCard() {
               </p>
               <FlowProvider
                 config={{
-                  accessNodeUrl: "https://access-mainnet.onflow.org",
+                  accessNodeUrl: "https://rest-mainnet.onflow.org",
                   flowNetwork: "mainnet",
                   appDetailTitle: "Theme Demo",
                   appDetailIcon: "",
