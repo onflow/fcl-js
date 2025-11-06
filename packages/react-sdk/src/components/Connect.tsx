@@ -1,26 +1,10 @@
-import React, {useState, useEffect, useMemo} from "react"
-import {
-  Listbox,
-  ListboxButton,
-  ListboxOption,
-  ListboxOptions,
-} from "@headlessui/react"
+import React, {useState} from "react"
 import {useFlowCurrentUser} from "../hooks"
-import {
-  useCrossVmTokenBalance,
-  UseCrossVmTokenBalanceData,
-} from "../hooks/useCrossVmTokenBalance"
-import {useFlowChainId} from "../hooks/useFlowChainId"
+import {UseCrossVmTokenBalanceData} from "../hooks/useCrossVmTokenBalance"
 import {Button, ButtonProps} from "./internal/Button"
 import {Dialog} from "./internal/Dialog"
 import {StyleWrapper} from "./internal/StyleWrapper"
-import {UserIcon} from "../icons/UserIcon"
-import {CopyIcon} from "../icons/CopyIcon"
-import {LogOutIcon} from "../icons/LogOutIcon"
-import {ExternalLinkIcon} from "../icons/ExternalLink"
-import {ScheduledTransactionList} from "./ScheduledTransactionList"
-import {CONTRACT_ADDRESSES} from "../constants"
-import {getFlowscanAccountUrl} from "../utils/flowscan"
+import {Profile} from "./Profile"
 
 type BalanceType = keyof UseCrossVmTokenBalanceData
 
@@ -46,6 +30,7 @@ interface ConnectProps {
   balanceType?: BalanceType
   balanceTokens?: TokenConfig[]
   modalConfig?: ConnectModalConfig
+  modalEnabled?: boolean
 }
 
 export const Connect: React.FC<ConnectProps> = ({
@@ -55,129 +40,33 @@ export const Connect: React.FC<ConnectProps> = ({
   balanceType = "cadence",
   balanceTokens,
   modalConfig = {},
+  modalEnabled = true,
 }) => {
   const {user, authenticate, unauthenticate} = useFlowCurrentUser()
   const [open, setOpen] = useState(false)
-  const [copied, setCopied] = useState(false)
-  const {data: chainId} = useFlowChainId()
 
-  // Default token configuration for FlowToken - memoized to avoid recreation
-  const defaultTokens: TokenConfig[] = useMemo(() => {
-    if (!chainId) return []
-
-    const getFlowTokenAddress = () => {
-      if (chainId === "emulator" || chainId === "local")
-        return CONTRACT_ADDRESSES.local.FlowToken
-      return chainId === "testnet"
-        ? CONTRACT_ADDRESSES.testnet.FlowToken
-        : CONTRACT_ADDRESSES.mainnet.FlowToken
-    }
-
-    const address = getFlowTokenAddress().replace("0x", "")
-    return [
-      {
-        symbol: "FLOW",
-        name: "Flow Token",
-        vaultIdentifier: `A.${address}.FlowToken.Vault`,
-      },
-    ]
-  }, [chainId])
-
-  // Use provided tokens or default to FLOW - memoized to avoid recreation
-  const availableTokens = useMemo(
-    () =>
-      balanceTokens && balanceTokens.length > 0 ? balanceTokens : defaultTokens,
-    [balanceTokens, defaultTokens]
-  )
-
-  // Initialize with first token, but will update when availableTokens changes
-  const [selectedToken, setSelectedToken] = useState<TokenConfig>(
-    availableTokens[0] || defaultTokens[0]
-  )
-
-  // Update selectedToken when availableTokens changes (when chainId loads or balanceTokens prop changes)
-  useEffect(() => {
-    setSelectedToken((prev: any) => {
-      // If no tokens available yet, return undefined
-      if (!availableTokens || availableTokens.length === 0) return undefined
-      // If prev is undefined (first load), return first available token
-      if (!prev) return availableTokens[0]
-
-      // Find the same token in the new list (match by symbol)
-      const updatedToken = availableTokens.find(t => t.symbol === prev.symbol)
-
-      // If the token is no longer in the list, switch to first token
-      if (!updatedToken) {
-        return availableTokens[0]
-      }
-
-      // If we found the same token but it now has more data (chainId loaded), use the updated version
-      if (
-        (!prev.vaultIdentifier && updatedToken.vaultIdentifier) ||
-        (!prev.erc20Address && updatedToken.erc20Address)
-      ) {
-        return updatedToken
-      }
-
-      // Keep the current selection if nothing changed
-      return prev
-    })
-  }, [availableTokens])
   const showScheduledTransactions =
     modalConfig.scheduledTransactions?.show ?? false
   const modalWidth = showScheduledTransactions
     ? "flow-max-w-xl"
     : "flow-max-w-md"
 
-  const {data: balanceData} = useCrossVmTokenBalance({
-    owner: user?.addr,
-    vaultIdentifier: selectedToken?.vaultIdentifier,
-    erc20Address: selectedToken?.erc20Address,
-    query: {
-      enabled:
-        !!user?.addr &&
-        !!chainId &&
-        !!selectedToken &&
-        (!!selectedToken?.vaultIdentifier || !!selectedToken?.erc20Address),
-    },
-  })
-
   const displayAddress =
     user?.loggedIn && user.addr
       ? `${user.addr.slice(0, 6)}...${user.addr.slice(-4)}`
       : ""
 
-  const flowscanUrl = getFlowscanAccountUrl(user?.addr || "", chainId)
-
-  // Get balance for the selected type
-  const displayBalance =
-    balanceData &&
-    typeof balanceData !== "string" &&
-    balanceData[balanceType]?.formatted
-      ? Number(balanceData[balanceType].formatted).toLocaleString(undefined, {
-          maximumFractionDigits: 4,
-          minimumFractionDigits: 0,
-        })
-      : "0"
-
   const handleButtonClick = async () => {
     if (user?.loggedIn) {
-      setOpen(true)
+      if (modalEnabled) {
+        setOpen(true)
+      } else {
+        // Disconnect when modal is disabled
+        handleDisconnect()
+      }
     } else {
       await authenticate()
       onConnect?.()
-    }
-  }
-
-  const handleCopy = async () => {
-    if (
-      user?.addr &&
-      typeof window !== "undefined" &&
-      window.navigator.clipboard
-    ) {
-      await window.navigator.clipboard.writeText(user.addr)
-      setCopied(true)
-      setTimeout(() => setCopied(false), 1500)
     }
   }
 
@@ -198,210 +87,18 @@ export const Connect: React.FC<ConnectProps> = ({
           {user?.loggedIn ? displayAddress : "Connect Wallet"}
         </Button>
       </StyleWrapper>
-      {user?.loggedIn && (
+      {user?.loggedIn && modalEnabled && (
         <Dialog
           isOpen={open}
           onClose={() => setOpen(false)}
           className={modalWidth}
         >
-          <div className="flow-flex flow-flex-col flow-gap-4">
-            <div className="flow-flex flow-flex-col flow-items-center">
-              <div
-                className="flow-w-16 flow-h-16 flow-rounded-full flow-bg-slate-100 dark:flow-bg-slate-800
-                  flow-flex flow-items-center flow-justify-center flow-mb-3"
-              >
-                <UserIcon className="flow-w-8 flow-h-8 flow-text-slate-900 dark:flow-text-slate-100" />
-              </div>
-              <div className="flow-flex flow-items-center flow-gap-2">
-                <div className="flow-text-base flow-font-medium flow-text-slate-900 dark:flow-text-slate-100">
-                  {displayAddress}
-                </div>
-                {flowscanUrl && (
-                  <a
-                    href={flowscanUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flow-text-slate-500 hover:flow-text-slate-700 dark:flow-text-slate-400
-                      dark:hover:flow-text-slate-200 flow-transition-colors"
-                    title="View on Flowscan"
-                  >
-                    <ExternalLinkIcon className="flow-w-4 flow-h-4" />
-                  </a>
-                )}
-              </div>
-            </div>
-
-            <div className="flow-w-full flow-space-y-3">
-              <div className="flow-flex flow-items-stretch flow-gap-3">
-                {availableTokens.length > 1 && (
-                  <div
-                    className="flow-flex-shrink-0"
-                    style={{minWidth: "140px"}}
-                  >
-                    <Listbox value={selectedToken} onChange={setSelectedToken}>
-                      {({open}) => (
-                        <div className="flow-relative flow-h-full">
-                          <ListboxButton
-                            className="flow-relative flow-w-full flow-h-full flow-cursor-pointer flow-rounded-md
-                              flow-bg-white dark:flow-bg-slate-800 flow-py-2.5 flow-px-3 flow-text-left
-                              flow-border flow-border-slate-300 dark:flow-border-slate-600
-                              hover:flow-border-slate-400 dark:hover:flow-border-slate-500
-                              focus:flow-outline-none focus:flow-border-slate-400
-                              dark:focus:flow-border-slate-500 flow-transition-colors"
-                          >
-                            <div className="flow-flex flow-flex-col flow-justify-center flow-h-full">
-                              <span
-                                className="flow-text-xs flow-font-medium flow-text-slate-500 dark:flow-text-slate-400
-                                  flow-mb-1"
-                              >
-                                Token
-                              </span>
-                              <div className="flow-flex flow-items-center flow-justify-between flow-gap-2">
-                                <span
-                                  className="flow-text-sm flow-font-semibold flow-text-slate-900 dark:flow-text-slate-100
-                                    flow-truncate"
-                                >
-                                  {selectedToken?.symbol}
-                                </span>
-                                <svg
-                                  className="flow-h-4 flow-w-4 flow-text-slate-400 dark:flow-text-slate-500
-                                    flow-flex-shrink-0"
-                                  viewBox="0 0 20 20"
-                                  fill="currentColor"
-                                >
-                                  <path
-                                    fillRule="evenodd"
-                                    d="M10 3a.75.75 0 01.55.24l3.25 3.5a.75.75 0 11-1.1 1.02L10 4.852 7.3 7.76a.75.75 0 01-1.1-1.02l3.25-3.5A.75.75 0 0110 3zm-3.76 9.2a.75.75 0 011.06.04l2.7 2.908 2.7-2.908a.75.75 0 111.1 1.02l-3.25 3.5a.75.75 0 01-1.1 0l-3.25-3.5a.75.75 0 01.04-1.06z"
-                                    clipRule="evenodd"
-                                  />
-                                </svg>
-                              </div>
-                            </div>
-                          </ListboxButton>
-                          {open && (
-                            <ListboxOptions
-                              static
-                              className="flow-absolute flow-z-10 flow-mt-2 flow-w-48 flow-overflow-auto flow-rounded-md
-                                flow-bg-white dark:flow-bg-slate-800 flow-py-2 flow-border flow-border-slate-300
-                                dark:flow-border-slate-600 focus:flow-outline-none flow-max-h-64"
-                            >
-                              {availableTokens.map((token: TokenConfig) => (
-                                <ListboxOption
-                                  key={token.symbol}
-                                  value={token}
-                                  className="flow-relative flow-cursor-pointer flow-select-none flow-py-2.5 flow-px-4
-                                    data-[focus]:flow-bg-slate-100 data-[focus]:dark:flow-bg-slate-700
-                                    flow-text-slate-900 dark:flow-text-slate-100 flow-transition-colors"
-                                >
-                                  {({selected}) => (
-                                    <div className="flow-flex flow-items-center flow-justify-between">
-                                      <div>
-                                        <div
-                                          className={`flow-text-sm ${selected ? "flow-font-semibold" : "flow-font-medium"}`}
-                                        >
-                                          {token.name}
-                                        </div>
-                                        <div className="flow-text-xs flow-text-slate-500 dark:flow-text-slate-400 flow-mt-0.5">
-                                          {token.symbol}
-                                        </div>
-                                      </div>
-                                      {selected && (
-                                        <svg
-                                          className="flow-h-5 flow-w-5 flow-text-slate-900 dark:flow-text-slate-100"
-                                          viewBox="0 0 20 20"
-                                          fill="currentColor"
-                                        >
-                                          <path
-                                            fillRule="evenodd"
-                                            d="M16.704 4.153a.75.75 0 01.143 1.052l-8 10.5a.75.75 0 01-1.127.075l-4.5-4.5a.75.75 0 011.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 011.05-.143z"
-                                            clipRule="evenodd"
-                                          />
-                                        </svg>
-                                      )}
-                                    </div>
-                                  )}
-                                </ListboxOption>
-                              ))}
-                            </ListboxOptions>
-                          )}
-                        </div>
-                      )}
-                    </Listbox>
-                  </div>
-                )}
-
-                <div
-                  className="flow-flex-1 flow-rounded-md flow-bg-slate-50 dark:flow-bg-slate-800/50
-                    flow-border flow-border-slate-200 dark:flow-border-slate-700 flow-px-4
-                    flow-py-2.5"
-                >
-                  <div
-                    className="flow-text-xs flow-font-medium flow-text-slate-500 dark:flow-text-slate-400
-                      flow-mb-1"
-                  >
-                    Balance
-                  </div>
-                  <div
-                    className="flow-text-xl flow-font-semibold flow-text-slate-900 dark:flow-text-slate-100
-                      flow-leading-tight"
-                  >
-                    {displayBalance}{" "}
-                    <span className="flow-text-sm flow-font-medium flow-text-slate-600 dark:flow-text-slate-400">
-                      {selectedToken?.symbol}
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div className="flow-flex flow-gap-3 flow-w-full flow-mt-6">
-              <Button
-                variant="outline"
-                className="flow-flex-1 flow-flex flow-items-center flow-justify-center flow-text-sm"
-                onClick={handleCopy}
-                disabled={copied}
-              >
-                {copied ? (
-                  <>
-                    <span className="flow-mr-2 flow-h-4 flow-w-4">✓</span>
-                    Copied!
-                  </>
-                ) : (
-                  <>
-                    <CopyIcon className="flow-mr-2 flow-h-4 flow-w-4" />
-                    Copy Address
-                  </>
-                )}
-              </Button>
-              <Button
-                variant="outline"
-                className="flow-flex-1 flow-flex flow-items-center flow-justify-center flow-text-sm"
-                onClick={handleDisconnect}
-              >
-                <LogOutIcon className="flow-mr-2 flow-h-4 flow-w-4" />
-                Disconnect
-              </Button>
-            </div>
-
-            {showScheduledTransactions && (
-              <div className="flow-rounded-lg flow-bg-slate-50 dark:flow-bg-slate-900 flow-p-4 flow-mt-2">
-                <h3 className="flow-text-base flow-font-bold flow-text-slate-900 dark:flow-text-white flow-pb-2">
-                  Scheduled Transactions
-                </h3>
-                <div
-                  className="flow-overflow-y-auto flow-pr-2"
-                  style={{maxHeight: "250px", minHeight: "100px"}}
-                >
-                  <ScheduledTransactionList
-                    address={user.addr || ""}
-                    filterHandlerTypes={
-                      modalConfig.scheduledTransactions?.filterHandlerTypes
-                    }
-                  />
-                </div>
-              </div>
-            )}
-          </div>
+          <Profile
+            onDisconnect={handleDisconnect}
+            balanceType={balanceType}
+            balanceTokens={balanceTokens}
+            profileConfig={modalConfig}
+          />
         </Dialog>
       )}
     </>

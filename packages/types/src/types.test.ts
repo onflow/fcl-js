@@ -50,6 +50,36 @@ registerTest([
   "64.0",
   false,
 ])
+registerTest([t.UFix128, "128", {type: "UFix128", value: "128"}, "128", true])
+registerTest([t.Fix128, "128", {type: "Fix128", value: "128"}, "128", true])
+registerTest([
+  t.UFix128,
+  "128.000000000000000001",
+  {type: "UFix128", value: "128.000000000000000001000000"},
+  "128.000000000000000001",
+  false,
+])
+registerTest([
+  t.Fix128,
+  "128.000000000000000001",
+  {type: "Fix128", value: "128.000000000000000001000000"},
+  "128.000000000000000001",
+  false,
+])
+registerTest([
+  t.UFix128,
+  "128.0",
+  {type: "UFix128", value: "128.000000000000000000000000"},
+  "128.0",
+  false,
+])
+registerTest([
+  t.Fix128,
+  "128.0",
+  {type: "Fix128", value: "128.000000000000000000000000"},
+  "128.0",
+  false,
+])
 registerTest([
   t.String,
   "Go with the Flow",

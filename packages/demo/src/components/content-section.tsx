@@ -29,6 +29,7 @@ import {ThemingCard} from "./advanced-cards/theming-card"
 
 // Import component cards
 import {ConnectCard} from "./component-cards/connect-card"
+import {ProfileCard} from "./component-cards/profile-card"
 import {TransactionButtonCard} from "./component-cards/transaction-button-card"
 import {TransactionDialogCard} from "./component-cards/transaction-dialog-card"
 import {TransactionLinkCard} from "./component-cards/transaction-link-card"
@@ -68,6 +69,7 @@ export function ContentSection() {
             </div>
 
             <ConnectCard />
+            <ProfileCard />
             <TransactionButtonCard />
             <TransactionDialogCard />
             <TransactionLinkCard />

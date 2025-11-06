@@ -1,4 +1,5 @@
-export {Connect} from "./Connect"
+export {Connect, type TokenConfig, type ConnectModalConfig} from "./Connect"
+export {Profile, type ProfileConfig} from "./Profile"
 export {TransactionDialog} from "./TransactionDialog"
 export {TransactionLink} from "./TransactionLink"
 export {TransactionButton} from "./TransactionButton"

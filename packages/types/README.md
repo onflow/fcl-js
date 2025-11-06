@@ -282,6 +282,26 @@ sdk.build([
 ])
 ```
 
+### UFix128
+
+```javascript
+import * as t from "@onflow/types"
+
+sdk.build([
+  sdk.args([ sdk.arg("128.123456789012345678901234", t.UFix128) ])
+])
+```
+
+### Fix128
+
+```javascript
+import * as t from "@onflow/types"
+
+sdk.build([
+  sdk.args([ sdk.arg("128.123456789012345678901234", t.Fix128) ])
+])
+```
+
 ### String
 
 ```javascript
