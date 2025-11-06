@@ -1,5 +1,21 @@
 # @onflow/demo
 
+## 1.2.0
+
+### Minor Changes
+
+- [#2677](https://github.com/onflow/fcl-js/pull/2677) [`58f953381ee0826bfeb6d068c28bf8853b470915`](https://github.com/onflow/fcl-js/commit/58f953381ee0826bfeb6d068c28bf8853b470915) Thanks [@mfbz](https://github.com/mfbz)! - Added `NftCard` component for displaying NFT metadata. The component automatically fetches and renders NFT information including image, name, description, collection details, traits, and external links. Features loading states, error handling, dark mode support and optional display of traits and additional metadata through `showTraits` and `showExtra` props.
+
+- [#2685](https://github.com/onflow/fcl-js/pull/2685) [`f47dd3bd1efce2498b3ab731ca08da2326604f5f`](https://github.com/onflow/fcl-js/commit/f47dd3bd1efce2498b3ab731ca08da2326604f5f) Thanks [@mfbz](https://github.com/mfbz)! - Added standalone Profile component for displaying wallet information. The Profile component has been extracted from the Connect component modal to provide a reusable profile display that can be used independently. The component automatically detects connection state, showing a compact "No connected wallet" message when disconnected and full profile information when connected (including address, balance with cross-VM support, multi-token selector, copy/disconnect actions, and optional scheduled transactions).
+
+- [#2679](https://github.com/onflow/fcl-js/pull/2679) [`8ef9cc6933f61c45e32a69c9d723ab669a7757ec`](https://github.com/onflow/fcl-js/commit/8ef9cc6933f61c45e32a69c9d723ab669a7757ec) Thanks [@mfbz](https://github.com/mfbz)! - Added `ScheduledTransactionList` component, a scrollable list that displays scheduled transactions for a Flow account with support for MetadataViews.Display (thumbnails, names, descriptions), transaction cancellation, automatic refresh, responsive design and dark mode. Each card shows the scheduled execution time, fee, priority, and effort with an optional cancel button for pending transactions.
+
+  Enhanced `Connect` component to display scheduled transactions in the profile modal. The modal now shows the user's scheduled transactions below their account info with a configurable `modalConfig` prop to control visibility.
+
+- [#2673](https://github.com/onflow/fcl-js/pull/2673) [`e4e921a552caa78a8ef02b50a3e8431faee6764a`](https://github.com/onflow/fcl-js/commit/e4e921a552caa78a8ef02b50a3e8431faee6764a) Thanks [@mfbz](https://github.com/mfbz)! - Added flow-react-sdk-starter banner.
+
+- [#2681](https://github.com/onflow/fcl-js/pull/2681) [`3d6d1ab75898ff3b2d151ee2d1bd5923461f8b51`](https://github.com/onflow/fcl-js/commit/3d6d1ab75898ff3b2d151ee2d1bd5923461f8b51) Thanks [@mfbz](https://github.com/mfbz)! - Optimized hot reload for demo running locally
+
 ## 1.1.0
 
 ### Minor Changes

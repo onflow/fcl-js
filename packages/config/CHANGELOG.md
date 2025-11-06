@@ -1,5 +1,11 @@
 # @onflow/config
 
+## 1.6.2
+
+### Patch Changes
+
+- [#2683](https://github.com/onflow/fcl-js/pull/2683) [`c8b0b880d147840c66b8913894a8fe1e9804d557`](https://github.com/onflow/fcl-js/commit/c8b0b880d147840c66b8913894a8fe1e9804d557) Thanks [@jribbink](https://github.com/jribbink)! - Ensure `getContracts` accumulates `flow.json` deployments across multiple accounts
+
 ## 1.6.1
 
 ### Patch Changes
