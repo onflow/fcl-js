@@ -210,6 +210,8 @@ const defaultDecoders: DecoderMap = {
   Word256: decodeImplicit,
   UFix64: decodeImplicit,
   Fix64: decodeImplicit,
+  UFix128: decodeImplicit,
+  Fix128: decodeImplicit,
   String: decodeImplicit,
   Character: decodeImplicit,
   Bool: decodeImplicit,

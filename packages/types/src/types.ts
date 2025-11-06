@@ -607,17 +607,17 @@ export const UFix128 = typedef(
       const vParts = v.split(".")
       if (vParts.length !== 2) {
         return throwTypeError(
-          `Expected one decimal but found ${vParts.length} in the [U]Fix128 value. Find out more about [U]Fix128 types here: https://docs.onflow.org/cadence/json-cadence-spec/#fixed-point-numbers`
+          `Expected one decimal but found ${vParts.length} in the [U]Fix128 value. Find out more about [U]Fix128 types here: https://cadencelanguage.com/docs/language/values-and-types/fixed-point-nums-ints`
         )
       }
-      if (vParts[1].length == 0 || vParts[1].length > 18) {
+      if (vParts[1].length == 0 || vParts[1].length > 24) {
         return throwTypeError(
-          `Expected at least one digit, and at most 18 digits following the decimal of the [U]Fix128 value but found ${vParts[1].length} digits. Find out more about [U]Fix128 types here: https://docs.onflow.org/cadence/json-cadence-spec/#fixed-point-numbers`
+          `Expected at least one digit, and at most 24 digits following the decimal of the [U]Fix128 value but found ${vParts[1].length} digits. Find out more about [U]Fix128 types here: https://cadencelanguage.com/docs/language/values-and-types/fixed-point-nums-ints`
         )
       }
 
-      // make sure the number is extended to 18 decimal places so it matches cadence encoding of UFix128 values
-      vParts[1] = vParts[1].padEnd(18, "0")
+      // make sure the number is extended to 24 decimal places so it matches cadence encoding of UFix128 values
+      vParts[1] = vParts[1].padEnd(24, "0")
       v = vParts.join(".")
 
       return {
@@ -643,17 +643,17 @@ export const Fix128 = typedef(
       const vParts = v.split(".")
       if (vParts.length !== 2) {
         return throwTypeError(
-          `Expected one decimal but found ${vParts.length} in the [U]Fix128 value. Find out more about [U]Fix128 types here: https://docs.onflow.org/cadence/json-cadence-spec/#fixed-point-numbers`
+          `Expected one decimal but found ${vParts.length} in the [U]Fix128 value. Find out more about [U]Fix128 types here: https://cadencelanguage.com/docs/language/values-and-types/fixed-point-nums-ints`
         )
       }
-      if (vParts[1].length == 0 || vParts[1].length > 18) {
+      if (vParts[1].length == 0 || vParts[1].length > 24) {
         return throwTypeError(
-          `Expected at least one digit, and at most 18 digits following the decimal of the [U]Fix128 value but found ${vParts[1].length} digits. Find out more about [U]Fix128 types here: https://docs.onflow.org/cadence/json-cadence-spec/#fixed-point-numbers`
+          `Expected at least one digit, and at most 24 digits following the decimal of the [U]Fix128 value but found ${vParts[1].length} digits. Find out more about [U]Fix128 types here: https://cadencelanguage.com/docs/language/values-and-types/fixed-point-nums-ints`
         )
       }
 
-      // make sure the number is extended to 18 decimal places so it matches cadence encoding of Fix128 values
-      vParts[1] = vParts[1].padEnd(18, "0")
+      // make sure the number is extended to 24 decimal places so it matches cadence encoding of Fix128 values
+      vParts[1] = vParts[1].padEnd(24, "0")
       v = vParts.join(".")
 
       return {

@@ -344,7 +344,31 @@ describe("unit tests to cover all types", () => {
     expect(decoded).toStrictEqual("789.00123010")
   })
 
-  it("returns the correct response given a json-cdc payload 36 ARRAY", async () => {
+  it("returns the correct response given a json-cdc payload 36 FIX128", async () => {
+    const payload = {type: "Fix128", value: "1.230000000000000000000000"}
+
+    const decoded = await decode(payload)
+
+    expect(decoded).toStrictEqual("1.230000000000000000000000")
+  })
+
+  it("returns the correct response given a json-cdc payload 37 FIX128", async () => {
+    const payload = {type: "Fix128", value: "-12345.123456789012345678901234"}
+
+    const decoded = await decode(payload)
+
+    expect(decoded).toStrictEqual("-12345.123456789012345678901234")
+  })
+
+  it("returns the correct response given a json-cdc payload 38 UFIX128", async () => {
+    const payload = {type: "UFix128", value: "789.123456789012345678901234"}
+
+    const decoded = await decode(payload)
+
+    expect(decoded).toStrictEqual("789.123456789012345678901234")
+  })
+
+  it("returns the correct response given a json-cdc payload 39 ARRAY", async () => {
     const payload = {
       type: "Array",
       value: [
