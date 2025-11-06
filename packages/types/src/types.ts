@@ -600,6 +600,78 @@ export const Fix64 = typedef(
   v => v
 )
 
+export const UFix128 = typedef(
+  "UFix128",
+  (v: number | string) => {
+    if (isString(v)) {
+      const vParts = v.split(".")
+      if (vParts.length !== 2) {
+        return throwTypeError(
+          `Expected one decimal but found ${vParts.length} in the [U]Fix128 value. Find out more about [U]Fix128 types here: https://docs.onflow.org/cadence/json-cadence-spec/#fixed-point-numbers`
+        )
+      }
+      if (vParts[1].length == 0 || vParts[1].length > 18) {
+        return throwTypeError(
+          `Expected at least one digit, and at most 18 digits following the decimal of the [U]Fix128 value but found ${vParts[1].length} digits. Find out more about [U]Fix128 types here: https://docs.onflow.org/cadence/json-cadence-spec/#fixed-point-numbers`
+        )
+      }
+
+      // make sure the number is extended to 18 decimal places so it matches cadence encoding of UFix128 values
+      vParts[1] = vParts[1].padEnd(18, "0")
+      v = vParts.join(".")
+
+      return {
+        type: "UFix128",
+        value: v,
+      }
+    } else if (isNumber(v)) {
+      UFix64AndFix64NumberDeprecationNotice()
+      return {
+        type: "UFix128",
+        value: v.toString(),
+      }
+    }
+    return throwTypeError("Expected String for UFix128")
+  },
+  v => v
+)
+
+export const Fix128 = typedef(
+  "Fix128",
+  (v: number | string) => {
+    if (isString(v)) {
+      const vParts = v.split(".")
+      if (vParts.length !== 2) {
+        return throwTypeError(
+          `Expected one decimal but found ${vParts.length} in the [U]Fix128 value. Find out more about [U]Fix128 types here: https://docs.onflow.org/cadence/json-cadence-spec/#fixed-point-numbers`
+        )
+      }
+      if (vParts[1].length == 0 || vParts[1].length > 18) {
+        return throwTypeError(
+          `Expected at least one digit, and at most 18 digits following the decimal of the [U]Fix128 value but found ${vParts[1].length} digits. Find out more about [U]Fix128 types here: https://docs.onflow.org/cadence/json-cadence-spec/#fixed-point-numbers`
+        )
+      }
+
+      // make sure the number is extended to 18 decimal places so it matches cadence encoding of Fix128 values
+      vParts[1] = vParts[1].padEnd(18, "0")
+      v = vParts.join(".")
+
+      return {
+        type: "Fix128",
+        value: v,
+      }
+    } else if (isNumber(v)) {
+      UFix64AndFix64NumberDeprecationNotice()
+      return {
+        type: "Fix128",
+        value: v.toString(),
+      }
+    }
+    return throwTypeError("Expected String for Fix128")
+  },
+  v => v
+)
+
 export const String = typedef(
   "String",
   (v: string) => {
