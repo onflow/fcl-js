@@ -288,7 +288,7 @@ sdk.build([
 import * as t from "@onflow/types"
 
 sdk.build([
-  sdk.args([ sdk.arg("128.123456789012345678", t.UFix128) ])
+  sdk.args([ sdk.arg("128.123456789012345678901234", t.UFix128) ])
 ])
 ```
 
@@ -298,7 +298,7 @@ sdk.build([
 import * as t from "@onflow/types"
 
 sdk.build([
-  sdk.args([ sdk.arg("128.123456789012345678", t.Fix128) ])
+  sdk.args([ sdk.arg("128.123456789012345678901234", t.Fix128) ])
 ])
 ```
 
