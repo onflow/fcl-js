@@ -68,6 +68,7 @@ import {
   getMutate,
   getCurrentUser,
   initServiceRegistry,
+  getServiceRegistry,
   setIsReactNative,
 } from "@onflow/fcl-core"
 
@@ -107,10 +108,13 @@ initServiceRegistry({coreStrategies})
 // Set isReactNative flag
 setIsReactNative(true)
 
-export {useServiceDiscovery, ServiceDiscovery}
+export {useServiceDiscovery, ServiceDiscovery, getServiceRegistry}
 
 // Subscriptions
 export {subscribe} from "@onflow/fcl-core"
 export {subscribeRaw} from "@onflow/fcl-core"
+
+// WalletConnect
+export * from "./walletconnect"
 
 export * from "@onflow/typedefs"

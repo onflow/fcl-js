@@ -1,5 +1,6 @@
 import {useState, useEffect, createElement} from "react"
 import {StyleSheet, Text, View, TouchableOpacity} from "react-native"
+import {getServiceRegistry} from "@onflow/fcl-core"
 
 /**
  * @typedef {import("@onflow/typedefs").Service} Service
@@ -80,16 +81,41 @@ export const useServiceDiscovery = ({fcl}) => {
   const getServices = async () => {
     setIsLoading(true)
     const endpoint = await fcl.config.get("discovery.authn.endpoint")
+
+    // Get services from service registry (includes plugin services)
+    let pluginServices = []
+    try {
+      console.log("=== Attempting to get service registry...")
+      // Access the service registry which manages plugin services
+      const serviceRegistry = getServiceRegistry()
+      console.log("=== Service registry:", !!serviceRegistry)
+      if (serviceRegistry) {
+        pluginServices = serviceRegistry.getServices()
+        console.log("=== Found plugin services:", pluginServices.length)
+        if (pluginServices.length > 0) {
+          console.log("=== Plugin services:", JSON.stringify(pluginServices, null, 2))
+        }
+      }
+    } catch (error) {
+      console.warn("=== Could not get plugin services:", error)
+    }
+
     try {
       const response = await fetcher(endpoint, {
         fclVersion: fcl.VERSION,
         userAgent: "ReactNative",
-        supportedStrategies: ["HTTP/POST"],
+        supportedStrategies: ["HTTP/POST", "WC/RPC"],
       })
-      setServices(response)
+      // Combine discovery services with plugin services
+      const allServices = [...pluginServices, ...response]
+      console.log("=== Total services:", allServices.length)
+      setServices(allServices)
       setIsLoading(false)
     } catch (error) {
       console.error(error)
+      // Even if discovery fails, show plugin services
+      setServices(pluginServices)
+      setIsLoading(false)
     }
   }
 

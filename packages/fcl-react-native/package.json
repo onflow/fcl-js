@@ -60,6 +60,9 @@
     "@onflow/util-semver": "1.0.4",
     "@onflow/util-template": "1.2.4",
     "@onflow/util-uid": "1.2.4",
+    "@walletconnect/types": "^2.20.2",
+    "@walletconnect/universal-provider": "^2.20.2",
+    "@walletconnect/utils": "^2.20.2",
     "cross-fetch": "^4.0.0"
   },
   "peerDependencies": {
