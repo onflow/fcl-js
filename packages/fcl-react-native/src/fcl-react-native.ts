@@ -74,7 +74,7 @@ import {
 export const currentUser = getCurrentUser({
   platform: "react-native",
   getStorageProvider: async () => {
-    return (await config().get("fcl.storage")) || getAsyncStorage()
+    return (await config().get("fcl.storage")) || (await getAsyncStorage())
   },
 })
 export const mutate = getMutate(currentUser)

@@ -1,4 +1,12 @@
-import AsyncStorage from "@react-native-async-storage/async-storage"
+// Lazy load AsyncStorage to avoid TurboModule errors in Expo Go
+let AsyncStorage: any = null
+const getAsyncStorageModule = async () => {
+  if (!AsyncStorage) {
+    const module = await import("@react-native-async-storage/async-storage")
+    AsyncStorage = module.default
+  }
+  return AsyncStorage
+}
 
 const safeParseJSON = (str?: string | null) => {
   if (str == null) return null
@@ -9,17 +17,24 @@ const safeParseJSON = (str?: string | null) => {
   }
 }
 
-export const getAsyncStorage = () => {
+export const getAsyncStorage = async () => {
   try {
+    const Storage = await getAsyncStorageModule()
     const ASYNC_STORAGE = {
       can: true,
       get: async (key: string) =>
-        safeParseJSON(await AsyncStorage.getItem(key)),
+        safeParseJSON(await Storage.getItem(key)),
       put: async (key: string, value: any) =>
-        await AsyncStorage.setItem(key, JSON.stringify(value)),
+        await Storage.setItem(key, JSON.stringify(value)),
     }
     return ASYNC_STORAGE
   } catch (error) {
-    return null
+    console.warn("AsyncStorage not available, using fallback storage", error)
+    // Return a fallback storage that doesn't persist
+    return {
+      can: false,
+      get: async (key: string) => null,
+      put: async (key: string, value: any) => {},
+    }
   }
 }

@@ -1,6 +1,14 @@
-import * as Linking from "expo-linking"
 import {AppState} from "react-native"
 import {URL} from "@onflow/fcl-core"
+
+// Lazy load expo-linking to avoid TurboModule errors
+let Linking = null
+const getLinking = async () => {
+  if (!Linking) {
+    Linking = await import("expo-linking")
+  }
+  return Linking
+}
 
 /**
  * Renders a deeplink view (i.e. deep links to a wallet app)
@@ -10,7 +18,8 @@ import {URL} from "@onflow/fcl-core"
  * @param {() => void} [opts.onClose]
  * @returns {[null, () => void]}
  */
-export function renderDeeplink(src, opts = {}) {
+export async function renderDeeplink(src, opts = {}) {
+  const LinkingModule = await getLinking()
   const url = new URL(src.toString())
 
   // Custom schemes (i.e mywallet://) are not supported for
@@ -29,7 +38,7 @@ export function renderDeeplink(src, opts = {}) {
   }
 
   // Link to the target url
-  Linking.openURL(url.toString())
+  LinkingModule.openURL(url.toString())
 
   const onClose = opts.onClose || (() => {})
 

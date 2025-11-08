@@ -61,7 +61,7 @@ const DefaultServiceCard = ({service, onPress}) => {
  * @returns {JSX.Element} - The wrapper component.
  */
 const DefaultWrapper = ({children}) =>
-  createElement(View, {style: styles.container}, ...children)
+  createElement(View, {style: getStyles().container}, ...children)
 
 /**
  * Custom hook for service discovery.
@@ -153,11 +153,19 @@ export const ServiceDiscovery = ({
   )
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-})
+// Lazy create styles to avoid calling StyleSheet.create at module load time
+// This prevents TurboModule errors in Expo Go
+let styles
+const getStyles = () => {
+  if (!styles) {
+    styles = StyleSheet.create({
+      container: {
+        flex: 1,
+        backgroundColor: "#fff",
+        alignItems: "center",
+        justifyContent: "center",
+      },
+    })
+  }
+  return styles
+}

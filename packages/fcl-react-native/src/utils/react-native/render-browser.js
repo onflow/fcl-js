@@ -1,6 +1,17 @@
-import * as WebBrowser from "expo-web-browser"
-import * as Linking from "expo-linking"
 import {FCL_REDIRECT_URL_PARAM_NAME, URL} from "@onflow/fcl-core"
+
+// Lazy load Expo modules to avoid TurboModule errors in Expo Go
+// These modules require native code and must be loaded after React Native initializes
+let WebBrowser = null
+let Linking = null
+
+const getExpoModules = async () => {
+  if (!WebBrowser || !Linking) {
+    WebBrowser = await import("expo-web-browser")
+    Linking = await import("expo-linking")
+  }
+  return {WebBrowser, Linking}
+}
 
 /**
  *
@@ -8,17 +19,19 @@ import {FCL_REDIRECT_URL_PARAM_NAME, URL} from "@onflow/fcl-core"
  * @param {object} opts
  * @returns {[object, () => void]}
  */
-export function renderBrowser(src, opts = {}) {
-  const redirectUrl = Linking.createURL("$$fcl_auth_callback$$", {
+export async function renderBrowser(src, opts = {}) {
+  const {WebBrowser: WB, Linking: L} = await getExpoModules()
+
+  const redirectUrl = L.createURL("$$fcl_auth_callback$$", {
     queryParams: {},
   })
   const url = new URL(src.toString())
   url.searchParams.append(FCL_REDIRECT_URL_PARAM_NAME, redirectUrl)
-  const webbrowser = WebBrowser.openAuthSessionAsync(url.toString())
+  const webbrowser = WB.openAuthSessionAsync(url.toString())
 
   const unmount = () => {
     try {
-      WebBrowser.dismissAuthSession()
+      WB.dismissAuthSession()
     } catch (error) {
       console.log(error)
     }
