@@ -25,23 +25,32 @@ export async function renderBrowser(src, opts = {}) {
   const redirectUrl = L.createURL("$$fcl_auth_callback$$", {
     queryParams: {},
   })
+  console.log('=== FCL Redirect URL:', redirectUrl)
+
   const url = new URL(src.toString())
   url.searchParams.append(FCL_REDIRECT_URL_PARAM_NAME, redirectUrl)
+
+  console.log('=== Opening browser with URL:', url.toString())
+  console.log('=== Original src:', src.toString())
+
   const webbrowser = WB.openAuthSessionAsync(url.toString())
 
   const unmount = () => {
     try {
       WB.dismissAuthSession()
     } catch (error) {
-      console.log(error)
+      console.log('=== Error dismissing auth session:', error)
     }
   }
 
   // Call onClose when the webbrowser is closed
-  webbrowser.then(() => {
+  webbrowser.then((result) => {
+    console.log('=== Browser session result:', result)
     if (opts?.onClose) {
       opts.onClose()
     }
+  }).catch((error) => {
+    console.error('=== Browser session error:', error)
   })
 
   return [webbrowser, unmount]

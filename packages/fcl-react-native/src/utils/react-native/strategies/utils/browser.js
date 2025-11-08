@@ -30,12 +30,39 @@ export async function browser(service, config, body, opts = {}) {
     onResponse,
     onMessage,
   })
-  const parseDeeplink = ({url}) => {
+  const parseDeeplink = (result) => {
+    console.log('=== parseDeeplink called with:', result)
+
+    // Handle both deep link callback (with url) and browser result (with type)
+    const url = result?.url || result?.url
+    if (!url) {
+      console.log('=== No URL in result, checking if browser was dismissed')
+      if (result?.type === 'dismiss' || result?.type === 'cancel') {
+        console.log('=== Browser dismissed by user')
+        close()
+      }
+      return
+    }
+
+    console.log('=== Parsing URL:', url)
     const {queryParams} = LinkingModule.parse(url)
+    console.log('=== Query params:', queryParams)
+
     const eventDataRaw = queryParams[FCL_RESPONSE_PARAM_NAME]
+    if (!eventDataRaw) {
+      console.log('=== No FCL response in URL, ignoring')
+      return
+    }
+
+    console.log('=== Event data raw:', eventDataRaw)
     const eventData = JSON.parse(eventDataRaw)
+    console.log('=== Event data parsed:', eventData)
 
     handler({data: eventData})
+
+    // Auto-close browser after successful authentication
+    console.log('=== Auto-closing browser after authentication')
+    close()
   }
 
   const [browser, unmount] = await renderBrowser(
@@ -44,7 +71,9 @@ export async function browser(service, config, body, opts = {}) {
   // Android deeplink parsing
   LinkingModule.addEventListener("url", parseDeeplink)
   // iOS deeplink parsing
-  browser.then(parseDeeplink)
+  browser.then(parseDeeplink).catch(error => {
+    console.log('=== Browser promise error:', error)
+  })
   return {send: noop, close}
 
   function close() {
