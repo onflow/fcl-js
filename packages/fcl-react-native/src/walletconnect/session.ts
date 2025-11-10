@@ -21,6 +21,8 @@ export async function createSessionProposal({
         FLOW_METHODS.FLOW_PRE_AUTHZ,
         FLOW_METHODS.FLOW_AUTHZ,
         FLOW_METHODS.FLOW_USER_SIGN,
+        FLOW_METHODS.FLOW_SIGN_PAYER,
+        FLOW_METHODS.FLOW_SIGN_PROPOSER,
       ],
       chains: [`flow:${_network}`],
       events: ["chainChanged", "accountsChanged"],
@@ -32,9 +34,6 @@ export async function createSessionProposal({
     const onDisplayUri = (uri: string) => {
       resolve(uri)
     }
-    client.on("session_proposal", (proposal: any) => {
-      console.log("=== Session proposal received:", proposal)
-    })
     client.on("display_uri", onDisplayUri)
     cleanup = () => {
       client.removeListener("display_uri", onDisplayUri)
@@ -72,38 +71,56 @@ export const request = async ({
   const [chainId, addr, address] = makeSessionData(session)
   const data = JSON.stringify({...body, addr, address})
 
-  const result: any = await Promise.race([
-    client.request({
+  // Create a timeout promise (60 seconds for signing requests)
+  const timeoutPromise = new Promise((_, reject) => {
+    setTimeout(() => {
+      reject(new Error("WalletConnect request timed out after 60 seconds"))
+    }, 60000)
+  })
+
+  const abortPromise = new Promise((_, reject) => {
+    if (abortSignal?.aborted) {
+      reject(new Error("WalletConnect Request aborted"))
+    }
+    abortSignal?.addEventListener("abort", () => {
+      reject(new Error("WalletConnect Request aborted"))
+    })
+  })
+
+  try {
+    const requestPayload = {
       topic: session.topic,
       chainId,
       request: {
         method,
         params: [data],
       },
-    }),
-    new Promise((_, reject) => {
-      if (abortSignal?.aborted) {
-        reject(new Error("WalletConnect Request aborted"))
-      }
-      abortSignal?.addEventListener("abort", () => {
-        reject(new Error("WalletConnect Request aborted"))
-      })
-    }),
-  ])
+    }
 
-  if (typeof result !== "object" || result == null) return
+    const result: any = await Promise.race([
+      client.request(requestPayload),
+      abortPromise,
+      timeoutPromise,
+    ])
 
-  switch (result.status) {
-    case "APPROVED":
-      return result.data
-    case "DECLINED":
-      throw new Error(`Declined: ${result.reason || "No reason supplied."}`)
-    default:
-      throw new Error(`Invalid Response`)
+    if (typeof result !== "object" || result == null) {
+      return
+    }
+
+    switch (result.status) {
+      case "APPROVED":
+        return result.data
+      case "DECLINED":
+        throw new Error(`Declined: ${result.reason || "No reason supplied."}`)
+      default:
+        throw new Error(`Invalid Response: ${result.status}`)
+    }
+  } catch (error) {
+    throw error
   }
 }
 
-function makeSessionData(session: SessionTypes.Struct): [string, string, string] {
+export function makeSessionData(session: SessionTypes.Struct): [string, string, string] {
   const {namespaces} = session
   const flowNamespace = namespaces["flow"]
 

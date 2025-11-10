@@ -17,12 +17,23 @@ async function initializeWalletConnect() {
       )
     }
 
-    // Import WalletConnect React Native compat (ignore "Application module" warning)
+    // Import WalletConnect React Native compat
+    // This will show a warning about "Application module is not available" which is expected
     try {
-      await import("@walletconnect/react-native-compat")
+      // Temporarily suppress console.error to hide the expected warning
+      const originalError = console.error
+      console.error = () => {}
+
+      // Use dynamic require with string variable to prevent bundler from analyzing it
+      // This avoids TypeScript/Rollup errors during build
+      // eslint-disable-next-line @typescript-eslint/no-var-requires
+      const compatModule = "@walletconnect/react-native-compat"
+      require(compatModule)
+
+      // Restore console.error
+      console.error = originalError
     } catch (e) {
-      // Ignore "Application module is not available" warning
-      // The polyfills we need are still loaded
+      // Ignore errors - the polyfills we need are still loaded
     }
 
     walletConnectInitialized = true
@@ -54,16 +65,12 @@ const initClient = async ({
     "FCL Wallet Connect Error: WalletConnect projectId is required"
   )
 
-  console.log("=== Initializing WalletConnect SignClient")
-
   try {
     // Initialize WalletConnect compat first
     await initializeWalletConnect()
 
     // Dynamically import SignClient after compat is loaded
     const {SignClient} = await import("@walletconnect/sign-client")
-
-    console.log("=== WalletConnect modules loaded, calling SignClient.init")
 
     // SignClient will automatically use @walletconnect/keyvaluestorage
     // which has a React Native version that uses AsyncStorage internally
@@ -81,7 +88,24 @@ const initClient = async ({
       // which will automatically use the React Native version with AsyncStorage
     })
 
-    console.log("=== WalletConnect SignClient initialized successfully")
+    // Set up session event listeners
+    client.on("session_delete", () => {
+      // Session was deleted - next request will fail and force re-authentication
+    })
+
+    client.on("session_expire", () => {
+      // Session expired - next request will fail and force re-authentication
+    })
+
+    client.on("session_update", () => {
+      // Session was updated (e.g., account changed)
+    })
+
+    client.on("session_request", () => {
+      // This handler exists to prevent "emitting without listeners" errors
+      // Actual request handling is done through client.request() calls
+    })
+
     return client
   } catch (error) {
     if (error instanceof Error) {
@@ -96,8 +120,6 @@ const initClient = async ({
 }
 
 export const initLazy = (config: FclWalletConnectConfig) => {
-  console.log("=== initLazy called with projectId:", config.projectId)
-
   // Lazy load the client
   //  - Initialize the client if it doesn't exist
   //  - If it does exist, return existing client
@@ -106,10 +128,8 @@ export const initLazy = (config: FclWalletConnectConfig) => {
     .catch(() => null)
     .then(_client => {
       if (_client) {
-        console.log("=== Reusing existing WalletConnect client")
         return _client
       } else {
-        console.log("=== Creating new WalletConnect client")
         return initClient({
           projectId: config.projectId,
           metadata: config.metadata,
@@ -134,10 +154,8 @@ export const initLazy = (config: FclWalletConnectConfig) => {
 }
 
 export const init = async (config: FclWalletConnectConfig) => {
-  console.log("=== init called with projectId:", config.projectId)
   const {FclWcServicePlugin, clientPromise} = initLazy(config)
   const client = await clientPromise
-  console.log("=== WalletConnect client ready:", !!client)
 
   return {
     FclWcServicePlugin,

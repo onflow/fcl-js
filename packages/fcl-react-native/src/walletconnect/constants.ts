@@ -7,6 +7,9 @@ export const FLOW_METHODS = {
   FLOW_AUTHZ: "flow_authz",
   FLOW_PRE_AUTHZ: "flow_pre_authz",
   FLOW_USER_SIGN: "flow_user_sign",
+  // Additional methods returned by wallets in PreAuthzResponse
+  FLOW_SIGN_PAYER: "flow_sign_payer",
+  FLOW_SIGN_PROPOSER: "flow_sign_proposer",
 }
 
 export const REQUEST_TYPES = {

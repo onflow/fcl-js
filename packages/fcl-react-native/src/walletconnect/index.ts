@@ -1,4 +1,4 @@
-export {init, initLazy, getProvider} from "./client"
+export {init, initLazy} from "./client"
 export {createSessionProposal, request} from "./session"
 export {
   FLOW_METHODS,
