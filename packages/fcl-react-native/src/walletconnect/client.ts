@@ -1,10 +1,11 @@
 import {invariant} from "@onflow/util-invariant"
 import {LEVELS, log} from "@onflow/util-logger"
 import {CoreTypes} from "@walletconnect/types"
+import {SignClient} from "@walletconnect/sign-client"
 import {makeServicePlugin} from "./service"
 
-// NOTE: WalletConnect modules are imported lazily in initClient() to ensure
-// crypto polyfill (react-native-get-random-values) is loaded first from app/_layout.tsx
+// NOTE: SignClient is now imported at the top to avoid Expo async require issues
+// The crypto polyfill (react-native-get-random-values) must still be loaded first from config/flow.ts
 
 let walletConnectInitialized = false
 
@@ -68,9 +69,6 @@ const initClient = async ({
   try {
     // Initialize WalletConnect compat first
     await initializeWalletConnect()
-
-    // Dynamically import SignClient after compat is loaded
-    const {SignClient} = await import("@walletconnect/sign-client")
 
     // SignClient will automatically use @walletconnect/keyvaluestorage
     // which has a React Native version that uses AsyncStorage internally
