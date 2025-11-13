@@ -15,6 +15,7 @@ export interface FlowJson {
       aliases: {
         [key in FlowNetwork]?: string
       }
+      canonical?: string
     }
   }
   dependencies?: {
@@ -24,6 +25,7 @@ export interface FlowJson {
       aliases: {
         [key in FlowNetwork]?: string
       }
+      canonical?: string
     }
   }
   deployments?: {
@@ -161,6 +163,38 @@ const mapDependencyAliasesToNetworkAddress =
     )
   }
 
+/**
+ * @description Gathers contract canonical references
+ * @returns Contract canonical names mapping e.g { "FUSD1.canonical": "FUSD" }
+ */
+const mapContractCanonicals = (contracts: Record<string, any>) => {
+  return Object.entries(contracts).reduce(
+    (c, [key, value]) => {
+      if (value?.canonical) {
+        c[`${key}.canonical`] = value.canonical
+      }
+      return c
+    },
+    {} as Record<string, string>
+  )
+}
+
+/**
+ * @description Gathers dependency canonical references
+ * @returns Dependency canonical names mapping e.g { "FungibleTokenV2.canonical": "FungibleToken" }
+ */
+const mapDependencyCanonicals = (dependencies: Record<string, any>) => {
+  return Object.entries(dependencies).reduce(
+    (c, [key, value]) => {
+      if (value?.canonical) {
+        c[`${key}.canonical`] = value.canonical
+      }
+      return c
+    },
+    {} as Record<string, string>
+  )
+}
+
 const mapDeploymentsToNetworkAddress =
   (network: FlowNetwork) =>
   ({
@@ -186,7 +220,7 @@ const mapDeploymentsToNetworkAddress =
  * @description Take in flow.json files and return contract to address mapping by network
  * @param jsons - Flow JSON or array of Flow JSONs
  * @param network - Network to gather addresses for
- * @returns Contract names by addresses mapping e.g { "HelloWorld": "0x123" }
+ * @returns Contract names by addresses mapping e.g { "HelloWorld": "0x123", "FUSD1.canonical": "FUSD" }
  */
 export const getContracts = (
   jsons: FlowJson | FlowJson[],
@@ -197,7 +231,9 @@ export const getContracts = (
     mergePipe(
       mapDeploymentsToNetworkAddress(network),
       pipe(filterContracts, mapContractAliasesToNetworkAddress(network)),
-      pipe(filterDependencies, mapDependencyAliasesToNetworkAddress(network))
+      pipe(filterDependencies, mapDependencyAliasesToNetworkAddress(network)),
+      pipe(filterContracts, mapContractCanonicals),
+      pipe(filterDependencies, mapDependencyCanonicals)
     )
   )(jsons)
 }
