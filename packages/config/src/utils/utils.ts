@@ -15,6 +15,10 @@ export interface FlowJson {
       aliases: {
         [key in FlowNetwork]?: string
       }
+      // Optional canonical field for import aliases
+      // When set, indicates this contract is an alias of another contract
+      // Example: FUSD1 has canonical="FUSD" means FUSD1 is an alias of FUSD
+      // Results in: import FUSD as FUSD1 from 0x...
       canonical?: string
     }
   }
@@ -25,6 +29,10 @@ export interface FlowJson {
       aliases: {
         [key in FlowNetwork]?: string
       }
+      // Optional canonical field for import aliases
+      // When set, indicates this dependency is an alias of another contract
+      // Example: FungibleTokenV2 has canonical="FungibleToken"
+      // Results in: import FungibleToken as FungibleTokenV2 from 0x...
       canonical?: string
     }
   }
@@ -164,8 +172,18 @@ const mapDependencyAliasesToNetworkAddress =
   }
 
 /**
- * @description Gathers contract canonical references
+ * @description Gathers contract canonical references for import aliases
+ * @param contracts - Contracts from flow.json
  * @returns Contract canonical names mapping e.g { "FUSD1.canonical": "FUSD" }
+ *
+ * Import aliases allow multiple deployments of the same contract to different addresses.
+ * The canonical field specifies the actual contract name in the source code.
+ *
+ * Example:
+ * - Input: { FUSD1: { canonical: "FUSD" } }
+ * - Output: { "FUSD1.canonical": "FUSD" }
+ * - Config stored as: system.contracts.FUSD1.canonical = "FUSD"
+ * - Resolves to: import FUSD as FUSD1 from 0x...
  */
 const mapContractCanonicals = (contracts: Record<string, any>) => {
   return Object.entries(contracts).reduce(
@@ -180,8 +198,18 @@ const mapContractCanonicals = (contracts: Record<string, any>) => {
 }
 
 /**
- * @description Gathers dependency canonical references
+ * @description Gathers dependency canonical references for import aliases
+ * @param dependencies - Dependencies from flow.json
  * @returns Dependency canonical names mapping e.g { "FungibleTokenV2.canonical": "FungibleToken" }
+ *
+ * Import aliases allow multiple deployments of the same contract to different addresses.
+ * The canonical field specifies the actual contract name in the source code.
+ *
+ * Example:
+ * - Input: { FungibleTokenV2: { canonical: "FungibleToken" } }
+ * - Output: { "FungibleTokenV2.canonical": "FungibleToken" }
+ * - Config stored as: system.contracts.FungibleTokenV2.canonical = "FungibleToken"
+ * - Resolves to: import FungibleToken as FungibleTokenV2 from 0x...
  */
 const mapDependencyCanonicals = (dependencies: Record<string, any>) => {
   return Object.entries(dependencies).reduce(
@@ -220,7 +248,18 @@ const mapDeploymentsToNetworkAddress =
  * @description Take in flow.json files and return contract to address mapping by network
  * @param jsons - Flow JSON or array of Flow JSONs
  * @param network - Network to gather addresses for
- * @returns Contract names by addresses mapping e.g { "HelloWorld": "0x123", "FUSD1.canonical": "FUSD" }
+ * @returns Contract names by addresses mapping including canonical references
+ *
+ * Returns both contract addresses and canonical references for import aliases:
+ * - Contract addresses: { "HelloWorld": "0x123", "FUSD1": "0xe223..." }
+ * - Canonical references: { "FUSD1.canonical": "FUSD" }
+ *
+ * These are stored in config as:
+ * - system.contracts.FUSD1 = "0xe223..."
+ * - system.contracts.FUSD1.canonical = "FUSD"
+ *
+ * The canonical reference enables import alias resolution:
+ * - import "FUSD1" → import FUSD as FUSD1 from 0xe223...
  */
 export const getContracts = (
   jsons: FlowJson | FlowJson[],
