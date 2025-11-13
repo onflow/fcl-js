@@ -1,1 +1,1 @@
-declare module '@walletconnect/react-native-compat'
+declare module "@walletconnect/react-native-compat"

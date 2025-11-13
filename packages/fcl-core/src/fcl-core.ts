@@ -5,7 +5,10 @@ export {verifyUserSignatures} from "./exec/verify"
 export {serialize} from "./serialize"
 export {transaction as tx, TransactionError} from "./transaction"
 export {events} from "./events"
-export {pluginRegistry, getServiceRegistry} from "./current-user/exec-service/plugins"
+export {
+  pluginRegistry,
+  getServiceRegistry,
+} from "./current-user/exec-service/plugins"
 
 import {discovery} from "./discovery"
 export {discovery}

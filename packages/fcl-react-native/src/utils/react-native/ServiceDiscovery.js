@@ -49,8 +49,33 @@ const DefaultEmptyComponent = () =>
 const DefaultServiceCard = ({service, onPress}) => {
   return createElement(
     TouchableOpacity,
-    {onPress},
-    createElement(Text, null, service?.provider?.name)
+    {
+      onPress,
+      style: {
+        backgroundColor: '#0052FF',
+        paddingVertical: 16,
+        paddingHorizontal: 24,
+        borderRadius: 12,
+        marginVertical: 8,
+        marginHorizontal: 16,
+        minHeight: 60,
+        justifyContent: 'center',
+        alignItems: 'center',
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 4,
+        elevation: 3,
+      }
+    },
+    createElement(Text, {
+      style: {
+        color: '#FFFFFF',
+        fontSize: 18,
+        fontWeight: '600',
+        textAlign: 'center',
+      }
+    }, service?.provider?.name)
   )
 }
 
@@ -85,19 +110,13 @@ export const useServiceDiscovery = ({fcl}) => {
     // Get services from service registry (includes plugin services)
     let pluginServices = []
     try {
-      console.log("=== Attempting to get service registry...")
       // Access the service registry which manages plugin services
       const serviceRegistry = getServiceRegistry()
-      console.log("=== Service registry:", !!serviceRegistry)
       if (serviceRegistry) {
         pluginServices = serviceRegistry.getServices()
-        console.log("=== Found plugin services:", pluginServices.length)
-        if (pluginServices.length > 0) {
-          console.log("=== Plugin services:", JSON.stringify(pluginServices, null, 2))
-        }
       }
     } catch (error) {
-      console.warn("=== Could not get plugin services:", error)
+      console.log("Plugin Services Error - Could not get plugin services:", error.message || error)
     }
 
     try {
@@ -108,11 +127,10 @@ export const useServiceDiscovery = ({fcl}) => {
       })
       // Combine discovery services with plugin services
       const allServices = [...pluginServices, ...response]
-      console.log("=== Total services:", allServices.length)
       setServices(allServices)
       setIsLoading(false)
     } catch (error) {
-      console.error(error)
+      console.log("Service Discovery Error - Failed to fetch services from", endpoint + ":", error.message || error)
       // Even if discovery fails, show plugin services
       setServices(pluginServices)
       setIsLoading(false)

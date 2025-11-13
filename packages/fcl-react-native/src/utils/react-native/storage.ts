@@ -22,8 +22,7 @@ export const getAsyncStorage = async () => {
     const Storage = await getAsyncStorageModule()
     const ASYNC_STORAGE = {
       can: true,
-      get: async (key: string) =>
-        safeParseJSON(await Storage.getItem(key)),
+      get: async (key: string) => safeParseJSON(await Storage.getItem(key)),
       put: async (key: string, value: any) =>
         await Storage.setItem(key, JSON.stringify(value)),
     }

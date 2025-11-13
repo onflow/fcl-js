@@ -60,16 +60,18 @@
     "@onflow/util-semver": "1.0.4",
     "@onflow/util-template": "1.2.4",
     "@onflow/util-uid": "1.2.4",
+    "@walletconnect/sign-client": "^2.20.2",
     "@walletconnect/types": "^2.20.2",
-    "@walletconnect/universal-provider": "^2.20.2",
     "@walletconnect/utils": "^2.20.2",
     "cross-fetch": "^4.0.0"
   },
   "peerDependencies": {
     "@react-native-async-storage/async-storage": "^2.1.2",
+    "@walletconnect/react-native-compat": "^2.20.2",
     "expo-linking": "^7.0.5",
     "expo-web-browser": "^14.0.2",
     "react": "^18.0.0 || ^19.0.0",
-    "react-native": "^0.0.0-0 || 0.60 - 0.78 || 1000.0.0"
+    "react-native": "^0.0.0-0 || 0.60 - 0.78 || 1000.0.0",
+    "react-native-get-random-values": "^1.8.0 || ^1.9.0 || ^1.10.0 || ^1.11.0"
   }
 }

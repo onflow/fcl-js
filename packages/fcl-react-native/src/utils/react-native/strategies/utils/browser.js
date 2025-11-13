@@ -30,39 +30,42 @@ export async function browser(service, config, body, opts = {}) {
     onResponse,
     onMessage,
   })
-  const parseDeeplink = (result) => {
-    console.log('=== parseDeeplink called with:', result)
+  const parseDeeplink = result => {
+    console.log("Browser Deeplink Callback - Result type:", result?.type || "unknown")
 
     // Handle both deep link callback (with url) and browser result (with type)
     const url = result?.url || result?.url
     if (!url) {
-      console.log('=== No URL in result, checking if browser was dismissed')
-      if (result?.type === 'dismiss' || result?.type === 'cancel') {
-        console.log('=== Browser dismissed by user')
+      if (result?.type === "dismiss" || result?.type === "cancel") {
+        console.log("Browser Dismissed by User - User closed browser without completing authentication")
         close()
       }
       return
     }
 
-    console.log('=== Parsing URL:', url)
+    console.log("Parsing Browser Callback URL - URL received:", url)
+
     const {queryParams} = LinkingModule.parse(url)
-    console.log('=== Query params:', queryParams)
 
     const eventDataRaw = queryParams[FCL_RESPONSE_PARAM_NAME]
     if (!eventDataRaw) {
-      console.log('=== No FCL response in URL, ignoring')
+      console.log("No FCL Response in URL - URL does not contain FCL response parameter, ignoring")
       return
     }
 
-    console.log('=== Event data raw:', eventDataRaw)
-    const eventData = JSON.parse(eventDataRaw)
-    console.log('=== Event data parsed:', eventData)
+    try {
+      const eventData = JSON.parse(eventDataRaw)
 
-    handler({data: eventData})
+      console.log("Browser Callback Parsed - Event type:", eventData?.type || "unknown")
 
-    // Auto-close browser after successful authentication
-    console.log('=== Auto-closing browser after authentication')
-    close()
+      handler({data: eventData})
+
+      // Auto-close browser after successful authentication
+      console.log("Auto-closing Browser - Authentication complete, closing browser")
+      close()
+    } catch (error) {
+      console.log("Browser Callback Parse Error - Failed to parse FCL response:", error.message || error)
+    }
   }
 
   const [browser, unmount] = await renderBrowser(
@@ -72,7 +75,7 @@ export async function browser(service, config, body, opts = {}) {
   LinkingModule.addEventListener("url", parseDeeplink)
   // iOS deeplink parsing
   browser.then(parseDeeplink).catch(error => {
-    console.log('=== Browser promise error:', error)
+    console.log("Browser Promise Error:", error.message || error)
   })
   return {send: noop, close}
 
@@ -81,7 +84,7 @@ export async function browser(service, config, body, opts = {}) {
       unmount()
       onClose()
     } catch (error) {
-      console.error("Frame Close Error", error)
+      console.log("Frame Close Error - Error closing frame:", error.message || error)
     }
   }
 }

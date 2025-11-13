@@ -31,8 +31,8 @@ export function execDeeplinkRPC({service, config, body}) {
               break
           }
         } catch (error) {
-          console.error("execExtRPC onResponse error", error)
-          throw error
+          console.log("execDeeplinkRPC onResponse Error - Error processing response:", error.message || error)
+          reject(error)
         }
       },
       onClose: () => {

@@ -55,17 +55,22 @@ const makeExec = (signerPromise: Promise<any>, config: FclWalletConnectConfig) =
     user: any
     config: any
   }) => {
+    console.log("WalletConnect Service Request Started - Method:", service.endpoint, "Service:", service.uid)
+
     const {wcRequestHook, disableNotifications: _appDisabledNotifications} =
       config
 
     const appDisabledNotifications =
       service.params?.disableNotifications ?? _appDisabledNotifications
 
+    console.log("WalletConnect: Waiting for client...")
     const client = await signerPromise
     invariant(!!client, "WalletConnect is not initialized")
+    console.log("WalletConnect: Client ready")
 
     const method = service.endpoint
     const appLink = validateAppLink(service)
+    console.log("WalletConnect: App link validated:", appLink)
 
     // Check if service has a session topic in params (from injected PreAuthzResponse)
     const sessionTopic = service.params?.sessionTopic
@@ -74,9 +79,12 @@ const makeExec = (signerPromise: Promise<any>, config: FclWalletConnectConfig) =
 
     // If we have a session topic from params, use it directly
     if (sessionTopic) {
+      console.log("WalletConnect: Using session topic from params:", sessionTopic)
       try {
         session = client.session.get(sessionTopic)
+        console.log("WalletConnect: Found session from topic")
       } catch (e) {
+        console.log("WalletConnect: Session not found for topic, will search for active sessions")
         // Session not found, fall through to session lookup
       }
     }
@@ -84,6 +92,7 @@ const makeExec = (signerPromise: Promise<any>, config: FclWalletConnectConfig) =
     // If no session yet, find an existing session
     if (!session) {
       const activeSessions = client.session.getAll()
+      console.log("WalletConnect: Active sessions count:", activeSessions.length)
 
       // If there are no active sessions, fall through to create new session
 
@@ -323,6 +332,7 @@ const makeExec = (signerPromise: Promise<any>, config: FclWalletConnectConfig) =
     }
 
     // Send the request (don't await yet)
+    console.log("WalletConnect: Sending request to wallet - Method:", method, "Session topic:", session?.topic)
     const requestPromise = request({
       method: method,
       body: body,
@@ -331,6 +341,7 @@ const makeExec = (signerPromise: Promise<any>, config: FclWalletConnectConfig) =
       abortSignal,
       disableNotifications: service.params?.disableNotifications,
     }).then((response: any) => {
+      console.log("WalletConnect: Received response from wallet - Method:", method)
       // For PreAuthzResponse, we need to inject our session topic into the returned services
       // so FCL knows to route follow-up requests through our WalletConnect plugin
       if (method === FLOW_METHODS.FLOW_PRE_AUTHZ && response?.f_type === "PreAuthzResponse") {
@@ -361,18 +372,29 @@ const makeExec = (signerPromise: Promise<any>, config: FclWalletConnectConfig) =
 
     // For signing requests (not auth), deep link to wallet with session info
     const shouldOpenWallet = shouldDeepLink({service, user}) && session
+    console.log("WalletConnect: Should open wallet?", shouldOpenWallet, "Method:", method)
 
     if (shouldOpenWallet) {
-      // Small delay to ensure the request is sent to the relay first
-      await new Promise(resolve => setTimeout(resolve, 500))
+      // The WalletConnect client.request() posts to relay synchronously, then waits for response
+      // We open the wallet immediately after the request is sent
+      // The wallet should fetch pending requests for this session when opened via deep link
 
       // Construct deep link with session topic for proper routing
       const deepLinkUrl = `${appLink}?topic=${session.topic}`
-      openDeeplink(deepLinkUrl)
+      console.log("WalletConnect: Opening wallet immediately with deep link:", deepLinkUrl)
+
+      // Open wallet right away - the request is already on the relay
+      // Use setImmediate to avoid blocking the request promise
+      setImmediate(() => {
+        openDeeplink(deepLinkUrl)
+      })
     }
 
     // Now wait for the response
-    return await requestPromise
+    console.log("WalletConnect: Waiting for wallet response...")
+    const finalResponse = await requestPromise
+    console.log("WalletConnect: Request completed successfully - Method:", method)
+    return finalResponse
 
     function validateAppLink({uid}: {uid: string}) {
       if (!(uid && /^(ftp|http|https):\/\/[^ "]+$/.test(uid))) {

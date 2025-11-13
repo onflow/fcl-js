@@ -123,13 +123,14 @@ module.exports = function getInputOptions(package, build) {
                   "src/**/*.cjs",
                   "src/**/*.mjs",
                 ],
-                exclude: [
-                  "**/node_modules/**",
-                  "node_modules/**",
-                ],
+                exclude: ["**/node_modules/**", "node_modules/**"],
                 useTsconfigDeclarationDir: true,
                 tsconfigOverride: {
-                  exclude: ["node_modules", "**/node_modules/**", "../../node_modules/**"],
+                  exclude: [
+                    "node_modules",
+                    "**/node_modules/**",
+                    "../../node_modules/**",
+                  ],
                 },
               }
             : {

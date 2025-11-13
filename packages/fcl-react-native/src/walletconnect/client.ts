@@ -67,11 +67,16 @@ const initClient = async ({
   )
 
   try {
+    console.log("WalletConnect initClient: Starting initialization, project ID:", projectId.substring(0, 8) + "...")
+
     // Initialize WalletConnect compat first
+    console.log("WalletConnect initClient: Initializing compat layer...")
     await initializeWalletConnect()
+    console.log("WalletConnect initClient: Compat layer ready")
 
     // SignClient will automatically use @walletconnect/keyvaluestorage
     // which has a React Native version that uses AsyncStorage internally
+    console.log("WalletConnect initClient: Creating SignClient...")
     const client = await SignClient.init({
       logger: DEFAULT_LOGGER,
       relayUrl: DEFAULT_RELAY_URL,
@@ -85,17 +90,52 @@ const initClient = async ({
       // NOTE: Don't pass storage parameter - let SignClient use default keyvaluestorage
       // which will automatically use the React Native version with AsyncStorage
     })
+    console.log("WalletConnect initClient: SignClient created successfully")
 
     // Set up session event listeners
-    client.on("session_delete", () => {
-      // Session was deleted - next request will fail and force re-authentication
+    client.on("session_delete", async ({topic}: {topic: string}) => {
+      console.log("WalletConnect: Session deleted by wallet - Topic:", topic.substring(0, 10) + "...")
+      // Auto-logout when wallet disconnects
+      try {
+        const {default: fcl} = await import("@onflow/fcl")
+        const user = await fcl.currentUser.snapshot()
+
+        // Check if the deleted session matches the current user's session
+        const hasWcService = user.services?.some((s: any) =>
+          s.method === "WC/RPC" && s.params?.sessionTopic === topic
+        )
+
+        if (user.loggedIn && hasWcService) {
+          console.log("WalletConnect: Auto-logging out user due to wallet disconnect")
+          await fcl.unauthenticate()
+        }
+      } catch (error) {
+        console.log("WalletConnect: Error during auto-logout:", error)
+      }
     })
 
-    client.on("session_expire", () => {
-      // Session expired - next request will fail and force re-authentication
+    client.on("session_expire", async ({topic}: {topic: string}) => {
+      console.log("WalletConnect: Session expired - Topic:", topic.substring(0, 10) + "...")
+      // Auto-logout when session expires
+      try {
+        const {default: fcl} = await import("@onflow/fcl")
+        const user = await fcl.currentUser.snapshot()
+
+        const hasWcService = user.services?.some((s: any) =>
+          s.method === "WC/RPC" && s.params?.sessionTopic === topic
+        )
+
+        if (user.loggedIn && hasWcService) {
+          console.log("WalletConnect: Auto-logging out user due to session expiry")
+          await fcl.unauthenticate()
+        }
+      } catch (error) {
+        console.log("WalletConnect: Error during auto-logout:", error)
+      }
     })
 
     client.on("session_update", () => {
+      console.log("WalletConnect: Session updated")
       // Session was updated (e.g., account changed)
     })
 
@@ -122,12 +162,20 @@ export const initLazy = (config: FclWalletConnectConfig) => {
   //  - Initialize the client if it doesn't exist
   //  - If it does exist, return existing client
   //  - If existing client fails to initialize, reinitialize
+  console.log("WalletConnect initLazy: Called")
+
   clientPromise = clientPromise
-    .catch(() => null)
+    .catch(() => {
+      console.log("WalletConnect initLazy: Promise catch triggered")
+      return null
+    })
     .then(_client => {
+      console.log("WalletConnect initLazy: Promise then - client exists:", _client !== null)
       if (_client) {
+        console.log("WalletConnect initLazy: Reusing existing client")
         return _client
       } else {
+        console.log("WalletConnect initLazy: Calling initClient")
         return initClient({
           projectId: config.projectId,
           metadata: config.metadata,
@@ -135,6 +183,7 @@ export const initLazy = (config: FclWalletConnectConfig) => {
       }
     })
     .catch(e => {
+      console.log("WalletConnect initLazy: Error caught:", e.message || e)
       log({
         title: `WalletConnect Client Initialization Error`,
         message: e.message ? e.message : e,
