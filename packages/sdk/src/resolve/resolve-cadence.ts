@@ -71,10 +71,11 @@ export function createResolveCadence(context: SdkContext) {
       ] of getContractIdentifierSyntaxMatches(cadence)) {
         const address: string | null = context.contracts[contractName] || null
         if (address) {
-          cadence = cadence.replace(
-            fullMatch,
-            `import ${contractName} from ${withPrefix(address)}`
-          )
+          const canonical: string | null = context.contracts[contractName + ".canonical"] || null
+          const importStatement = canonical
+            ? `import ${canonical} as ${contractName} from ${withPrefix(address)}`
+            : `import ${contractName} from ${withPrefix(address)}`
+          cadence = cadence.replace(fullMatch, importStatement)
         } else {
           logger.log({
             title: "Contract Placeholder not found",
