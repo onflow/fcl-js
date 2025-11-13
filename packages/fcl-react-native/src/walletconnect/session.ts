@@ -21,9 +21,16 @@ export async function createSessionProposal({
         FLOW_METHODS.FLOW_PRE_AUTHZ,
         FLOW_METHODS.FLOW_AUTHZ,
         FLOW_METHODS.FLOW_USER_SIGN,
-        FLOW_METHODS.FLOW_SIGN_PAYER,
-        FLOW_METHODS.FLOW_SIGN_PROPOSER,
       ],
+      chains: [`flow:${_network}`],
+      events: ["chainChanged", "accountsChanged"],
+    },
+  }
+
+  // Optional wallet-specific methods
+  const optionalNamespaces = {
+    flow: {
+      methods: [FLOW_METHODS.FLOW_SIGN_PAYER, FLOW_METHODS.FLOW_SIGN_PROPOSER],
       chains: [`flow:${_network}`],
       events: ["chainChanged", "accountsChanged"],
     },
@@ -44,6 +51,7 @@ export async function createSessionProposal({
   const {uri: connectionUri, approval} = await client.connect({
     pairingTopic: existingPairing,
     requiredNamespaces,
+    optionalNamespaces,
   })
 
   return {
@@ -128,7 +136,46 @@ export const request = async ({
 
     switch (result.status) {
       case "APPROVED":
+        // Helper function to add session info to WC/RPC services
+        function addSessionInfo(service: any) {
+          if (service.method === "WC/RPC") {
+            return {
+              ...service,
+              params: {
+                ...service.params,
+                sessionTopic: session.topic,
+                ...(disableNotifications ? {disableNotifications} : {}),
+              },
+            }
+          }
+          return service
+        }
+
+        // Process authentication response
+        if (method === FLOW_METHODS.FLOW_AUTHN) {
+          const services = (result?.data?.services ?? []).map(addSessionInfo)
+          return {
+            ...(result.data ? result.data : {}),
+            services,
+          }
+        }
+
+        // Process pre-authz response
+        if (method === FLOW_METHODS.FLOW_PRE_AUTHZ) {
+          return {
+            ...result.data,
+            ...(result.data?.proposer
+              ? {proposer: addSessionInfo(result.data.proposer)}
+              : {}),
+            payer: [...(result.data?.payer?.map(addSessionInfo) ?? [])],
+            authorization: [
+              ...(result.data?.authorization?.map(addSessionInfo) ?? []),
+            ],
+          }
+        }
+
         return result.data
+
       case "DECLINED":
         throw new Error(`Declined: ${result.reason || "No reason supplied."}`)
       default:

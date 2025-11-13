@@ -6,7 +6,7 @@ import {
   SERVICE_PLUGIN_NAME,
   WC_SERVICE_METHOD,
 } from "./constants"
-import {createSessionProposal, request, makeSessionData} from "./session"
+import {createSessionProposal, request} from "./session"
 import {FclWalletConnectConfig} from "./client"
 import {SessionTypes} from "@walletconnect/types"
 
@@ -112,20 +112,9 @@ const makeExec = (
 
       // If there are no active sessions, fall through to create new session
 
-      // Find an existing session - prefer the one matching the service UID
+      // Find an existing session - use the most recent session
       if (activeSessions.length > 0) {
-        // Try to find a session for this specific wallet
-        // Match by wallet metadata or use the most recent session
-        let foundSession =
-          activeSessions.find((s: SessionTypes.Struct) => {
-            const walletUrl = s.peer?.metadata?.url
-            return (
-              walletUrl &&
-              (walletUrl.includes("flow.com") ||
-                walletUrl.includes("lilico.app") ||
-                walletUrl.includes("frw"))
-            )
-          }) || activeSessions[activeSessions.length - 1]
+        let foundSession = activeSessions[activeSessions.length - 1]
 
         // Validate the session is still active and not expired
         if (foundSession) {
@@ -160,15 +149,22 @@ const makeExec = (
       }
     }
 
-    // If this is an auth request and we already have a valid session, return user data from session
+    // If this is an authn request and we already have a session, return user
+    if (
+      session &&
+      method === FLOW_METHODS.FLOW_AUTHN &&
+      session.topic === service.params?.sessionTopic
+    ) {
+      return user
+    }
+
+    // Validate session if exists for authn
     if (session && method === FLOW_METHODS.FLOW_AUTHN) {
-      // Verify the session is still valid
       const isSessionValid =
         (session.acknowledged && !session.expiry) ||
         session.expiry > Date.now() / 1000
 
       if (!isSessionValid) {
-        // Session expired, clear it and create a new one
         try {
           await client.disconnect({
             topic: session.topic,
@@ -178,75 +174,6 @@ const makeExec = (
           // Session already disconnected
         }
         session = null
-        // Fall through to create new session
-      } else {
-        // Extract user data directly from the session without making a request
-        const [chainId, address, addr] = makeSessionData(session)
-
-        // Return authentication response with ALL necessary services
-        return {
-          f_type: "AuthnResponse",
-          f_vsn: "1.0.0",
-          addr: address,
-          services: [
-            // Authentication service
-            {
-              f_type: "Service",
-              f_vsn: "1.0.0",
-              type: "authn",
-              uid: service.uid,
-              endpoint: FLOW_METHODS.FLOW_AUTHN,
-              method: WC_SERVICE_METHOD,
-              id: address,
-              identity: {address},
-              provider: service.provider,
-              params: {
-                sessionTopic: session.topic,
-              },
-            },
-            // Authorization service (required for transactions)
-            {
-              f_type: "Service",
-              f_vsn: "1.0.0",
-              type: "authz",
-              uid: service.uid,
-              endpoint: FLOW_METHODS.FLOW_AUTHZ,
-              method: WC_SERVICE_METHOD,
-              identity: {address},
-              params: {
-                sessionTopic: session.topic,
-              },
-            },
-            // Pre-authorization service (required for some transactions)
-            {
-              f_type: "Service",
-              f_vsn: "1.0.0",
-              type: "pre-authz",
-              uid: service.uid,
-              endpoint: FLOW_METHODS.FLOW_PRE_AUTHZ,
-              method: WC_SERVICE_METHOD,
-              data: {
-                address,
-                keyId: 0,
-              },
-              params: {
-                sessionTopic: session.topic,
-              },
-            },
-            // User signature service
-            {
-              f_type: "Service",
-              f_vsn: "1.0.0",
-              type: "user-signature",
-              uid: service.uid,
-              endpoint: FLOW_METHODS.FLOW_USER_SIGN,
-              method: WC_SERVICE_METHOD,
-              params: {
-                sessionTopic: session.topic,
-              },
-            },
-          ],
-        }
       }
     }
 
@@ -267,81 +194,6 @@ const makeExec = (
           network: fclConfig.client.network,
         }).then(resolve, reject)
       })
-
-      // For authentication, session approval is enough - return user data immediately
-      if (method === FLOW_METHODS.FLOW_AUTHN) {
-        const [chainId, address, addr] = makeSessionData(session)
-
-        const authResponse = {
-          f_type: "AuthnResponse",
-          f_vsn: "1.0.0",
-          addr: address,
-          services: [
-            // Authentication service
-            {
-              f_type: "Service",
-              f_vsn: "1.0.0",
-              type: "authn",
-              uid: service.uid,
-              endpoint: FLOW_METHODS.FLOW_AUTHN,
-              method: WC_SERVICE_METHOD,
-              id: address,
-              identity: {address},
-              provider: service.provider,
-              params: {
-                sessionTopic: session.topic,
-              },
-            },
-            // Authorization service (required for transactions)
-            {
-              f_type: "Service",
-              f_vsn: "1.0.0",
-              type: "authz",
-              uid: service.uid,
-              endpoint: FLOW_METHODS.FLOW_AUTHZ,
-              method: WC_SERVICE_METHOD,
-              identity: {
-                address: address,
-                keyId: 0,
-              },
-              data: {
-                address: address,
-                keyId: 0,
-              },
-              params: {
-                sessionTopic: session.topic,
-              },
-            },
-            // Pre-authorization service (required for proxy accounts like FRW)
-            {
-              f_type: "Service",
-              f_vsn: "1.0.0",
-              type: "pre-authz",
-              uid: service.uid,
-              endpoint: FLOW_METHODS.FLOW_PRE_AUTHZ,
-              method: WC_SERVICE_METHOD,
-              data: {address, keyId: 0},
-              params: {
-                sessionTopic: session.topic,
-              },
-            },
-            // User signature service
-            {
-              f_type: "Service",
-              f_vsn: "1.0.0",
-              type: "user-signature",
-              uid: service.uid,
-              endpoint: FLOW_METHODS.FLOW_USER_SIGN,
-              method: WC_SERVICE_METHOD,
-              params: {
-                sessionTopic: session.topic,
-              },
-            },
-          ],
-        }
-
-        return authResponse
-      }
     }
 
     if (wcRequestHook && wcRequestHook instanceof Function) {
@@ -441,13 +293,19 @@ const makeExec = (
       return response
     })
 
-    // For signing requests (not auth), deep link to wallet with session info
-    const shouldOpenWallet = shouldDeepLink({service, user}) && session
+    // Deep link to wallet for all requests (mobile requirement)
+    // EXCEPT for flow_authn when we just created a new session (sessionTopic not in params)
+    // because the wallet was already opened during connectWc() for session approval
+    const isNewSessionAuthn =
+      method === FLOW_METHODS.FLOW_AUTHN && !service.params?.sessionTopic
+    const shouldOpenWallet = !isNewSessionAuthn && session
     console.log(
       "WalletConnect: Should open wallet?",
       shouldOpenWallet,
       "Method:",
-      method
+      method,
+      "Is new session authn:",
+      isNewSessionAuthn
     )
 
     if (shouldOpenWallet) {
@@ -575,25 +433,6 @@ async function connectWc({
 }
 
 // Utility functions for React Native
-function shouldDeepLink({service, user}: {service: any; user: any}): boolean {
-  // In React Native, we're always on mobile, so we need to deep link for ALL signing requests
-  // Skip only for authentication requests (already handled in connectWc)
-  const endpoint = service.endpoint
-
-  if (endpoint === FLOW_METHODS.FLOW_AUTHN) return false
-
-  // Deep link for all signing-related requests:
-  // - flow_pre_authz: get the PreAuthzResponse with payer/proposer/authorization services
-  //   NOTE: Ideally this wouldn't require deep link (informational only), but Flow Wallet
-  //   doesn't support background request processing, so we need to open the wallet
-  // - flow_authz: standard authorization (user must approve)
-  // - flow_sign_payer: payer signature (from PreAuthzResponse, user must approve)
-  // - flow_sign_proposer: proposer signature (from PreAuthzResponse, user must approve)
-  // - flow_user_sign: user signature requests (user must approve)
-
-  return true
-}
-
 async function openDeeplink(url: string) {
   try {
     // Lazy load Linking to avoid TurboModule errors
