@@ -407,6 +407,122 @@ access(all) fun main(): Address {
     })
   })
 
+  describe("import aliases with canonical", () => {
+    test("canonical contract import (no alias)", async () => {
+      const CADENCE = `import "FUSD"
+
+access(all) fun main(): String {
+  return "test"
+}`
+
+      const expected = `import FUSD from 0x9a0766d93b6608b7
+
+access(all) fun main(): String {
+  return "test"
+}`
+
+      await config().put("system.contracts.FUSD", "0x9a0766d93b6608b7")
+      await idle()
+
+      const ix = await pipe([
+        makeScript,
+        put("ix.cadence", CADENCE),
+        async ix => resolveCadence(ix, await getGlobalContext()),
+      ])(initInteraction())
+
+      expect(ix.message.cadence).toEqual(expected)
+    })
+
+    test("single aliased contract import", async () => {
+      const CADENCE = `import "FUSD1"
+
+access(all) fun main(): String {
+  return "test"
+}`
+
+      const expected = `import FUSD as FUSD1 from 0xe223d8a629e49c68
+
+access(all) fun main(): String {
+  return "test"
+}`
+
+      await config().put("system.contracts.FUSD1", "0xe223d8a629e49c68")
+      await config().put("system.contracts.FUSD1.canonical", "FUSD")
+      await idle()
+
+      const ix = await pipe([
+        makeScript,
+        put("ix.cadence", CADENCE),
+        async ix => resolveCadence(ix, await getGlobalContext()),
+      ])(initInteraction())
+
+      expect(ix.message.cadence).toEqual(expected)
+    })
+
+    test("multiple aliases of same canonical contract", async () => {
+      const CADENCE = `import "FUSD1"
+import "FUSD2"
+
+access(all) fun main(): String {
+  return "test"
+}`
+
+      const expected = `import FUSD as FUSD1 from 0xe223d8a629e49c68
+import FUSD as FUSD2 from 0x0f9df91c9121c460
+
+access(all) fun main(): String {
+  return "test"
+}`
+
+      await config().put("system.contracts.FUSD1", "0xe223d8a629e49c68")
+      await config().put("system.contracts.FUSD1.canonical", "FUSD")
+      await config().put("system.contracts.FUSD2", "0x0f9df91c9121c460")
+      await config().put("system.contracts.FUSD2.canonical", "FUSD")
+      await idle()
+
+      const ix = await pipe([
+        makeScript,
+        put("ix.cadence", CADENCE),
+        async ix => resolveCadence(ix, await getGlobalContext()),
+      ])(initInteraction())
+
+      expect(ix.message.cadence).toEqual(expected)
+    })
+
+    test("mixed canonical and alias imports", async () => {
+      const CADENCE = `import "FUSD"
+import "FUSD1"
+import "FUSD2"
+
+access(all) fun main(): String {
+  return "test"
+}`
+
+      const expected = `import FUSD from 0x9a0766d93b6608b7
+import FUSD as FUSD1 from 0xe223d8a629e49c68
+import FUSD as FUSD2 from 0x0f9df91c9121c460
+
+access(all) fun main(): String {
+  return "test"
+}`
+
+      await config().put("system.contracts.FUSD", "0x9a0766d93b6608b7")
+      await config().put("system.contracts.FUSD1", "0xe223d8a629e49c68")
+      await config().put("system.contracts.FUSD1.canonical", "FUSD")
+      await config().put("system.contracts.FUSD2", "0x0f9df91c9121c460")
+      await config().put("system.contracts.FUSD2.canonical", "FUSD")
+      await idle()
+
+      const ix = await pipe([
+        makeScript,
+        put("ix.cadence", CADENCE),
+        async ix => resolveCadence(ix, await getGlobalContext()),
+      ])(initInteraction())
+
+      expect(ix.message.cadence).toEqual(expected)
+    })
+  })
+
   describe("no imports", () => {
     test("cadence with no imports should remain unchanged", async () => {
       const CADENCE = `access(all) fun main(): String {
