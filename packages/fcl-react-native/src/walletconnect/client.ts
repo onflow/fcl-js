@@ -47,6 +47,7 @@ export interface FclWalletConnectConfig {
   wcRequestHook?: any
   disableNotifications?: boolean
   wallets?: any[] // Optional array of wallet services to add
+  redirect?: string // Optional redirect URI for wallet to return to dApp after approval (mobile deep linking)
 }
 
 const DEFAULT_RELAY_URL = "wss://relay.walletconnect.com"
@@ -57,9 +58,11 @@ let clientPromise: Promise<any> = Promise.resolve(null)
 const initClient = async ({
   projectId,
   metadata,
+  redirect,
 }: {
   projectId: string
   metadata?: CoreTypes.Metadata
+  redirect?: string
 }) => {
   invariant(
     projectId != null,
@@ -74,6 +77,23 @@ const initClient = async ({
     await initializeWalletConnect()
     console.log("WalletConnect initClient: Compat layer ready")
 
+    // Build metadata with redirect if provided
+    const clientMetadata = metadata || {
+      name: "Flow dApp",
+      description: "Flow dApp powered by FCL",
+      url: "https://flow.com",
+      icons: ["https://avatars.githubusercontent.com/u/62387156?v=4"],
+    }
+
+    // Add redirect URI if provided (for automatic return to dApp after wallet approval)
+    if (redirect) {
+      clientMetadata.redirect = {
+        native: redirect,
+        universal: redirect,
+      } as any
+      console.log("WalletConnect initClient: Redirect URI configured:", redirect)
+    }
+
     // SignClient will automatically use @walletconnect/keyvaluestorage
     // which has a React Native version that uses AsyncStorage internally
     console.log("WalletConnect initClient: Creating SignClient...")
@@ -81,12 +101,7 @@ const initClient = async ({
       logger: DEFAULT_LOGGER,
       relayUrl: DEFAULT_RELAY_URL,
       projectId: projectId,
-      metadata: metadata || {
-        name: "Flow dApp",
-        description: "Flow dApp powered by FCL",
-        url: "https://flow.com",
-        icons: ["https://avatars.githubusercontent.com/u/62387156?v=4"],
-      },
+      metadata: clientMetadata,
       // NOTE: Don't pass storage parameter - let SignClient use default keyvaluestorage
       // which will automatically use the React Native version with AsyncStorage
     })
@@ -95,19 +110,25 @@ const initClient = async ({
     // Set up session event listeners
     client.on("session_delete", async ({topic}: {topic: string}) => {
       console.log("WalletConnect: Session deleted by wallet - Topic:", topic.substring(0, 10) + "...")
-      // Auto-logout when wallet disconnects
+
+      // Check if we need to log out the user
+      // We need to import FCL React Native dynamically to get currentUser
       try {
-        const {default: fcl} = await import("@onflow/fcl")
-        const user = await fcl.currentUser.snapshot()
+        const fclRN = await import("../fcl-react-native")
+        const user = await fclRN.currentUser.snapshot()
 
-        // Check if the deleted session matches the current user's session
-        const hasWcService = user.services?.some((s: any) =>
-          s.method === "WC/RPC" && s.params?.sessionTopic === topic
-        )
+        console.log("WalletConnect: Checking if user needs to be logged out - User logged in:", user.loggedIn)
 
-        if (user.loggedIn && hasWcService) {
-          console.log("WalletConnect: Auto-logging out user due to wallet disconnect")
-          await fcl.unauthenticate()
+        if (user.loggedIn) {
+          // Check if the user was using WalletConnect
+          const hasWcService = user.services?.some((s: any) => s.method === "WC/RPC")
+          console.log("WalletConnect: User has WC service:", hasWcService)
+
+          if (hasWcService) {
+            console.log("WalletConnect: Logging out user due to session deletion")
+            fclRN.currentUser.unauthenticate()
+            console.log("WalletConnect: User logged out successfully")
+          }
         }
       } catch (error) {
         console.log("WalletConnect: Error during auto-logout:", error)
@@ -116,18 +137,24 @@ const initClient = async ({
 
     client.on("session_expire", async ({topic}: {topic: string}) => {
       console.log("WalletConnect: Session expired - Topic:", topic.substring(0, 10) + "...")
-      // Auto-logout when session expires
+
+      // Check if we need to log out the user
       try {
-        const {default: fcl} = await import("@onflow/fcl")
-        const user = await fcl.currentUser.snapshot()
+        const fclRN = await import("../fcl-react-native")
+        const user = await fclRN.currentUser.snapshot()
 
-        const hasWcService = user.services?.some((s: any) =>
-          s.method === "WC/RPC" && s.params?.sessionTopic === topic
-        )
+        console.log("WalletConnect: Checking if user needs to be logged out - User logged in:", user.loggedIn)
 
-        if (user.loggedIn && hasWcService) {
-          console.log("WalletConnect: Auto-logging out user due to session expiry")
-          await fcl.unauthenticate()
+        if (user.loggedIn) {
+          // Check if the user was using WalletConnect
+          const hasWcService = user.services?.some((s: any) => s.method === "WC/RPC")
+          console.log("WalletConnect: User has WC service:", hasWcService)
+
+          if (hasWcService) {
+            console.log("WalletConnect: Logging out user due to session expiration")
+            fclRN.currentUser.unauthenticate()
+            console.log("WalletConnect: User logged out successfully")
+          }
         }
       } catch (error) {
         console.log("WalletConnect: Error during auto-logout:", error)
@@ -179,6 +206,7 @@ export const initLazy = (config: FclWalletConnectConfig) => {
         return initClient({
           projectId: config.projectId,
           metadata: config.metadata,
+          redirect: config.redirect,
         })
       }
     })
