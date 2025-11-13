@@ -108,57 +108,16 @@ const initClient = async ({
     console.log("WalletConnect initClient: SignClient created successfully")
 
     // Set up session event listeners
-    client.on("session_delete", async ({topic}: {topic: string}) => {
+    client.on("session_delete", ({topic}: {topic: string}) => {
       console.log("WalletConnect: Session deleted by wallet - Topic:", topic.substring(0, 10) + "...")
-
-      // Check if we need to log out the user
-      // We need to import FCL React Native dynamically to get currentUser
-      try {
-        const fclRN = await import("../fcl-react-native")
-        const user = await fclRN.currentUser.snapshot()
-
-        console.log("WalletConnect: Checking if user needs to be logged out - User logged in:", user.loggedIn)
-
-        if (user.loggedIn) {
-          // Check if the user was using WalletConnect
-          const hasWcService = user.services?.some((s: any) => s.method === "WC/RPC")
-          console.log("WalletConnect: User has WC service:", hasWcService)
-
-          if (hasWcService) {
-            console.log("WalletConnect: Logging out user due to session deletion")
-            fclRN.currentUser.unauthenticate()
-            console.log("WalletConnect: User logged out successfully")
-          }
-        }
-      } catch (error) {
-        console.log("WalletConnect: Error during auto-logout:", error)
-      }
+      // Note: Session cleanup is handled by the app's orphaned session check on startup
+      // See flow.ts sessionCleanupPromise for the cleanup logic
     })
 
-    client.on("session_expire", async ({topic}: {topic: string}) => {
+    client.on("session_expire", ({topic}: {topic: string}) => {
       console.log("WalletConnect: Session expired - Topic:", topic.substring(0, 10) + "...")
-
-      // Check if we need to log out the user
-      try {
-        const fclRN = await import("../fcl-react-native")
-        const user = await fclRN.currentUser.snapshot()
-
-        console.log("WalletConnect: Checking if user needs to be logged out - User logged in:", user.loggedIn)
-
-        if (user.loggedIn) {
-          // Check if the user was using WalletConnect
-          const hasWcService = user.services?.some((s: any) => s.method === "WC/RPC")
-          console.log("WalletConnect: User has WC service:", hasWcService)
-
-          if (hasWcService) {
-            console.log("WalletConnect: Logging out user due to session expiration")
-            fclRN.currentUser.unauthenticate()
-            console.log("WalletConnect: User logged out successfully")
-          }
-        }
-      } catch (error) {
-        console.log("WalletConnect: Error during auto-logout:", error)
-      }
+      // Note: Session cleanup is handled by the app's orphaned session check on startup
+      // See flow.ts sessionCleanupPromise for the cleanup logic
     })
 
     client.on("session_update", () => {
