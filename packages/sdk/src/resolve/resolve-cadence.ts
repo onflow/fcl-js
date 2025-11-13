@@ -71,7 +71,14 @@ export function createResolveCadence(context: SdkContext) {
       ] of getContractIdentifierSyntaxMatches(cadence)) {
         const address: string | null = context.contracts[contractName] || null
         if (address) {
-          const canonical: string | null = context.contracts[contractName + ".canonical"] || null
+          // Check if this contract has a canonical reference (for import aliases)
+          // e.g., context.contracts["FUSD1.canonical"] = "FUSD"
+          const canonical: string | null =
+            context.contracts[contractName + ".canonical"] || null
+
+          // Generate import statement based on whether a canonical exists:
+          // - With canonical: import FUSD as FUSD1 from 0x... (alias syntax)
+          // - Without canonical: import FUSD1 from 0x... (standard syntax)
           const importStatement = canonical
             ? `import ${canonical} as ${contractName} from ${withPrefix(address)}`
             : `import ${contractName} from ${withPrefix(address)}`
