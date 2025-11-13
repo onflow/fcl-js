@@ -71,12 +71,20 @@ export const request = async ({
   const [chainId, addr, address] = makeSessionData(session)
   const data = JSON.stringify({...body, addr, address})
 
-  console.log("WalletConnect Request: Preparing request - Method:", method, "Topic:", session.topic.substring(0, 10) + "...")
+  console.log(
+    "WalletConnect Request: Preparing request - Method:",
+    method,
+    "Topic:",
+    session.topic.substring(0, 10) + "..."
+  )
 
   // Create a timeout promise (60 seconds for signing requests)
   const timeoutPromise = new Promise((_, reject) => {
     setTimeout(() => {
-      console.log("WalletConnect Request: TIMEOUT after 60 seconds - Method:", method)
+      console.log(
+        "WalletConnect Request: TIMEOUT after 60 seconds - Method:",
+        method
+      )
       reject(new Error("WalletConnect request timed out after 60 seconds"))
     }, 60000)
   })
@@ -107,7 +115,12 @@ export const request = async ({
       abortPromise,
       timeoutPromise,
     ])
-    console.log("WalletConnect Request: Received result - Method:", method, "Status:", result?.status)
+    console.log(
+      "WalletConnect Request: Received result - Method:",
+      method,
+      "Status:",
+      result?.status
+    )
 
     if (typeof result !== "object" || result == null) {
       return
@@ -126,7 +139,9 @@ export const request = async ({
   }
 }
 
-export function makeSessionData(session: SessionTypes.Struct): [string, string, string] {
+export function makeSessionData(
+  session: SessionTypes.Struct
+): [string, string, string] {
   const {namespaces} = session
   const flowNamespace = namespaces["flow"]
 

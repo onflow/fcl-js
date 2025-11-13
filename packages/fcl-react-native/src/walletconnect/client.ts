@@ -70,7 +70,10 @@ const initClient = async ({
   )
 
   try {
-    console.log("WalletConnect initClient: Starting initialization, project ID:", projectId.substring(0, 8) + "...")
+    console.log(
+      "WalletConnect initClient: Starting initialization, project ID:",
+      projectId.substring(0, 8) + "..."
+    )
 
     // Initialize WalletConnect compat first
     console.log("WalletConnect initClient: Initializing compat layer...")
@@ -91,7 +94,10 @@ const initClient = async ({
         native: redirect,
         universal: redirect,
       } as any
-      console.log("WalletConnect initClient: Redirect URI configured:", redirect)
+      console.log(
+        "WalletConnect initClient: Redirect URI configured:",
+        redirect
+      )
     }
 
     // SignClient will automatically use @walletconnect/keyvaluestorage
@@ -109,13 +115,19 @@ const initClient = async ({
 
     // Set up session event listeners
     client.on("session_delete", ({topic}: {topic: string}) => {
-      console.log("WalletConnect: Session deleted by wallet - Topic:", topic.substring(0, 10) + "...")
+      console.log(
+        "WalletConnect: Session deleted by wallet - Topic:",
+        topic.substring(0, 10) + "..."
+      )
       // Note: Session cleanup is handled by the app's orphaned session check on startup
       // See flow.ts sessionCleanupPromise for the cleanup logic
     })
 
     client.on("session_expire", ({topic}: {topic: string}) => {
-      console.log("WalletConnect: Session expired - Topic:", topic.substring(0, 10) + "...")
+      console.log(
+        "WalletConnect: Session expired - Topic:",
+        topic.substring(0, 10) + "..."
+      )
       // Note: Session cleanup is handled by the app's orphaned session check on startup
       // See flow.ts sessionCleanupPromise for the cleanup logic
     })
@@ -156,7 +168,10 @@ export const initLazy = (config: FclWalletConnectConfig) => {
       return null
     })
     .then(_client => {
-      console.log("WalletConnect initLazy: Promise then - client exists:", _client !== null)
+      console.log(
+        "WalletConnect initLazy: Promise then - client exists:",
+        _client !== null
+      )
       if (_client) {
         console.log("WalletConnect initLazy: Reusing existing client")
         return _client

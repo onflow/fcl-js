@@ -52,30 +52,34 @@ const DefaultServiceCard = ({service, onPress}) => {
     {
       onPress,
       style: {
-        backgroundColor: '#0052FF',
+        backgroundColor: "#0052FF",
         paddingVertical: 16,
         paddingHorizontal: 24,
         borderRadius: 12,
         marginVertical: 8,
         marginHorizontal: 16,
         minHeight: 60,
-        justifyContent: 'center',
-        alignItems: 'center',
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 2 },
+        justifyContent: "center",
+        alignItems: "center",
+        shadowColor: "#000",
+        shadowOffset: {width: 0, height: 2},
         shadowOpacity: 0.1,
         shadowRadius: 4,
         elevation: 3,
-      }
+      },
     },
-    createElement(Text, {
-      style: {
-        color: '#FFFFFF',
-        fontSize: 18,
-        fontWeight: '600',
-        textAlign: 'center',
-      }
-    }, service?.provider?.name)
+    createElement(
+      Text,
+      {
+        style: {
+          color: "#FFFFFF",
+          fontSize: 18,
+          fontWeight: "600",
+          textAlign: "center",
+        },
+      },
+      service?.provider?.name
+    )
   )
 }
 
@@ -116,7 +120,10 @@ export const useServiceDiscovery = ({fcl}) => {
         pluginServices = serviceRegistry.getServices()
       }
     } catch (error) {
-      console.log("Plugin Services Error - Could not get plugin services:", error.message || error)
+      console.log(
+        "Plugin Services Error - Could not get plugin services:",
+        error.message || error
+      )
     }
 
     try {
@@ -130,7 +137,11 @@ export const useServiceDiscovery = ({fcl}) => {
       setServices(allServices)
       setIsLoading(false)
     } catch (error) {
-      console.log("Service Discovery Error - Failed to fetch services from", endpoint + ":", error.message || error)
+      console.log(
+        "Service Discovery Error - Failed to fetch services from",
+        endpoint + ":",
+        error.message || error
+      )
       // Even if discovery fails, show plugin services
       setServices(pluginServices)
       setIsLoading(false)

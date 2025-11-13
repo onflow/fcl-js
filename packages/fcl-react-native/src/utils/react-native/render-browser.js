@@ -36,10 +36,15 @@ export async function renderBrowser(src, opts = {}) {
   const unmount = () => {
     try {
       WB.dismissAuthSession()
-      console.log("Browser Auth Session Dismissed - Auth session closed successfully")
+      console.log(
+        "Browser Auth Session Dismissed - Auth session closed successfully"
+      )
     } catch (error) {
       // Ignore errors on dismissal
-      console.log("Browser Auth Session Dismissal Error:", error.message || error)
+      console.log(
+        "Browser Auth Session Dismissal Error:",
+        error.message || error
+      )
     }
   }
 

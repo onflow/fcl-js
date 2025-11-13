@@ -39,7 +39,10 @@ export const makeServicePlugin = (
   }
 }
 
-const makeExec = (signerPromise: Promise<any>, config: FclWalletConnectConfig) => {
+const makeExec = (
+  signerPromise: Promise<any>,
+  config: FclWalletConnectConfig
+) => {
   return async ({
     service,
     body,
@@ -55,7 +58,12 @@ const makeExec = (signerPromise: Promise<any>, config: FclWalletConnectConfig) =
     user: any
     config: any
   }) => {
-    console.log("WalletConnect Service Request Started - Method:", service.endpoint, "Service:", service.uid)
+    console.log(
+      "WalletConnect Service Request Started - Method:",
+      service.endpoint,
+      "Service:",
+      service.uid
+    )
 
     const {wcRequestHook, disableNotifications: _appDisabledNotifications} =
       config
@@ -79,12 +87,17 @@ const makeExec = (signerPromise: Promise<any>, config: FclWalletConnectConfig) =
 
     // If we have a session topic from params, use it directly
     if (sessionTopic) {
-      console.log("WalletConnect: Using session topic from params:", sessionTopic)
+      console.log(
+        "WalletConnect: Using session topic from params:",
+        sessionTopic
+      )
       try {
         session = client.session.get(sessionTopic)
         console.log("WalletConnect: Found session from topic")
       } catch (e) {
-        console.log("WalletConnect: Session not found for topic, will search for active sessions")
+        console.log(
+          "WalletConnect: Session not found for topic, will search for active sessions"
+        )
         // Session not found, fall through to session lookup
       }
     }
@@ -92,7 +105,10 @@ const makeExec = (signerPromise: Promise<any>, config: FclWalletConnectConfig) =
     // If no session yet, find an existing session
     if (!session) {
       const activeSessions = client.session.getAll()
-      console.log("WalletConnect: Active sessions count:", activeSessions.length)
+      console.log(
+        "WalletConnect: Active sessions count:",
+        activeSessions.length
+      )
 
       // If there are no active sessions, fall through to create new session
 
@@ -100,56 +116,64 @@ const makeExec = (signerPromise: Promise<any>, config: FclWalletConnectConfig) =
       if (activeSessions.length > 0) {
         // Try to find a session for this specific wallet
         // Match by wallet metadata or use the most recent session
-        let foundSession = activeSessions.find((s: SessionTypes.Struct) => {
-          const walletUrl = s.peer?.metadata?.url
-          return walletUrl && (
-            walletUrl.includes('flow.com') ||
-            walletUrl.includes('lilico.app') ||
-            walletUrl.includes('frw')
-          )
-        }) || activeSessions[activeSessions.length - 1]
+        let foundSession =
+          activeSessions.find((s: SessionTypes.Struct) => {
+            const walletUrl = s.peer?.metadata?.url
+            return (
+              walletUrl &&
+              (walletUrl.includes("flow.com") ||
+                walletUrl.includes("lilico.app") ||
+                walletUrl.includes("frw"))
+            )
+          }) || activeSessions[activeSessions.length - 1]
 
-      // Validate the session is still active and not expired
-      if (foundSession) {
-        const isExpired = foundSession.expiry && foundSession.expiry <= Date.now() / 1000
-        const isAcknowledged = foundSession.acknowledged
+        // Validate the session is still active and not expired
+        if (foundSession) {
+          const isExpired =
+            foundSession.expiry && foundSession.expiry <= Date.now() / 1000
+          const isAcknowledged = foundSession.acknowledged
 
-        if (isExpired) {
-          try {
-            await client.disconnect({
-              topic: foundSession.topic,
-              reason: {code: 6000, message: "Session expired"}
-            })
-          } catch (e) {
-            // Session already disconnected
-          }
-          foundSession = null
-        } else if (!isAcknowledged) {
-          foundSession = null
-        } else {
-          // Final check: verify the session still exists in the client
-          try {
-            const stillExists = client.session.get(foundSession.topic)
-            if (stillExists) {
-              session = foundSession
+          if (isExpired) {
+            try {
+              await client.disconnect({
+                topic: foundSession.topic,
+                reason: {code: 6000, message: "Session expired"},
+              })
+            } catch (e) {
+              // Session already disconnected
             }
-          } catch (e) {
             foundSession = null
+          } else if (!isAcknowledged) {
+            foundSession = null
+          } else {
+            // Final check: verify the session still exists in the client
+            try {
+              const stillExists = client.session.get(foundSession.topic)
+              if (stillExists) {
+                session = foundSession
+              }
+            } catch (e) {
+              foundSession = null
+            }
           }
         }
-      }
       }
     }
 
     // If this is an auth request and we already have a valid session, return user data from session
     if (session && method === FLOW_METHODS.FLOW_AUTHN) {
       // Verify the session is still valid
-      const isSessionValid = session.acknowledged && !session.expiry || session.expiry > Date.now() / 1000
+      const isSessionValid =
+        (session.acknowledged && !session.expiry) ||
+        session.expiry > Date.now() / 1000
 
       if (!isSessionValid) {
         // Session expired, clear it and create a new one
         try {
-          await client.disconnect({topic: session.topic, reason: {code: 6000, message: "Session expired"}})
+          await client.disconnect({
+            topic: session.topic,
+            reason: {code: 6000, message: "Session expired"},
+          })
         } catch (e) {
           // Session already disconnected
         }
@@ -332,7 +356,12 @@ const makeExec = (signerPromise: Promise<any>, config: FclWalletConnectConfig) =
     }
 
     // Send the request (don't await yet)
-    console.log("WalletConnect: Sending request to wallet - Method:", method, "Session topic:", session?.topic)
+    console.log(
+      "WalletConnect: Sending request to wallet - Method:",
+      method,
+      "Session topic:",
+      session?.topic
+    )
     const requestPromise = request({
       method: method,
       body: body,
@@ -341,22 +370,41 @@ const makeExec = (signerPromise: Promise<any>, config: FclWalletConnectConfig) =
       abortSignal,
       disableNotifications: service.params?.disableNotifications,
     }).then((response: any) => {
-      console.log("WalletConnect: Received response from wallet - Method:", method)
+      console.log(
+        "WalletConnect: Received response from wallet - Method:",
+        method
+      )
       console.log("WalletConnect: Response f_type:", response?.f_type)
 
       // For PreAuthzResponse, we need to inject our session topic into the returned services
       // so FCL knows to route follow-up requests through our WalletConnect plugin
-      if (method === FLOW_METHODS.FLOW_PRE_AUTHZ && response?.f_type === "PreAuthzResponse") {
+      if (
+        method === FLOW_METHODS.FLOW_PRE_AUTHZ &&
+        response?.f_type === "PreAuthzResponse"
+      ) {
         console.log("WalletConnect: Processing PreAuthzResponse")
         console.log("WalletConnect: Original response services:")
         console.log("  -> Proposer:", response.proposer ? "present" : "missing")
-        console.log("  -> Payer:", response.payer ? `array of ${response.payer.length}` : "missing")
-        console.log("  -> Authorization:", response.authorization ? `array of ${response.authorization.length}` : "missing")
+        console.log(
+          "  -> Payer:",
+          response.payer ? `array of ${response.payer.length}` : "missing"
+        )
+        console.log(
+          "  -> Authorization:",
+          response.authorization
+            ? `array of ${response.authorization.length}`
+            : "missing"
+        )
 
         // Helper to inject session params into a service
         const injectSessionParams = (svc: any) => {
           if (!svc) return svc
-          console.log("WalletConnect: Injecting session params into service - Type:", svc.type, "Endpoint:", svc.endpoint)
+          console.log(
+            "WalletConnect: Injecting session params into service - Type:",
+            svc.type,
+            "Endpoint:",
+            svc.endpoint
+          )
           return {
             ...svc,
             method: WC_SERVICE_METHOD,
@@ -378,9 +426,15 @@ const makeExec = (signerPromise: Promise<any>, config: FclWalletConnectConfig) =
 
         console.log("WalletConnect: Modified PreAuthzResponse services:")
         console.log("  -> Proposer method:", modifiedResponse.proposer?.method)
-        console.log("  -> Proposer has sessionTopic:", !!modifiedResponse.proposer?.params?.sessionTopic)
+        console.log(
+          "  -> Proposer has sessionTopic:",
+          !!modifiedResponse.proposer?.params?.sessionTopic
+        )
         console.log("  -> Payer count:", modifiedResponse.payer?.length || 0)
-        console.log("  -> Authorization count:", modifiedResponse.authorization?.length || 0)
+        console.log(
+          "  -> Authorization count:",
+          modifiedResponse.authorization?.length || 0
+        )
 
         return modifiedResponse
       }
@@ -389,7 +443,12 @@ const makeExec = (signerPromise: Promise<any>, config: FclWalletConnectConfig) =
 
     // For signing requests (not auth), deep link to wallet with session info
     const shouldOpenWallet = shouldDeepLink({service, user}) && session
-    console.log("WalletConnect: Should open wallet?", shouldOpenWallet, "Method:", method)
+    console.log(
+      "WalletConnect: Should open wallet?",
+      shouldOpenWallet,
+      "Method:",
+      method
+    )
 
     if (shouldOpenWallet) {
       // The WalletConnect client.request() posts to relay synchronously, then waits for response
@@ -398,7 +457,10 @@ const makeExec = (signerPromise: Promise<any>, config: FclWalletConnectConfig) =
 
       // Construct deep link with session topic for proper routing
       const deepLinkUrl = `${appLink}?topic=${session.topic}`
-      console.log("WalletConnect: Opening wallet immediately with deep link:", deepLinkUrl)
+      console.log(
+        "WalletConnect: Opening wallet immediately with deep link:",
+        deepLinkUrl
+      )
 
       // Open wallet right away - the request is already on the relay
       // Use setImmediate to avoid blocking the request promise
@@ -409,9 +471,14 @@ const makeExec = (signerPromise: Promise<any>, config: FclWalletConnectConfig) =
 
     // Now wait for the response
     console.log("WalletConnect: Waiting for wallet response...")
-    console.log("WalletConnect: Wallet should automatically return to app via redirect URI after approval")
+    console.log(
+      "WalletConnect: Wallet should automatically return to app via redirect URI after approval"
+    )
     const finalResponse = await requestPromise
-    console.log("WalletConnect: Response received! Request completed successfully - Method:", method)
+    console.log(
+      "WalletConnect: Response received! Request completed successfully - Method:",
+      method
+    )
     return finalResponse
 
     function validateAppLink({uid}: {uid: string}) {
@@ -517,10 +584,12 @@ function shouldDeepLink({service, user}: {service: any; user: any}): boolean {
 
   // Deep link for all signing-related requests:
   // - flow_pre_authz: get the PreAuthzResponse with payer/proposer/authorization services
-  // - flow_authz: standard authorization
-  // - flow_sign_payer: payer signature (from PreAuthzResponse)
-  // - flow_sign_proposer: proposer signature (from PreAuthzResponse)
-  // - flow_user_sign: user signature requests
+  //   NOTE: Ideally this wouldn't require deep link (informational only), but Flow Wallet
+  //   doesn't support background request processing, so we need to open the wallet
+  // - flow_authz: standard authorization (user must approve)
+  // - flow_sign_payer: payer signature (from PreAuthzResponse, user must approve)
+  // - flow_sign_proposer: proposer signature (from PreAuthzResponse, user must approve)
+  // - flow_user_sign: user signature requests (user must approve)
 
   return true
 }
