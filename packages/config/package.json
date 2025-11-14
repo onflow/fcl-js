@@ -1,6 +1,6 @@
 {
   "name": "@onflow/config",
-  "version": "1.6.2",
+  "version": "1.6.3",
   "description": "Config for FCL-JS",
   "license": "Apache-2.0",
   "author": "Flow Foundation",

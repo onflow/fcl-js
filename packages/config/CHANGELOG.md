@@ -1,5 +1,11 @@
 # @onflow/config
 
+## 1.6.3
+
+### Patch Changes
+
+- [#2698](https://github.com/onflow/fcl-js/pull/2698) [`9c5bed0ed542e85d038e1763c6d94e38614d9a0e`](https://github.com/onflow/fcl-js/commit/9c5bed0ed542e85d038e1763c6d94e38614d9a0e) Thanks [@chasefleming](https://github.com/chasefleming)! - Add support for Cadence import aliasing
+
 ## 1.6.2
 
 ### Patch Changes
