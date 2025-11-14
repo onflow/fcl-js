@@ -1,5 +1,14 @@
 # @onflow/react-sdk
 
+## 0.12.1
+
+### Patch Changes
+
+- [#2696](https://github.com/onflow/fcl-js/pull/2696) [`3bf349056b623cdd19ca5f135120250814bcf810`](https://github.com/onflow/fcl-js/commit/3bf349056b623cdd19ca5f135120250814bcf810) Thanks [@jribbink](https://github.com/jribbink)! - Add support for `discoveryAuthnExclude` configuration option in React SDK. This allows users to exclude specific wallet providers from the discovery service, complementing the existing `discoveryAuthnInclude` option.
+
+- Updated dependencies [[`3bf349056b623cdd19ca5f135120250814bcf810`](https://github.com/onflow/fcl-js/commit/3bf349056b623cdd19ca5f135120250814bcf810), [`a5e84666b0482547fe9411064f4821e8067e5238`](https://github.com/onflow/fcl-js/commit/a5e84666b0482547fe9411064f4821e8067e5238)]:
+  - @onflow/fcl@1.20.5
+
 ## 0.12.0
 
 ### Minor Changes
