@@ -1,27 +1,10 @@
 import {useState, useEffect, createElement} from "react"
 import {StyleSheet, Text, View, TouchableOpacity} from "react-native"
-import {getServiceRegistry} from "@onflow/fcl-core"
+import {getServiceRegistry, URL} from "@onflow/fcl-core"
 
 /**
  * @typedef {import("@onflow/typedefs").Service} Service
  */
-
-/**
- * Fetches data from a URL using the POST method and returns the parsed JSON response.
- *
- * @param {string} url - The URL to fetch.
- * @param {object} opts - Additional options for the fetch request.
- * @returns {Promise<object>} - A promise that resolves to the parsed JSON response.
- */
-const fetcher = (url, opts) => {
-  return fetch(url, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(opts),
-  }).then(d => d.json())
-}
 
 /**
  * Default loading component that renders the "Loading..." text.
@@ -109,41 +92,114 @@ export const useServiceDiscovery = ({fcl}) => {
 
   const getServices = async () => {
     setIsLoading(true)
-    const endpoint = await fcl.config.get("discovery.authn.endpoint")
+    console.log(
+      "Discovery: Replicating FCL's getServices() logic for React Native"
+    )
 
-    // Get services from service registry (includes plugin services)
-    let pluginServices = []
+    // NOTE: fcl-discovery.onflow.org currently returns 404 for React Native requests
+    // This is a server-side issue - the Vercel deployment blocks React Native/OkHttp
+    // The same requests work perfectly from curl and browsers
+    // See: FCL_DISCOVERY_BUG_REPORT.md in the repository root
+    // Workaround: Manually add wallets via the plugin system (wallets array in config)
+
     try {
-      // Access the service registry which manages plugin services
-      const serviceRegistry = getServiceRegistry()
-      if (serviceRegistry) {
-        pluginServices = serviceRegistry.getServices()
+      // Replicate what fcl-core/src/discovery/services.ts getServices() does
+      const endpoint = await fcl.config.get("discovery.authn.endpoint")
+      if (!endpoint) {
+        throw new Error('"discovery.authn.endpoint" in config must be defined.')
       }
-    } catch (error) {
-      console.log(
-        "Plugin Services Error - Could not get plugin services:",
-        error.message || error
-      )
-    }
 
-    try {
-      const response = await fetcher(endpoint, {
+      const include = await fcl.config.get("discovery.authn.include", [])
+      const exclude = await fcl.config.get("discovery.authn.exclude", [])
+
+      // Use FCL's URL class to fix React Native trailing slash bug
+      const url = new URL(endpoint)
+      console.log("Discovery: Endpoint URL:", url.href)
+
+      // Get network from config (getChainId equivalent)
+      const network = await fcl.config.get("flow.network", "testnet")
+
+      // Get client services (plugin services) - React Native doesn't have window.fcl_extensions
+      // so we just get services from the service registry
+      const serviceRegistry = getServiceRegistry()
+      const clientServices = serviceRegistry.getServices()
+      console.log(
+        "Discovery: Client services (plugins):",
+        clientServices.length
+      )
+
+      // Get supported strategies from service registry
+      const supportedStrategies = serviceRegistry.getStrategies()
+      console.log("Discovery: Supported strategies:", supportedStrategies)
+
+      // Build request body exactly like services.ts does
+      // NOTE: Changed userAgent to look like browser - server might be filtering "ReactNative"
+      const requestBody = {
+        type: ["authn"],
         fclVersion: fcl.VERSION,
-        userAgent: "ReactNative",
-        supportedStrategies: ["HTTP/POST", "WC/RPC"],
+        include,
+        exclude,
+        features: {
+          suggested: await fcl.config.get("discovery.features.suggested", []),
+        },
+        clientServices,
+        supportedStrategies,
+        userAgent: "Mozilla/5.0 (compatible; FCL/1.0)",
+        network,
+      }
+
+      console.log(
+        "Discovery: Request body:",
+        JSON.stringify(requestBody, null, 2)
+      )
+
+      // Make the fetch request exactly like services.ts does
+      const response = await fetch(url.href, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(requestBody),
       })
-      // Combine discovery services with plugin services
-      const allServices = [...pluginServices, ...response]
-      setServices(allServices)
+
+      console.log("Discovery: Response status:", response.status)
+
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}: ${response.statusText}`)
+      }
+
+      const discoveryServices = await response.json()
+      console.log("Discovery: Services returned:", discoveryServices.length)
+      console.log(
+        "Discovery: Service names:",
+        discoveryServices.map(s => s.provider?.name || s.uid)
+      )
+
+      setServices(discoveryServices)
       setIsLoading(false)
     } catch (error) {
-      console.log(
-        "Service Discovery Error - Failed to fetch services from",
-        endpoint + ":",
-        error.message || error
-      )
-      // Even if discovery fails, show plugin services
-      setServices(pluginServices)
+      console.log("Service Discovery Error - Failed:", error.message || error)
+
+      // Fallback: try to get plugin services directly
+      try {
+        const serviceRegistry = getServiceRegistry()
+        if (serviceRegistry) {
+          const pluginServices = serviceRegistry.getServices()
+          console.log(
+            "Discovery: Falling back to plugin services only:",
+            pluginServices.length
+          )
+          setServices(pluginServices)
+        } else {
+          setServices([])
+        }
+      } catch (pluginError) {
+        console.log(
+          "Discovery: Failed to get plugin services too:",
+          pluginError.message
+        )
+        setServices([])
+      }
       setIsLoading(false)
     }
   }
