@@ -84,6 +84,7 @@ const makeExec = (
     const sessionTopic = service.params?.sessionTopic
 
     let session: SessionTypes.Struct | null = null
+    let isExistingSession = false // Track if we're reusing an existing session
 
     // If we have a session topic from params, use it directly
     if (sessionTopic) {
@@ -94,6 +95,7 @@ const makeExec = (
       try {
         session = client.session.get(sessionTopic)
         console.log("WalletConnect: Found session from topic")
+        isExistingSession = true
       } catch (e) {
         console.log(
           "WalletConnect: Session not found for topic, will search for active sessions"
@@ -140,6 +142,7 @@ const makeExec = (
               const stillExists = client.session.get(foundSession.topic)
               if (stillExists) {
                 session = foundSession
+                isExistingSession = true
               }
             } catch (e) {
               foundSession = null
@@ -294,19 +297,10 @@ const makeExec = (
     })
 
     // Deep link to wallet for all requests (mobile requirement)
-    // EXCEPT for flow_authn when we just created a new session (sessionTopic not in params)
-    // because the wallet was already opened during connectWc() for session approval
-    const isNewSessionAuthn =
-      method === FLOW_METHODS.FLOW_AUTHN && !service.params?.sessionTopic
-    const shouldOpenWallet = !isNewSessionAuthn && session
-    console.log(
-      "WalletConnect: Should open wallet?",
-      shouldOpenWallet,
-      "Method:",
-      method,
-      "Is new session authn:",
-      isNewSessionAuthn
-    )
+    // EXCEPT when we just created a brand new session during this request
+    // (because the wallet was already opened during connectWc() for session approval)
+    const justCreatedNewSession = !isExistingSession && session
+    const shouldOpenWallet = isExistingSession && session
 
     if (shouldOpenWallet) {
       // The WalletConnect client.request() posts to relay synchronously, then waits for response
