@@ -188,7 +188,7 @@ export const initServiceRegistry = ({
 export const getServiceRegistry = () => {
   if (!getIsServiceRegistryInitialized()) {
     console.warn(
-      "Registry is not initalized, it will be initialized with stub core strategies"
+      "Registry is not initialized, it will be initialized with stub core strategies"
     )
 
     return initServiceRegistry({coreStrategies: stubCoreStrategies})

@@ -62,11 +62,11 @@ FCL will always publicly try to fetch these fields when asked for a users inform
 - **`color`** -- A 6 character hex color, could be used by the dapp for personalization
 - **`bio`** -- A small amount of text that a user can use to express themselves
 
-If we can give dapp developers a solid foundation of usable information that is in the direct control of the users from the very start, which we belive the above fields would do, our hopes are they can rely more on the chain and will need to store less in their own database.
+If we can give dapp developers a solid foundation of usable information that is in the direct control of the users from the very start, which we believe the above fields would do, our hopes are they can rely more on the chain and will need to store less in their own database.
 
 Private data on the other hand has more use cases than general data. It is pretty easy to imagine ordering something and needing information like contact details and where to ship something.
 
-Eventually we would love to see that sort of thing handled completely on-chain, securely, privately and safely, but in the interm it probably means storing a copy of data in a database when its needed, and allowed by a user.
+Eventually we would love to see that sort of thing handled completely on-chain, securely, privately and safely, but in the interim it probably means storing a copy of data in a database when its needed, and allowed by a user.
 
 The process of a dapp receiving private data is as follows:
 
@@ -259,14 +259,14 @@ Below is the public authorization hook we received during the challenge above.
   }
 ```
 
-FCL will take that hook and do the following post requeset:
+FCL will take that hook and do the following post request:
 
 ```
 POST https://provider.com/flow/authorize
   ?id=2345432
 ---
 {
-  message: "...",     // what needs to be signed (needs to be convered from hex to binary before signing)
+  message: "...",     // what needs to be signed (needs to be converted from hex to binary before signing)
   addr: "0xab4U9KMf", // the flow address that needs to sign
   keyId: 3,           // the flow account keyId for the private key that needs to sign
   roles: {
