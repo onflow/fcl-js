@@ -1,6 +1,7 @@
 export {
   VERSION,
   query,
+  queryRaw,
   verifyUserSignatures,
   serialize,
   tx,
@@ -14,6 +15,9 @@ export {
   getChainId,
   TestUtils,
   config,
+  flowMainnet,
+  flowTestnet,
+  flowEmulator,
   send,
   decode,
   account,
