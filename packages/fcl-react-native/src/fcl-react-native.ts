@@ -76,10 +76,50 @@ import {
   setIsReactNative,
 } from "@onflow/fcl-core"
 
+// Eagerly start loading AsyncStorage when module loads
+// This ensures storage is ready before any component subscribes to currentUser
+const storagePromise = getAsyncStorage()
+
 export const currentUser = getCurrentUser({
   platform: "react-native",
   getStorageProvider: async () => {
-    return (await config().get("fcl.storage")) || (await getAsyncStorage())
+    // This is needed to make fcl-react-native work like fcl
+    await storagePromise
+    const configStorage = await config().get("fcl.storage")
+    const baseStorage: any = configStorage || (await storagePromise)
+
+    // Wrap storage to fix loggedIn state initialization
+    // This happens when storage is checked before proper initialization, so we need to wrap the storage to fix it.
+    return {
+      can: baseStorage.can,
+      get: async (key: string) => {
+        const value = await baseStorage.get(key)
+        if (key === "CURRENT_USER") {
+          if (!value) {
+            return {
+              f_type: "User",
+              f_vsn: "1.0.0",
+              addr: null,
+              cid: null,
+              loggedIn: false,
+              expiresAt: null,
+              services: [],
+            }
+          }
+
+          // Fix corrupted stored user with loggedIn: null
+          if (value.loggedIn === null) {
+            // Update storage with corrected value
+            const correctedValue = {...value, loggedIn: false}
+            await baseStorage.put(key, correctedValue)
+            return correctedValue
+          }
+        }
+        return value
+      },
+      put: baseStorage.put,
+      removeItem: baseStorage.removeItem,
+    }
   },
 })
 export const mutate = getMutate(currentUser)
@@ -103,6 +143,7 @@ import {
   ServiceDiscovery,
 } from "./utils/react-native"
 import {getAsyncStorage} from "./utils/react-native/storage"
+import {initFclWcLoader} from "./utils/walletconnect/loader"
 
 config(getDefaultConfig())
 
@@ -111,6 +152,9 @@ initServiceRegistry({coreStrategies})
 
 // Set isReactNative flag
 setIsReactNative(true)
+
+// Automatically load WalletConnect plugin based on config
+initFclWcLoader()
 
 export {useServiceDiscovery, ServiceDiscovery, getServiceRegistry}
 
@@ -122,3 +166,5 @@ export {subscribeRaw} from "@onflow/fcl-core"
 export * from "./walletconnect"
 
 export * from "@onflow/typedefs"
+
+export {createFlowClient, type FlowClientConfig} from "./client"

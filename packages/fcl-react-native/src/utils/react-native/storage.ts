@@ -25,6 +25,7 @@ export const getAsyncStorage = async () => {
       get: async (key: string) => safeParseJSON(await Storage.getItem(key)),
       put: async (key: string, value: any) =>
         await Storage.setItem(key, JSON.stringify(value)),
+      removeItem: async (key: string) => await Storage.removeItem(key),
     }
     return ASYNC_STORAGE
   } catch (error) {
@@ -34,6 +35,7 @@ export const getAsyncStorage = async () => {
       can: false,
       get: async (key: string) => null,
       put: async (key: string, value: any) => {},
+      removeItem: async (key: string) => {},
     }
   }
 }
