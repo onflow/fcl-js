@@ -19,7 +19,7 @@ npm install --save @onflow/transport-grpc
 
 ### Integration with FCL
 
-By default `@onflow/fcl` defaults to using the HTTP Access Node endpoint via the [HTTP Transport](/packages/transport-http/) package (`@onflow/transport-http`).  This may be overriden, however.
+By default `@onflow/fcl` defaults to using the HTTP Access Node endpoint via the [HTTP Transport](/packages/transport-http/) package (`@onflow/transport-http`).  This may be overridden, however.
 
 If using the gRPC Access API, the `sdk.transport` configuration key must be populated as this value defaults to the HTTP API transport.  The SDK can be configured to use the gRPC API transport as follows:
 
