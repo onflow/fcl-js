@@ -83,51 +83,43 @@ const storagePromise = getAsyncStorage()
 export const currentUser = getCurrentUser({
   platform: "react-native",
   getStorageProvider: async () => {
-    // This is needed to make fcl-react-native work like fcl
+    // Wait for eager-loaded storage to be ready
     await storagePromise
-    const configStorage = await config().get("fcl.storage")
-    const baseStorage: any = configStorage || (await storagePromise)
-
-    // Wrap storage to fix loggedIn state initialization
-    // This happens when storage is checked before proper initialization, so we need to wrap the storage to fix it.
-    return {
-      can: baseStorage.can,
-      get: async (key: string) => {
-        const value = await baseStorage.get(key)
-        if (key === "CURRENT_USER") {
-          if (!value) {
-            return {
-              f_type: "User",
-              f_vsn: "1.0.0",
-              addr: null,
-              cid: null,
-              loggedIn: false,
-              expiresAt: null,
-              services: [],
-            }
-          }
-
-          // Fix corrupted stored user with loggedIn: null
-          if (value.loggedIn === null) {
-            // Update storage with corrected value
-            const correctedValue = {...value, loggedIn: false}
-            await baseStorage.put(key, correctedValue)
-            return correctedValue
-          }
-        }
-        return value
-      },
-      put: baseStorage.put,
-      removeItem: baseStorage.removeItem,
-    }
+    return (await config().get("fcl.storage")) || (await storagePromise)
   },
 })
 export const mutate = getMutate(currentUser)
 
 export const authenticate = (opts = {}) => currentUser().authenticate(opts)
-export const unauthenticate = () => currentUser().unauthenticate()
-export const reauthenticate = (opts = {}) => {
+
+export const unauthenticate = async () => {
+  // First unauthenticate from FCL
   currentUser().unauthenticate()
+
+  // Then disconnect all WalletConnect sessions
+  try {
+    const {getClient} = await import("./walletconnect/client")
+    const client = await getClient()
+    if (client) {
+      const sessions = client.session.getAll()
+      console.log(`Disconnecting ${sessions.length} WalletConnect session(s)`)
+      for (const session of sessions) {
+        await client.disconnect({
+          topic: session.topic,
+          reason: {
+            code: 6000,
+            message: "User disconnected",
+          },
+        })
+      }
+    }
+  } catch (error) {
+    console.warn("Failed to disconnect WalletConnect sessions:", error)
+  }
+}
+
+export const reauthenticate = async (opts = {}) => {
+  await unauthenticate()
   return currentUser().authenticate(opts)
 }
 export const signUp = (opts = {}) => currentUser().authenticate(opts)
