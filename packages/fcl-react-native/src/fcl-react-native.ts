@@ -76,6 +76,8 @@ import {
   setIsReactNative,
 } from "@onflow/fcl-core"
 
+import {getClient} from "./walletconnect/client"
+
 // Eagerly start loading AsyncStorage when module loads
 // This ensures storage is ready before any component subscribes to currentUser
 const storagePromise = getAsyncStorage()
@@ -98,7 +100,6 @@ export const unauthenticate = async () => {
 
   // Then disconnect all WalletConnect sessions
   try {
-    const {getClient} = await import("./walletconnect/client")
     const client = await getClient()
     if (client) {
       const sessions = client.session.getAll()

@@ -113,35 +113,6 @@ const initClient = async ({
     })
     console.log("WalletConnect initClient: SignClient created successfully")
 
-    // Set up session event listeners
-    client.on("session_delete", ({topic}: {topic: string}) => {
-      console.log(
-        "WalletConnect: Session deleted by wallet - Topic:",
-        topic.substring(0, 10) + "..."
-      )
-      // Note: Session cleanup is handled by the app's orphaned session check on startup
-      // See flow.ts sessionCleanupPromise for the cleanup logic
-    })
-
-    client.on("session_expire", ({topic}: {topic: string}) => {
-      console.log(
-        "WalletConnect: Session expired - Topic:",
-        topic.substring(0, 10) + "..."
-      )
-      // Note: Session cleanup is handled by the app's orphaned session check on startup
-      // See flow.ts sessionCleanupPromise for the cleanup logic
-    })
-
-    client.on("session_update", () => {
-      console.log("WalletConnect: Session updated")
-      // Session was updated (e.g., account changed)
-    })
-
-    client.on("session_request", () => {
-      // This handler exists to prevent "emitting without listeners" errors
-      // Actual request handling is done through client.request() calls
-    })
-
     return client
   } catch (error) {
     if (error instanceof Error) {
