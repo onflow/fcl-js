@@ -1,6 +1,6 @@
 import {config} from "@onflow/config"
 import {pluginRegistry} from "@onflow/fcl-core"
-import {initLazy} from "../../walletconnect/client"
+import {initLazy} from "./client"
 
 // Flow Reference Wallet configuration
 const FLOW_REFERENCE_WALLET = {

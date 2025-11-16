@@ -4,7 +4,7 @@ import {
   StorageProvider,
 } from "@onflow/fcl-core"
 import {getAsyncStorage} from "./utils/react-native/storage"
-import {loadFclWc} from "./utils/walletconnect/loader"
+import {loadFclWc} from "./walletconnect/loader"
 import {execLocal} from "./utils/react-native/exec-local"
 
 const PLATFORM = "react-native"

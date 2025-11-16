@@ -136,7 +136,7 @@ import {
   ServiceDiscovery,
 } from "./utils/react-native"
 import {getAsyncStorage} from "./utils/react-native/storage"
-import {initFclWcLoader} from "./utils/walletconnect/loader"
+import {initFclWcLoader} from "./walletconnect/loader"
 
 config(getDefaultConfig())
 
