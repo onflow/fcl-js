@@ -20,6 +20,7 @@ interface WalletConnectConfig {
   walletConnectProjectId?: string
   walletConnectRedirect?: string
   walletConnectDisableNotifications?: boolean
+  walletConnectWallets?: any[]
   appDetailTitle?: string
   appDetailIcon?: string
   appDetailDescription?: string
@@ -51,14 +52,19 @@ function loadFclWc(wcConfig: WalletConnectConfig) {
 
   isLoaded = true
 
+  // Merge Flow Reference Wallet (default) with any custom wallets from config
+  const wallets = [
+    FLOW_REFERENCE_WALLET,
+    ...(wcConfig.walletConnectWallets || []),
+  ]
+
   const {FclWcServicePlugin} = initLazy({
     projectId,
     metadata: getMetadata(wcConfig),
     redirect: redirect || "",
     disableNotifications:
       wcConfig.walletConnectDisableNotifications ?? undefined,
-    // Hardcode Flow Reference Wallet with universal link support
-    wallets: [FLOW_REFERENCE_WALLET],
+    wallets: wallets,
   })
 
   pluginRegistry.add([FclWcServicePlugin])
@@ -71,6 +77,7 @@ export function initFclWcLoader() {
       walletConnectRedirect: fullConfig["walletconnect.redirect"],
       walletConnectDisableNotifications:
         fullConfig["walletconnect.disableNotifications"],
+      walletConnectWallets: fullConfig["walletconnect.wallets"],
       appDetailTitle: fullConfig["app.detail.title"],
       appDetailIcon: fullConfig["app.detail.icon"],
       appDetailDescription: fullConfig["app.detail.description"],
