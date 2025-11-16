@@ -1,5 +1,4 @@
 import {invariant} from "@onflow/util-invariant"
-import {log, LEVELS} from "@onflow/util-logger"
 import {
   FLOW_METHODS,
   REQUEST_TYPES,
@@ -379,11 +378,10 @@ const makeExec = (
 
     function validateAppLink({uid}: {uid: string}) {
       if (!(uid && /^(ftp|http|https):\/\/[^ "]+$/.test(uid))) {
-        log({
-          title: "WalletConnect Service Warning",
-          message: `service.uid should be a valid universal link url. Found: ${uid}`,
-          level: LEVELS.warn,
-        })
+        console.warn(
+          "WalletConnect Service Warning",
+          `service.uid should be a valid universal link url. Found: ${uid}`
+        )
       }
       return uid
     }
@@ -473,14 +471,10 @@ async function connectWc({
     return session
   } catch (error) {
     if (error instanceof Error) {
-      log({
-        title: `${error.name} Error establishing WalletConnect session`,
-        message: `
-          ${error.message}
-          uri: ${_uri}
-        `,
-        level: LEVELS.error,
-      })
+      console.error(
+        `${error.name} Error establishing WalletConnect session`,
+        `${error.message}\nuri: ${_uri}`
+      )
     }
     onClose()
     throw error
@@ -501,11 +495,7 @@ async function openDeeplink(url: string) {
     const errorMessage =
       "Cannot open wallet app. Please ensure Flow Reference Wallet is installed and try again."
 
-    log({
-      title: "WalletConnect Deep Link Error",
-      message: errorMessage,
-      level: LEVELS.error,
-    })
+    console.error("WalletConnect Deep Link Error", errorMessage)
 
     // Re-throw with user-friendly message
     throw new Error(errorMessage)

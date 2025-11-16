@@ -1,5 +1,4 @@
 import {invariant} from "@onflow/util-invariant"
-import {LEVELS, log} from "@onflow/util-logger"
 import {CoreTypes} from "@walletconnect/types"
 import {SignClient} from "@walletconnect/sign-client"
 import {makeServicePlugin} from "./service"
@@ -116,11 +115,7 @@ const initClient = async ({
     return client
   } catch (error) {
     if (error instanceof Error) {
-      log({
-        title: `${error.name} fcl-wc Init Client`,
-        message: error.message,
-        level: LEVELS.error,
-      })
+      console.error(`${error.name} fcl-wc Init Client`, error.message)
     }
     throw error
   }
@@ -157,11 +152,10 @@ export const initLazy = (config: FclWalletConnectConfig) => {
     })
     .catch(e => {
       console.log("WalletConnect initLazy: Error caught:", e.message || e)
-      log({
-        title: `WalletConnect Client Initialization Error`,
-        message: e.message ? e.message : e,
-        level: LEVELS.error,
-      })
+      console.error(
+        "WalletConnect Client Initialization Error",
+        e.message ? e.message : e
+      )
       throw e
     })
 
