@@ -235,6 +235,7 @@ export const useServiceDiscovery = ({fcl}) => {
  * @param {Function} [props.Empty=DefaultEmptyComponent] - The empty component.
  * @param {Function} [props.ServiceCard=DefaultServiceCard] - The service card component.
  * @param {Function} [props.Wrapper=DefaultWrapper] - The wrapper component.
+ * @param {Function} [props.onServiceSelect] - Optional custom handler for service selection. If provided, this will be called instead of the default authentication.
  * @returns {JSX.Element} - The service discovery component.
  */
 export const ServiceDiscovery = ({
@@ -243,8 +244,17 @@ export const ServiceDiscovery = ({
   Empty = DefaultEmptyComponent,
   ServiceCard = DefaultServiceCard,
   Wrapper = DefaultWrapper,
+  onServiceSelect,
 }) => {
   const {services, isLoading, authenticateService} = useServiceDiscovery({fcl})
+
+  const handleServicePress = service => {
+    if (onServiceSelect) {
+      onServiceSelect(service)
+    } else {
+      authenticateService(service)
+    }
+  }
 
   return createElement(
     Wrapper,
@@ -257,7 +267,7 @@ export const ServiceDiscovery = ({
           key: service?.provider?.address ?? index,
           service,
           onPress: () => {
-            authenticateService(service)
+            handleServicePress(service)
           },
         })
       })

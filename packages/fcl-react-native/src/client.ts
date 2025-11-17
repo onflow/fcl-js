@@ -71,7 +71,7 @@ export async function createFlowClient(params: FlowClientConfig) {
   })
 
   // Get AsyncStorage for React Native
-  const storage = params.storage || (await getAsyncStorage())
+  const storage = params.storage || getAsyncStorage()
 
   const fclCore = createFlowClientCore({
     flowNetwork: params.flowNetwork,

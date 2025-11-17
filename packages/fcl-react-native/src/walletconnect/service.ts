@@ -8,6 +8,7 @@ import {
 import {createSessionProposal, request} from "./session"
 import {FclWalletConnectConfig} from "./client"
 import {SessionTypes} from "@walletconnect/types"
+import {Linking} from "react-native"
 
 export const makeServicePlugin = (
   provider: Promise<any>,
@@ -484,9 +485,6 @@ async function connectWc({
 // Utility functions for React Native
 async function openDeeplink(url: string) {
   try {
-    // Lazy load Linking to avoid TurboModule errors
-    const {Linking} = await import("react-native")
-
     // Just try opening directly and let the OS handle it
     await Linking.openURL(url)
     console.log("WalletConnect: Successfully opened wallet app")

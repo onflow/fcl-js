@@ -2,17 +2,21 @@ import {config} from "@onflow/config"
 import {pluginRegistry} from "@onflow/fcl-core"
 import {initLazy} from "./client"
 
+// Flow Reference Wallet icon (SVG data URI)
+// Using expo-image component which supports SVG (unlike React Native's standard Image)
+const FLOW_WALLET_ICON = `data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjUwIiBoZWlnaHQ9IjI1MCIgdmlld0JveD0iMCAwIDI1MCAyNTAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxnIGNsaXAtcGF0aD0idXJsKCNjbGlwMF8xN182OTM0KSI+CjxyZWN0IHdpZHRoPSIyNTAiIGhlaWdodD0iMjUwIiBmaWxsPSIjMkNERTc4Ii8+CjxjaXJjbGUgY3g9IjEyNSIgY3k9IjEyNSIgcj0iODMiIGZpbGw9IndoaXRlIi8+CjxyZWN0IHg9IjExNCIgeT0iMTEyIiB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIGZpbGw9IiM0MUNDNUQiLz4KPHJlY3QgeD0iMTM4IiB5PSIxMTIiIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgZmlsbD0iYmxhY2siLz4KPC9nPgo8ZGVmcz4KPGNsaXBQYXRoIGlkPSJjbGlwMF8xN182OTM0Ij4KPHJlY3Qgd2lkdGg9IjI1MCIgaGVpZ2h0PSIyNTAiIGZpbGw9IndoaXRlIi8+CjwvY2xpcFBhdGg+CjwvZGVmcz4KPC9zdmc+Cg==`
+
 // Flow Reference Wallet configuration
-const FLOW_REFERENCE_WALLET = {
-  name: "Flow Reference Wallet",
-  description: "Connect to Flow Reference Wallet via WalletConnect",
-  homepage: "https://frw.gitbook.io/",
+const FLOW_WALLET = {
+  name: "Flow Wallet",
+  description: "Digital wallet created for everyone.",
+  homepage: "https://wallet.flow.com",
   uid: "https://link.wallet.flow.com/wc",
   provider: {
-    name: "Flow Reference Wallet",
-    icon: "https://frw-link.s3.amazonaws.com/logo.png",
+    name: "Flow Wallet",
+    icon: FLOW_WALLET_ICON,
     description: "Digital wallet created for everyone.",
-    website: "https://frw.gitbook.io/",
+    website: "https://wallet.flow.com",
   },
 }
 
@@ -53,10 +57,7 @@ function loadFclWc(wcConfig: WalletConnectConfig) {
   isLoaded = true
 
   // Merge Flow Reference Wallet (default) with any custom wallets from config
-  const wallets = [
-    FLOW_REFERENCE_WALLET,
-    ...(wcConfig.walletConnectWallets || []),
-  ]
+  const wallets = [FLOW_WALLET, ...(wcConfig.walletConnectWallets || [])]
 
   const {FclWcServicePlugin} = initLazy({
     projectId,

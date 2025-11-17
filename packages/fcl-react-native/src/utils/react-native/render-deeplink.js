@@ -1,14 +1,6 @@
 import {AppState} from "react-native"
 import {URL} from "@onflow/fcl-core"
-
-// Lazy load expo-linking to avoid TurboModule errors
-let Linking = null
-const getLinking = async () => {
-  if (!Linking) {
-    Linking = await import("expo-linking")
-  }
-  return Linking
-}
+import * as Linking from "expo-linking"
 
 /**
  * Renders a deeplink view (i.e. deep links to a wallet app)
@@ -19,7 +11,6 @@ const getLinking = async () => {
  * @returns {[null, () => void]}
  */
 export async function renderDeeplink(src, opts = {}) {
-  const LinkingModule = await getLinking()
   const url = new URL(src.toString())
 
   // Custom schemes (i.e mywallet://) are not supported for
@@ -43,7 +34,7 @@ export async function renderDeeplink(src, opts = {}) {
 
   // Link to the target url
   try {
-    await LinkingModule.openURL(url.toString())
+    await Linking.openURL(url.toString())
     console.log("Deeplink Opened Successfully - URL:", url.toString())
   } catch (error) {
     console.log(

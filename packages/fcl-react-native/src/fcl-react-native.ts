@@ -78,21 +78,31 @@ import {
 
 import {getClient} from "./walletconnect/client"
 
-// Eagerly start loading AsyncStorage when module loads
+// Get AsyncStorage instance when module loads
 // This ensures storage is ready before any component subscribes to currentUser
-const storagePromise = getAsyncStorage()
+const storageInstance = getAsyncStorage()
 
 export const currentUser = getCurrentUser({
   platform: "react-native",
   getStorageProvider: async () => {
-    // Wait for eager-loaded storage to be ready
-    await storagePromise
-    return (await config().get("fcl.storage")) || (await storagePromise)
+    return (await config().get("fcl.storage")) || storageInstance
   },
 })
 export const mutate = getMutate(currentUser)
 
-export const authenticate = (opts = {}) => currentUser().authenticate(opts)
+export const authenticate = async (opts: any = {}) => {
+  // If service is explicitly provided, use direct authentication (backward compatible)
+  if (opts.service) {
+    return currentUser().authenticate(opts)
+  }
+
+  // Otherwise, use mobile-specific authentication with auto-modal
+  // This replicates browser FCL's automatic discovery UI behavior
+  return authenticateWithDiscovery(
+    {authenticate: currentUser().authenticate, config},
+    opts
+  )
+}
 
 export const unauthenticate = async () => {
   // First unauthenticate from FCL
@@ -134,6 +144,9 @@ import {
   getDefaultConfig,
   useServiceDiscovery,
   ServiceDiscovery,
+  ServiceDiscoveryModal,
+  ServiceModalProvider,
+  authenticateWithDiscovery,
 } from "./utils/react-native"
 import {getAsyncStorage} from "./utils/react-native/storage"
 import {initFclWcLoader} from "./walletconnect/loader"
@@ -149,7 +162,15 @@ setIsReactNative(true)
 // Automatically load WalletConnect plugin based on config
 initFclWcLoader()
 
-export {useServiceDiscovery, ServiceDiscovery, getServiceRegistry}
+export {
+  useServiceDiscovery,
+  ServiceDiscovery,
+  ServiceDiscoveryModal,
+  getServiceRegistry,
+}
+
+// Export ModalContainer for app root wrapper
+export {ServiceModalProvider as ModalContainer}
 
 // Subscriptions
 export {subscribe} from "@onflow/fcl-core"

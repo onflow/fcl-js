@@ -1,17 +1,6 @@
 import {FCL_REDIRECT_URL_PARAM_NAME, URL} from "@onflow/fcl-core"
-
-// Lazy load Expo modules to avoid TurboModule errors in Expo Go
-// These modules require native code and must be loaded after React Native initializes
-let WebBrowser = null
-let Linking = null
-
-const getExpoModules = async () => {
-  if (!WebBrowser || !Linking) {
-    WebBrowser = await import("expo-web-browser")
-    Linking = await import("expo-linking")
-  }
-  return {WebBrowser, Linking}
-}
+import * as WebBrowser from "expo-web-browser"
+import * as Linking from "expo-linking"
 
 /**
  *
@@ -20,9 +9,7 @@ const getExpoModules = async () => {
  * @returns {[object, () => void]}
  */
 export async function renderBrowser(src, opts = {}) {
-  const {WebBrowser: WB, Linking: L} = await getExpoModules()
-
-  const redirectUrl = L.createURL("$$fcl_auth_callback$$", {
+  const redirectUrl = Linking.createURL("$$fcl_auth_callback$$", {
     queryParams: {},
   })
 
@@ -31,11 +18,11 @@ export async function renderBrowser(src, opts = {}) {
 
   console.log("Opening Browser Auth Session - URL:", url.toString())
 
-  const webbrowser = WB.openAuthSessionAsync(url.toString())
+  const webbrowser = WebBrowser.openAuthSessionAsync(url.toString())
 
   const unmount = () => {
     try {
-      WB.dismissAuthSession()
+      WebBrowser.dismissAuthSession()
       console.log(
         "Browser Auth Session Dismissed - Auth session closed successfully"
       )
