@@ -1,6 +1,6 @@
 {
   "name": "@onflow/sdk",
-  "version": "1.11.1",
+  "version": "1.11.2",
   "description": "Low-level JavaScript/TypeScript SDK for interacting with the Flow blockchain.",
   "license": "Apache-2.0",
   "author": "Flow Foundation",
@@ -42,7 +42,7 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.25.7",
-    "@onflow/config": "1.6.2",
+    "@onflow/config": "1.6.3",
     "@onflow/rlp": "1.2.4",
     "@onflow/transport-http": "1.14.0",
     "@onflow/typedefs": "1.8.0",
