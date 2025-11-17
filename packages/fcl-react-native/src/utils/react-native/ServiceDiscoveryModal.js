@@ -72,7 +72,11 @@ const DefaultModalServiceCard = ({service, onPress}) => {
       walletDescription &&
         createElement(
           Text,
-          {style: styles.walletDescription},
+          {
+            style: styles.walletDescription,
+            numberOfLines: 1,
+            ellipsizeMode: "tail",
+          },
           walletDescription
         )
     ),
@@ -268,12 +272,12 @@ const styles = StyleSheet.create({
     paddingVertical: 4,
   },
   closeButtonText: {
-    fontSize: 28,
-    color: "#666666",
-    lineHeight: 28,
+    fontSize: 20,
+    color: "#000000",
+    lineHeight: 20,
   },
   scrollView: {
-    maxHeight: 500,
+    maxHeight: 600,
   },
   scrollViewContent: {
     paddingVertical: 8,
@@ -312,11 +316,11 @@ const styles = StyleSheet.create({
   },
   walletArrow: {
     fontSize: 20,
-    color: "#0052FF",
+    color: "#000000",
     marginLeft: 12,
   },
   loadingContainer: {
-    paddingVertical: 40,
+    paddingVertical: 34,
     alignItems: "center",
   },
   loadingText: {
@@ -324,7 +328,7 @@ const styles = StyleSheet.create({
     color: "#666666",
   },
   emptyContainer: {
-    paddingVertical: 40,
+    paddingVertical: 28,
     alignItems: "center",
   },
   emptyText: {
