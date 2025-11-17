@@ -1,14 +1,15 @@
-import {createElement} from "react"
+import {Image} from "expo-image"
+import {createElement, useEffect, useRef} from "react"
 import {
+  Animated,
   Modal,
-  View,
+  SafeAreaView,
+  ScrollView,
+  StyleSheet,
   Text,
   TouchableOpacity,
-  StyleSheet,
-  ScrollView,
-  SafeAreaView,
+  View,
 } from "react-native"
-import {Image} from "expo-image"
 import {useServiceDiscovery} from "./ServiceDiscovery"
 
 /**
@@ -109,6 +110,34 @@ export const ServiceDiscoveryModal = ({
 }) => {
   const {services, isLoading, authenticateService} = useServiceDiscovery({fcl})
 
+  // Animation values
+  const backdropOpacity = useRef(new Animated.Value(0)).current
+  const slideAnim = useRef(new Animated.Value(300)).current
+
+  // Animate backdrop and content when modal visibility changes
+  useEffect(() => {
+    if (visible) {
+      // Fade in backdrop instantly (fast)
+      Animated.timing(backdropOpacity, {
+        toValue: 1,
+        duration: 200,
+        useNativeDriver: true,
+      }).start()
+
+      // Slide up content with spring animation
+      Animated.spring(slideAnim, {
+        toValue: 0,
+        tension: 65,
+        friction: 10,
+        useNativeDriver: true,
+      }).start()
+    } else {
+      // Reset animations when modal closes
+      backdropOpacity.setValue(0)
+      slideAnim.setValue(300)
+    }
+  }, [visible, backdropOpacity, slideAnim])
+
   const handleServiceSelect = service => {
     authenticateService(service)
     onAuthenticate?.(service)
@@ -120,12 +149,12 @@ export const ServiceDiscoveryModal = ({
     {
       visible,
       transparent: true,
-      animationType: "slide",
+      animationType: "none",
       onRequestClose: onClose,
     },
     createElement(
-      View,
-      {style: styles.backdrop},
+      Animated.View,
+      {style: [styles.backdrop, {opacity: backdropOpacity}]},
       createElement(TouchableOpacity, {
         style: styles.backdropTouchable,
         activeOpacity: 1,
@@ -135,8 +164,13 @@ export const ServiceDiscoveryModal = ({
         SafeAreaView,
         {style: styles.safeArea},
         createElement(
-          View,
-          {style: styles.modalContent},
+          Animated.View,
+          {
+            style: [
+              styles.modalContent,
+              {transform: [{translateY: slideAnim}]},
+            ],
+          },
           // Header
           createElement(
             View,
