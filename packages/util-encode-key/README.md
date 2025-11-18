@@ -16,7 +16,7 @@ const PUBLIC_KEY = "0bfcd8790c3ce88f3fac9d4bd23514f48bf0cdd1f6c3c8bdf87b11489b1b
 const ENCODED_KEY = encodeKey(
   PLUBLIC_KEY, // The key to encode (DER Hex)
   ECDSA_P256,  // The curve Flow needs to use with your key [ECDSA_P256|ECDSA_secp256k1]
-  SHA3_256,    // The hashing algorythm Flow needs to use with your key [SHA2_256|SHA3_256]
+  SHA3_256,    // The hashing algorithm Flow needs to use with your key [SHA2_256|SHA3_256]
   1000         // The weight you want this key to have [Range: 0..1000]
 )
 
