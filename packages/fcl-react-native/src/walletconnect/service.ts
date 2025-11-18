@@ -258,10 +258,6 @@ const makeExec = (
       abortSignal,
       disableNotifications: service.params?.disableNotifications,
     }).then((response: any) => {
-      console.log(
-        "WalletConnect: Received response from wallet - Method:",
-        method
-      )
       console.log("WalletConnect: Response f_type:", response?.f_type)
 
       // For PreAuthzResponse, we need to inject our session topic into the returned services
@@ -271,37 +267,26 @@ const makeExec = (
         response?.f_type === "PreAuthzResponse"
       ) {
         console.log("WalletConnect: Processing PreAuthzResponse")
-        console.log("WalletConnect: Original response services:")
-        console.log("  -> Proposer:", response.proposer ? "present" : "missing")
-        console.log(
-          "  -> Payer:",
-          response.payer ? `array of ${response.payer.length}` : "missing"
-        )
-        console.log(
-          "  -> Authorization:",
-          response.authorization
-            ? `array of ${response.authorization.length}`
-            : "missing"
-        )
 
         // Helper to inject session params into a service
         const injectSessionParams = (svc: any) => {
           if (!svc) return svc
-          console.log(
-            "WalletConnect: Injecting session params into service - Type:",
-            svc.type,
-            "Endpoint:",
-            svc.endpoint
-          )
-          return {
-            ...svc,
-            method: WC_SERVICE_METHOD,
-            uid: service.uid, // Use our plugin's UID
-            params: {
-              ...svc.params,
-              sessionTopic: session?.topic,
-            },
+
+          // Only modify WalletConnect services
+          // Preserve HTTP/POST, HTTP/GET, and other service types as-is
+          if (svc.method === WC_SERVICE_METHOD) {
+            return {
+              ...svc,
+              uid: service.uid, // Use our plugin's UID
+              params: {
+                ...svc.params,
+                sessionTopic: session?.topic,
+              },
+            }
           }
+
+          // Return non-WC services unchanged (e.g., HTTP/POST for payer)
+          return svc
         }
 
         // Inject session topic into all returned services
@@ -312,18 +297,7 @@ const makeExec = (
           authorization: response.authorization?.map(injectSessionParams),
         }
 
-        console.log("WalletConnect: Modified PreAuthzResponse services:")
-        console.log("  -> Proposer method:", modifiedResponse.proposer?.method)
-        console.log(
-          "  -> Proposer has sessionTopic:",
-          !!modifiedResponse.proposer?.params?.sessionTopic
-        )
-        console.log("  -> Payer count:", modifiedResponse.payer?.length || 0)
-        console.log(
-          "  -> Authorization count:",
-          modifiedResponse.authorization?.length || 0
-        )
-
+        console.log("WalletConnect: Modified PreAuthzResponse services")
         return modifiedResponse
       }
       return response
