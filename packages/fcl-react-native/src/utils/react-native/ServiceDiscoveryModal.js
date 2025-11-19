@@ -258,8 +258,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingHorizontal: 20,
     paddingVertical: 16,
-    borderBottomWidth: 1,
-    borderBottomColor: "#E5E5E5",
     backgroundColor: "#ffffff",
   },
   title: {
@@ -294,8 +292,6 @@ const styles = StyleSheet.create({
     marginHorizontal: 16,
     marginVertical: 6,
     borderRadius: 12,
-    borderWidth: 1,
-    borderColor: "#E5E5E5",
   },
   walletIcon: {
     width: 40,
