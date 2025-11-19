@@ -277,10 +277,12 @@ const styles = StyleSheet.create({
     lineHeight: 20,
   },
   scrollView: {
-    maxHeight: 600,
+    flexGrow: 0,
+    flexShrink: 1,
   },
   scrollViewContent: {
-    paddingVertical: 8,
+    paddingTop: 8,
+    paddingBottom: 16,
   },
   walletCard: {
     flexDirection: "row",
