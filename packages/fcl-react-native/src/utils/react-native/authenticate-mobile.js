@@ -1,6 +1,6 @@
 import {getServiceRegistry} from "@onflow/fcl-core"
-import {showModal, hideModal} from "./ServiceModalProvider"
-import {ServiceDiscoveryModal} from "./ServiceDiscoveryModal"
+import {showModal, hideModal} from "./ConnectModalProvider"
+import {ConnectModal} from "./ConnectModal"
 
 /**
  * Mobile-specific authentication with automatic discovery modal.
@@ -10,7 +10,7 @@ import {ServiceDiscoveryModal} from "./ServiceDiscoveryModal"
  *
  * Flow:
  * 1. Get available wallets from service registry
- * 2. Show ServiceDiscoveryModal imperatively (even if only 1 wallet)
+ * 2. Show ConnectModal imperatively (even if only 1 wallet)
  * 3. Wait for user to select a wallet
  * 4. Authenticate with selected wallet via WalletConnect
  * 5. Return authenticated user
@@ -36,8 +36,6 @@ export async function authenticateWithDiscovery(fclContext, opts = {}) {
   // Show modal even with single wallet (as requested by user)
   // This matches browser FCL behavior where discovery UI always shows
   return new Promise((resolve, reject) => {
-    let modalId = null
-
     const handleAuthenticate = async service => {
       console.log(
         `[FCL Mobile Auth] User selected wallet:`,
@@ -45,9 +43,7 @@ export async function authenticateWithDiscovery(fclContext, opts = {}) {
       )
 
       // Close modal
-      if (modalId !== null) {
-        hideModal(modalId)
-      }
+      hideModal()
 
       try {
         // Authenticate with selected service
@@ -64,26 +60,24 @@ export async function authenticateWithDiscovery(fclContext, opts = {}) {
       console.log(`[FCL Mobile Auth] User cancelled wallet selection`)
 
       // Close modal
-      if (modalId !== null) {
-        hideModal(modalId)
-      }
+      hideModal()
 
       // Reject with cancellation error
       reject(new Error("User cancelled authentication"))
     }
 
     // Show modal imperatively (like browser FCL's renderFrame)
-    modalId = showModal(ServiceDiscoveryModal, {
+    const result = showModal(ConnectModal, {
       fcl: fclContext,
       onAuthenticate: handleAuthenticate,
       onClose: handleClose,
     })
 
     // If modal manager not available, provide helpful error
-    if (modalId === null) {
+    if (result === null) {
       reject(
         new Error(
-          "FCL Modal system not initialized. Please wrap your app with <fcl.ModalContainer>. " +
+          "FCL Modal system not initialized. Please wrap your app with <fcl.ConnectModalProvider>. " +
             "See: https://developers.flow.com/tools/clients/fcl-js/react-native#setup"
         )
       )

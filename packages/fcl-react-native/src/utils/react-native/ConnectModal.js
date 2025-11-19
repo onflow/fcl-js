@@ -12,13 +12,6 @@ import {
 } from "react-native"
 import {useServiceDiscovery} from "./ServiceDiscovery"
 
-/**
- * Default modal wrapper component that renders wallet cards in a scrollable list.
- *
- * @param {object} props - The component props.
- * @param {JSX.Element[]} props.children - The children components.
- * @returns {JSX.Element} - The modal wrapper component.
- */
 const DefaultModalWrapper = ({children}) =>
   createElement(
     ScrollView,
@@ -29,14 +22,6 @@ const DefaultModalWrapper = ({children}) =>
     ...children
   )
 
-/**
- * Default service card component for modal with enhanced styling.
- *
- * @param {object} props - The component props.
- * @param {Service} props.service - The service object.
- * @param {Function} props.onPress - The onPress event handler.
- * @returns {JSX.Element} - The service card component.
- */
 const DefaultModalServiceCard = ({service, onPress}) => {
   const walletIcon = service?.provider?.icon
   const walletName =
@@ -86,7 +71,7 @@ const DefaultModalServiceCard = ({service, onPress}) => {
 }
 
 /**
- * ServiceDiscoveryModal component that displays a modal for wallet selection.
+ * ConnectModal component that displays a modal for wallet selection.
  * Wraps the existing ServiceDiscovery component in a React Native Modal.
  *
  * @param {object} props - The component props.
@@ -99,9 +84,9 @@ const DefaultModalServiceCard = ({service, onPress}) => {
  * @param {Function} [props.ServiceCard] - Optional custom wallet card component.
  * @param {Function} [props.Wrapper] - Optional custom wrapper component.
  * @param {string} [props.title] - Modal title text (default: "Connect Wallet").
- * @returns {JSX.Element} - The service discovery modal component.
+ * @returns {JSX.Element} - The connect modal component.
  */
-export const ServiceDiscoveryModal = ({
+export const ConnectModal = ({
   fcl,
   visible,
   onClose,

@@ -144,8 +144,8 @@ import {
   getDefaultConfig,
   useServiceDiscovery,
   ServiceDiscovery,
-  ServiceDiscoveryModal,
-  ServiceModalProvider,
+  ConnectModal,
+  ConnectModalProvider,
   authenticateWithDiscovery,
 } from "./utils/react-native"
 import {getAsyncStorage} from "./utils/react-native/storage"
@@ -165,12 +165,10 @@ initFclWcLoader()
 export {
   useServiceDiscovery,
   ServiceDiscovery,
-  ServiceDiscoveryModal,
+  ConnectModal,
+  ConnectModalProvider,
   getServiceRegistry,
 }
-
-// Export ModalContainer for app root wrapper
-export {ServiceModalProvider as ModalContainer}
 
 // Subscriptions
 export {subscribe} from "@onflow/fcl-core"
