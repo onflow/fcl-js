@@ -22,6 +22,7 @@ export interface FlowClientCoreConfig {
   discoveryWalletMethod?: string
   discoveryAuthnEndpoint?: string
   discoveryAuthnInclude?: string[]
+  discoveryAuthnExclude?: string[]
 
   // Compute limit for transactions
   computeLimit: number

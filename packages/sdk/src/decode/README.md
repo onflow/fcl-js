@@ -65,7 +65,7 @@ const decoded = await decodeResponse(myResponse, {
 
 You can specify Custom Decoders to be executed on types tested against with a regular expression.
 To denote a regular expression, write the key for that custom decoder between two slashes. Note that
-only global search is suppoted at this time.
+only global search is supported at this time.
 
 ```javascript
 import {decodeResponse} from "@onflow/decode"

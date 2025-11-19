@@ -206,7 +206,7 @@ test("Voucher in PreSignable multiple payer keys different accounts", async () =
   await expect(resolve(built)).rejects.toThrow()
 })
 
-test("mulitple payer scenario (One from dev and one from pre-authz)", async () => {
+test("multiple payer scenario (One from dev and one from pre-authz)", async () => {
   const authzPayer = {
     addr: "0x01",
     signingFunction: () => ({signature: "123"}),
@@ -276,7 +276,7 @@ test("mulitple payer scenario (One from dev and one from pre-authz)", async () =
   })
 })
 
-test("mulitple payer scenario (One from dev and one from pre-authz) as array", async () => {
+test("multiple payer scenario (One from dev and one from pre-authz) as array", async () => {
   const authzPayer1 = {
     addr: "0x01",
     signingFunction: () => ({signature: "123"}),

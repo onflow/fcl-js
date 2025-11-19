@@ -183,7 +183,7 @@ describe("Subscribe Events", () => {
     ])
   })
 
-  test("close should propogate the websocket connection", async () => {
+  test("close should propagate the websocket connection", async () => {
     const response = await connectSubscribeEvents(
       {
         tag: "SUBSCRIBE_EVENTS",
