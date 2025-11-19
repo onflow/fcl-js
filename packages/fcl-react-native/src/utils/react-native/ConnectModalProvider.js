@@ -20,21 +20,6 @@ export function hideModal() {
   }
 }
 
-function ModalErrorBoundary({children}) {
-  const [hasError, setHasError] = useState(false)
-
-  try {
-    if (hasError) {
-      return null
-    }
-    return children
-  } catch (error) {
-    console.error("[FCL Modal Error]", error)
-    setHasError(true)
-    return null
-  }
-}
-
 export function ConnectModalProvider({children}) {
   const [currentModal, setCurrentModal] = useState(null)
 
@@ -64,14 +49,10 @@ export function ConnectModalProvider({children}) {
     null,
     children,
     currentModal &&
-      React.createElement(
-        ModalErrorBoundary,
-        null,
-        React.createElement(currentModal.ModalComponent, {
-          visible: true,
-          ...currentModal.props,
-          onClose: hide,
-        })
-      )
+      React.createElement(currentModal.ModalComponent, {
+        visible: true,
+        ...currentModal.props,
+        onClose: hide,
+      })
   )
 }
