@@ -80,8 +80,8 @@ const makeExec = (
     console.log("WalletConnect: Client ready")
 
     const method = service.endpoint
-    const appLink = validateAppLink(service)
-    console.log("WalletConnect: App link validated:", appLink)
+    const appLink = service.uid
+    console.log("WalletConnect: App link:", appLink)
 
     // Check if service has a session topic in params (from injected PreAuthzResponse)
     const sessionTopic = service.params?.sessionTopic
@@ -350,16 +350,6 @@ const makeExec = (
       method
     )
     return finalResponse
-
-    function validateAppLink({uid}: {uid: string}) {
-      if (!(uid && /^(ftp|http|https):\/\/[^ "]+$/.test(uid))) {
-        console.warn(
-          "WalletConnect Service Warning",
-          `service.uid should be a valid universal link url. Found: ${uid}`
-        )
-      }
-      return uid
-    }
   }
 }
 
