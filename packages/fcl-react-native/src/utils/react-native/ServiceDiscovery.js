@@ -1,6 +1,7 @@
 import {useState, useEffect, createElement} from "react"
 import {StyleSheet, Text, View, TouchableOpacity} from "react-native"
-import {getServiceRegistry, URL} from "@onflow/fcl-core"
+import {getServiceRegistry} from "@onflow/fcl-core"
+import {VERSION} from "../../VERSION"
 
 /**
  * @typedef {import("@onflow/typedefs").Service} Service
@@ -92,69 +93,21 @@ export const useServiceDiscovery = ({fcl}) => {
 
   const getServices = async () => {
     setIsLoading(true)
-    console.log(
-      "Discovery: Replicating FCL's getServices() logic for React Native"
-    )
-
-    // NOTE: fcl-discovery.onflow.org currently returns 404 for React Native requests
-    // This is a server-side issue - the Vercel deployment blocks React Native/OkHttp
-    // The same requests work perfectly from curl and browsers
-    // See: FCL_DISCOVERY_BUG_REPORT.md in the repository root
-    // Workaround: Manually add wallets via the plugin system (wallets array in config)
+    const endpoint = await fcl.config.get("discovery.authn.endpoint")
 
     try {
-      // Replicate what fcl-core/src/discovery/services.ts getServices() does
-      const endpoint = await fcl.config.get("discovery.authn.endpoint")
-      if (!endpoint) {
-        throw new Error('"discovery.authn.endpoint" in config must be defined.')
-      }
-
-      const include = await fcl.config.get("discovery.authn.include", [])
-      const exclude = await fcl.config.get("discovery.authn.exclude", [])
-
-      // Use FCL's URL class to fix React Native trailing slash bug
-      const url = new URL(endpoint)
-      console.log("Discovery: Endpoint URL:", url.href)
-
-      // Get network from config (getChainId equivalent)
-      const network = await fcl.config.get("flow.network", "testnet")
-
-      // Get client services (plugin services) - React Native doesn't have window.fcl_extensions
-      // so we just get services from the service registry
+      // Get supported strategies from service registry (should be WC/RPC for React Native)
       const serviceRegistry = getServiceRegistry()
-      const clientServices = serviceRegistry.getServices()
-      console.log(
-        "Discovery: Client services (plugins):",
-        clientServices.length
-      )
-
-      // Get supported strategies from service registry
       const supportedStrategies = serviceRegistry.getStrategies()
-      console.log("Discovery: Supported strategies:", supportedStrategies)
 
-      // Build request body exactly like services.ts does
-      // NOTE: Changed userAgent to look like browser - server might be filtering "ReactNative"
       const requestBody = {
-        type: ["authn"],
-        fclVersion: fcl.VERSION,
-        include,
-        exclude,
-        features: {
-          suggested: await fcl.config.get("discovery.features.suggested", []),
-        },
-        clientServices,
+        fclVersion: VERSION,
+        userAgent: "ReactNative",
         supportedStrategies,
-        userAgent: "Mozilla/5.0 (compatible; FCL/1.0)",
-        network,
       }
 
-      console.log(
-        "Discovery: Request body:",
-        JSON.stringify(requestBody, null, 2)
-      )
-
-      // Make the fetch request exactly like services.ts does
-      const response = await fetch(url.href, {
+      // Fetch wallets from Discovery API
+      const response = await fetch(endpoint, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -162,40 +115,46 @@ export const useServiceDiscovery = ({fcl}) => {
         body: JSON.stringify(requestBody),
       })
 
-      console.log("Discovery: Response status:", response.status)
-
       if (!response.ok) {
         throw new Error(`HTTP ${response.status}: ${response.statusText}`)
       }
 
       const discoveryServices = await response.json()
-      console.log("Discovery: Services returned:", discoveryServices.length)
-      console.log(
-        "Discovery: Service names:",
-        discoveryServices.map(s => s.provider?.name || s.uid)
+
+      // Filter to only mobile-compatible strategies (WC/RPC, DEEPLINK/RPC)
+      const mobileStrategies = ["WC/RPC", "DEEPLINK/RPC"]
+      const mobileServices = discoveryServices.filter(s =>
+        mobileStrategies.includes(s.method)
       )
 
-      setServices(discoveryServices)
+      // Get plugin services to merge with Discovery services
+      const pluginServices = serviceRegistry.getServices()
+
+      // Merge mobile Discovery services + plugin services, deduplicate by UID
+      const mergedServices = [...mobileServices]
+      const discoveryUids = new Set(
+        mobileServices.map(s => s.uid).filter(Boolean)
+      )
+      // Add plugin services that aren't already in Discovery
+      for (const pluginService of pluginServices) {
+        if (!discoveryUids.has(pluginService.uid)) {
+          mergedServices.push(pluginService)
+        }
+      }
+
+      setServices(mergedServices)
       setIsLoading(false)
     } catch (error) {
-      console.log("Service Discovery Error - Failed:", error.message || error)
+      console.error("Discovery: Failed to fetch services:", error.message)
 
-      // Fallback: try to get plugin services directly
+      // Fallback: use plugin services only
       try {
         const serviceRegistry = getServiceRegistry()
-        if (serviceRegistry) {
-          const pluginServices = serviceRegistry.getServices()
-          console.log(
-            "Discovery: Falling back to plugin services only:",
-            pluginServices.length
-          )
-          setServices(pluginServices)
-        } else {
-          setServices([])
-        }
+        const fallbackServices = serviceRegistry.getServices()
+        setServices(fallbackServices)
       } catch (pluginError) {
-        console.log(
-          "Discovery: Failed to get plugin services too:",
+        console.error(
+          "Discovery: Plugin services also failed:",
           pluginError.message
         )
         setServices([])

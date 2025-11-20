@@ -40,14 +40,7 @@ const DefaultModalServiceCard = ({service, onPress}) => {
       createElement(Image, {
         source: {uri: walletIcon},
         style: styles.walletIcon,
-        resizeMode: "contain",
-        onError: error => {
-          console.log(
-            "Wallet icon failed to load:",
-            walletIcon,
-            error.nativeEvent?.error
-          )
-        },
+        contentFit: "contain",
       }),
     // Wallet info
     createElement(
