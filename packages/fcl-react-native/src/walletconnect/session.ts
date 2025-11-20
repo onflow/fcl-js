@@ -86,17 +86,6 @@ export const request = async ({
     session.topic.substring(0, 10) + "..."
   )
 
-  // Create a timeout promise (60 seconds for signing requests)
-  const timeoutPromise = new Promise((_, reject) => {
-    setTimeout(() => {
-      console.log(
-        "WalletConnect Request: TIMEOUT after 60 seconds - Method:",
-        method
-      )
-      reject(new Error("WalletConnect request timed out after 60 seconds"))
-    }, 60000)
-  })
-
   const abortPromise = new Promise((_, reject) => {
     if (abortSignal?.aborted) {
       reject(new Error("WalletConnect Request aborted"))
@@ -118,11 +107,12 @@ export const request = async ({
     }
 
     console.log("WalletConnect Request: Sending to relay - Method:", method)
+    // Note: WalletConnect SDK has built-in 5-minute timeout (wc_sessionRequest.req.ttl)
     const result: any = await Promise.race([
       client.request(requestPayload),
       abortPromise,
-      timeoutPromise,
     ])
+
     console.log(
       "WalletConnect Request: Received result - Method:",
       method,

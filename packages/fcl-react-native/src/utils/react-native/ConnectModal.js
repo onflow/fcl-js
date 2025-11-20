@@ -71,7 +71,7 @@ const DefaultModalServiceCard = ({service, onPress}) => {
  * @param {object} props.fcl - The fcl instance.
  * @param {boolean} props.visible - Controls modal visibility.
  * @param {Function} props.onClose - Called when modal should close.
- * @param {Function} [props.onAuthenticate] - Optional callback after wallet selection.
+ * @param {Function} props.onAuthenticate - Callback when user selects a wallet. Required.
  * @param {Function} [props.Loading] - Optional custom loading component.
  * @param {Function} [props.Empty] - Optional custom empty state component.
  * @param {Function} [props.ServiceCard] - Optional custom wallet card component.
@@ -90,7 +90,7 @@ export const ConnectModal = ({
   Wrapper = DefaultModalWrapper,
   title = "Connect Wallet",
 }) => {
-  const {services, isLoading, authenticateService} = useServiceDiscovery({fcl})
+  const {services, isLoading} = useServiceDiscovery({fcl})
 
   // Animation values
   const backdropOpacity = useRef(new Animated.Value(0)).current
@@ -121,9 +121,8 @@ export const ConnectModal = ({
   }, [visible, backdropOpacity, slideAnim])
 
   const handleServiceSelect = service => {
-    authenticateService(service)
-    onAuthenticate?.(service)
-    onClose()
+    // onAuthenticate handles modal closing internally, don't call onClose()
+    onAuthenticate(service)
   }
 
   return createElement(
