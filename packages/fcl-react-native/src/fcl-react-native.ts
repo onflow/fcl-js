@@ -108,24 +108,42 @@ export const unauthenticate = async () => {
   // First unauthenticate from FCL
   currentUser().unauthenticate()
 
-  // Then disconnect all WalletConnect sessions
+  // Then disconnect WalletConnect (both sessions and pairings for complete cleanup)
   try {
     const client = await getClient()
     if (client) {
+      // Get all sessions and pairings
       const sessions = client.session.getAll()
-      console.log(`Disconnecting ${sessions.length} WalletConnect session(s)`)
+      const pairings = client.core.pairing.pairings.getAll()
+
+      console.log(
+        `Disconnecting ${sessions.length} session(s) and ${pairings.length} pairing(s)`
+      )
+
+      // Disconnect all sessions first
       for (const session of sessions) {
-        await client.disconnect({
-          topic: session.topic,
-          reason: {
-            code: 6000,
-            message: "User disconnected",
-          },
-        })
+        try {
+          await client.disconnect({
+            topic: session.topic,
+            reason: {code: 6000, message: "User disconnected"},
+          })
+        } catch (error) {
+          console.warn(`Failed to disconnect session: ${error}`)
+        }
       }
+      // Then disconnect all pairings (ensures wallet shows fully disconnected)
+      for (const pairing of pairings) {
+        try {
+          await client.core.pairing.disconnect({topic: pairing.topic})
+        } catch (error) {
+          console.warn(`Failed to disconnect pairing: ${error}`)
+        }
+      }
+
+      console.log("WalletConnect fully disconnected")
     }
   } catch (error) {
-    console.warn("Failed to disconnect WalletConnect sessions:", error)
+    console.error("Failed to disconnect WalletConnect:", error)
   }
 }
 
