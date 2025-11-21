@@ -43,6 +43,10 @@ const makeExec = (
   signerPromise: Promise<any>,
   config: FclWalletConnectConfig
 ) => {
+  // Store the wallet's deep link URL from the initial authn request
+  // This is reused for all subsequent WC/RPC requests (authz, pre-authz, user-sign)
+  let walletAppLink: string | null = null
+
   return async ({
     service,
     body,
@@ -81,7 +85,27 @@ const makeExec = (
       client.metadata?.redirect?.native || client.metadata?.redirect?.universal
 
     const method = service.endpoint
-    const appLink = service.uid
+
+    // Determine the app link (deep link URL) for opening the wallet
+    // For authn requests, use service.uid and store it for subsequent requests
+    // For other requests (authz, pre-authz from HTTP/POST), use the stored walletAppLink
+    let appLink: string
+
+    if (method === FLOW_METHODS.FLOW_AUTHN) {
+      // This is the initial authn request - store the wallet's deep link URL
+      appLink = service.uid
+      walletAppLink = appLink
+      console.log("WalletConnect: Storing wallet app link from authn:", appLink)
+    } else if (walletAppLink) {
+      // Use the stored wallet app link for all subsequent requests
+      appLink = walletAppLink
+      console.log("WalletConnect: Using stored wallet app link:", appLink)
+    } else {
+      // Fallback to service.uid (shouldn't happen in normal flow)
+      appLink = service.uid
+      console.log("WalletConnect: Using service uid as fallback:", appLink)
+    }
+
     console.log("WalletConnect: App link:", appLink)
 
     // Check if service has a session topic in params (from injected PreAuthzResponse)
