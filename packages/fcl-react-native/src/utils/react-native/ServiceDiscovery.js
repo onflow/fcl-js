@@ -1,26 +1,11 @@
 import {useState, useEffect, createElement} from "react"
 import {StyleSheet, Text, View, TouchableOpacity} from "react-native"
+import {getServiceRegistry} from "@onflow/fcl-core"
+import {VERSION} from "../../VERSION"
 
 /**
  * @typedef {import("@onflow/typedefs").Service} Service
  */
-
-/**
- * Fetches data from a URL using the POST method and returns the parsed JSON response.
- *
- * @param {string} url - The URL to fetch.
- * @param {object} opts - Additional options for the fetch request.
- * @returns {Promise<object>} - A promise that resolves to the parsed JSON response.
- */
-const fetcher = (url, opts) => {
-  return fetch(url, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(opts),
-  }).then(d => d.json())
-}
 
 /**
  * Default loading component that renders the "Loading..." text.
@@ -48,8 +33,37 @@ const DefaultEmptyComponent = () =>
 const DefaultServiceCard = ({service, onPress}) => {
   return createElement(
     TouchableOpacity,
-    {onPress},
-    createElement(Text, null, service?.provider?.name)
+    {
+      onPress,
+      style: {
+        backgroundColor: "#0052FF",
+        paddingVertical: 16,
+        paddingHorizontal: 24,
+        borderRadius: 12,
+        marginVertical: 8,
+        marginHorizontal: 16,
+        minHeight: 60,
+        justifyContent: "center",
+        alignItems: "center",
+        shadowColor: "#000",
+        shadowOffset: {width: 0, height: 2},
+        shadowOpacity: 0.1,
+        shadowRadius: 4,
+        elevation: 3,
+      },
+    },
+    createElement(
+      Text,
+      {
+        style: {
+          color: "#FFFFFF",
+          fontSize: 18,
+          fontWeight: "600",
+          textAlign: "center",
+        },
+      },
+      service?.provider?.name
+    )
   )
 }
 
@@ -61,7 +75,7 @@ const DefaultServiceCard = ({service, onPress}) => {
  * @returns {JSX.Element} - The wrapper component.
  */
 const DefaultWrapper = ({children}) =>
-  createElement(View, {style: styles.container}, ...children)
+  createElement(View, {style: getStyles().container}, ...children)
 
 /**
  * Custom hook for service discovery.
@@ -80,16 +94,72 @@ export const useServiceDiscovery = ({fcl}) => {
   const getServices = async () => {
     setIsLoading(true)
     const endpoint = await fcl.config.get("discovery.authn.endpoint")
+
     try {
-      const response = await fetcher(endpoint, {
-        fclVersion: fcl.VERSION,
+      // Get supported strategies from service registry (should be WC/RPC for React Native)
+      const serviceRegistry = getServiceRegistry()
+      const supportedStrategies = serviceRegistry.getStrategies()
+
+      const requestBody = {
+        fclVersion: VERSION,
         userAgent: "ReactNative",
-        supportedStrategies: ["HTTP/POST"],
+        supportedStrategies,
+      }
+
+      // Fetch wallets from Discovery API
+      const response = await fetch(endpoint, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(requestBody),
       })
-      setServices(response)
+
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}: ${response.statusText}`)
+      }
+
+      const discoveryServices = await response.json()
+
+      // Filter to only mobile-compatible strategies (WC/RPC, DEEPLINK/RPC)
+      const mobileStrategies = ["WC/RPC", "DEEPLINK/RPC"]
+      const mobileServices = discoveryServices.filter(s =>
+        mobileStrategies.includes(s.method)
+      )
+
+      // Get plugin services to merge with Discovery services
+      const pluginServices = serviceRegistry.getServices()
+
+      // Merge mobile Discovery services + plugin services, deduplicate by UID
+      const mergedServices = [...mobileServices]
+      const discoveryUids = new Set(
+        mobileServices.map(s => s.uid).filter(Boolean)
+      )
+      // Add plugin services that aren't already in Discovery
+      for (const pluginService of pluginServices) {
+        if (!discoveryUids.has(pluginService.uid)) {
+          mergedServices.push(pluginService)
+        }
+      }
+
+      setServices(mergedServices)
       setIsLoading(false)
     } catch (error) {
-      console.error(error)
+      console.error("Discovery: Failed to fetch services:", error.message)
+
+      // Fallback: use plugin services only
+      try {
+        const serviceRegistry = getServiceRegistry()
+        const fallbackServices = serviceRegistry.getServices()
+        setServices(fallbackServices)
+      } catch (pluginError) {
+        console.error(
+          "Discovery: Plugin services also failed:",
+          pluginError.message
+        )
+        setServices([])
+      }
+      setIsLoading(false)
     }
   }
 
@@ -124,6 +194,7 @@ export const useServiceDiscovery = ({fcl}) => {
  * @param {Function} [props.Empty=DefaultEmptyComponent] - The empty component.
  * @param {Function} [props.ServiceCard=DefaultServiceCard] - The service card component.
  * @param {Function} [props.Wrapper=DefaultWrapper] - The wrapper component.
+ * @param {Function} [props.onServiceSelect] - Optional custom handler for service selection. If provided, this will be called instead of the default authentication.
  * @returns {JSX.Element} - The service discovery component.
  */
 export const ServiceDiscovery = ({
@@ -132,8 +203,17 @@ export const ServiceDiscovery = ({
   Empty = DefaultEmptyComponent,
   ServiceCard = DefaultServiceCard,
   Wrapper = DefaultWrapper,
+  onServiceSelect,
 }) => {
   const {services, isLoading, authenticateService} = useServiceDiscovery({fcl})
+
+  const handleServicePress = service => {
+    if (onServiceSelect) {
+      onServiceSelect(service)
+    } else {
+      authenticateService(service)
+    }
+  }
 
   return createElement(
     Wrapper,
@@ -146,18 +226,26 @@ export const ServiceDiscovery = ({
           key: service?.provider?.address ?? index,
           service,
           onPress: () => {
-            authenticateService(service)
+            handleServicePress(service)
           },
         })
       })
   )
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-})
+// Lazy create styles to avoid calling StyleSheet.create at module load time
+// This prevents TurboModule errors in Expo Go
+let styles
+const getStyles = () => {
+  if (!styles) {
+    styles = StyleSheet.create({
+      container: {
+        flex: 1,
+        backgroundColor: "#fff",
+        alignItems: "center",
+        justifyContent: "center",
+      },
+    })
+  }
+  return styles
+}

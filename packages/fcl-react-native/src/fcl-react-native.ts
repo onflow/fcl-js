@@ -1,6 +1,7 @@
 export {
   VERSION,
   query,
+  queryRaw,
   verifyUserSignatures,
   serialize,
   tx,
@@ -14,6 +15,9 @@ export {
   getChainId,
   TestUtils,
   config,
+  flowMainnet,
+  flowTestnet,
+  flowEmulator,
   send,
   decode,
   account,
@@ -68,21 +72,83 @@ import {
   getMutate,
   getCurrentUser,
   initServiceRegistry,
+  getServiceRegistry,
   setIsReactNative,
 } from "@onflow/fcl-core"
+
+import {getClient} from "./walletconnect/client"
+
+// Get AsyncStorage instance when module loads
+// This ensures storage is ready before any component subscribes to currentUser
+const storageInstance = getAsyncStorage()
 
 export const currentUser = getCurrentUser({
   platform: "react-native",
   getStorageProvider: async () => {
-    return (await config().get("fcl.storage")) || getAsyncStorage()
+    return (await config().get("fcl.storage")) || storageInstance
   },
 })
 export const mutate = getMutate(currentUser)
 
-export const authenticate = (opts = {}) => currentUser().authenticate(opts)
-export const unauthenticate = () => currentUser().unauthenticate()
-export const reauthenticate = (opts = {}) => {
+export const authenticate = async (opts: any = {}) => {
+  // If service is explicitly provided, use direct authentication (backward compatible)
+  if (opts.service) {
+    return currentUser().authenticate(opts)
+  }
+
+  // Otherwise, use mobile-specific authentication with auto-modal
+  // This replicates browser FCL's automatic discovery UI behavior
+  return authenticateWithDiscovery(
+    {authenticate: currentUser().authenticate, config},
+    opts
+  )
+}
+
+export const unauthenticate = async () => {
+  // First unauthenticate from FCL
   currentUser().unauthenticate()
+
+  // Then disconnect WalletConnect (both sessions and pairings for complete cleanup)
+  try {
+    const client = await getClient()
+    if (client) {
+      // Get all sessions and pairings
+      const sessions = client.session.getAll()
+      const pairings = client.core.pairing.pairings.getAll()
+
+      console.log(
+        `Disconnecting ${sessions.length} session(s) and ${pairings.length} pairing(s)`
+      )
+
+      // Disconnect all sessions first
+      for (const session of sessions) {
+        try {
+          await client.disconnect({
+            topic: session.topic,
+            reason: {code: 6000, message: "User disconnected"},
+          })
+        } catch (error) {
+          console.warn(`Failed to disconnect session: ${error}`)
+        }
+      }
+      // Then disconnect all pairings (ensures wallet shows fully disconnected)
+      for (const pairing of pairings) {
+        try {
+          await client.core.pairing.disconnect({topic: pairing.topic})
+        } catch (error) {
+          console.warn(`Failed to disconnect pairing: ${error}`)
+        }
+      }
+
+      console.log("WalletConnect fully disconnected")
+    }
+  } catch (error) {
+    console.error("Failed to disconnect WalletConnect:", error)
+  }
+}
+
+export const reauthenticate = async (opts = {}) => {
+  await unauthenticate()
   return currentUser().authenticate(opts)
 }
 export const signUp = (opts = {}) => currentUser().authenticate(opts)
@@ -96,8 +162,12 @@ import {
   getDefaultConfig,
   useServiceDiscovery,
   ServiceDiscovery,
+  ConnectModal,
+  ConnectModalProvider,
+  authenticateWithDiscovery,
 } from "./utils/react-native"
 import {getAsyncStorage} from "./utils/react-native/storage"
+import {initFclWcLoader} from "./walletconnect/loader"
 
 config(getDefaultConfig())
 
@@ -107,10 +177,24 @@ initServiceRegistry({coreStrategies})
 // Set isReactNative flag
 setIsReactNative(true)
 
-export {useServiceDiscovery, ServiceDiscovery}
+// Automatically load WalletConnect plugin based on config
+initFclWcLoader()
+
+export {
+  useServiceDiscovery,
+  ServiceDiscovery,
+  ConnectModal,
+  ConnectModalProvider,
+  getServiceRegistry,
+}
 
 // Subscriptions
 export {subscribe} from "@onflow/fcl-core"
 export {subscribeRaw} from "@onflow/fcl-core"
 
+// WalletConnect
+export * from "./walletconnect"
+
 export * from "@onflow/typedefs"
+
+export {createFlowClient, type FlowClientConfig} from "./client"
