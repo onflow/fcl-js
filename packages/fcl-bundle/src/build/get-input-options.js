@@ -23,7 +23,7 @@ const SUPPRESSED_WARNING_CODES = [
 ]
 
 module.exports = function getInputOptions(package, build) {
-  // ensure that package has the required dependencies
+  // ensure that that package has the required dependencies
   if (!package.dependencies["@babel/runtime"]) {
     throw new Error(
       `${package.name} is missing required @babel/runtime dependency.  Please add this to the package.json and try again.`
@@ -72,11 +72,6 @@ module.exports = function getInputOptions(package, build) {
 
   const postcssConfigPath = path.resolve(getPackageRoot(), "postcss.config.js")
 
-  // Check if this package has WalletConnect dependencies that cause TypeScript emit issues
-  const hasWalletConnect = Object.keys(package.dependencies || {}).some(dep =>
-    dep.startsWith("@walletconnect/")
-  )
-
   let options = {
     input: build.source,
     external: testExternal,
@@ -106,49 +101,20 @@ module.exports = function getInputOptions(package, build) {
       commonjs(),
       build.type !== "umd" &&
         isTypeScript &&
-        typescript(
-          hasWalletConnect
-            ? {
-                // Special configuration for packages with WalletConnect dependencies
-                // to avoid TypeScript emit errors from node_modules
-                clean: true,
-                check: false,
-                include: [
-                  "src/*.ts+(|x)",
-                  "src/**/*.ts+(|x)",
-                  "src/**/*.cts",
-                  "src/**/*.mts",
-                  "src/*.js+(|x)",
-                  "src/**/*.js+(|x)",
-                  "src/**/*.cjs",
-                  "src/**/*.mjs",
-                ],
-                exclude: ["**/node_modules/**", "node_modules/**"],
-                useTsconfigDeclarationDir: true,
-                tsconfigOverride: {
-                  exclude: [
-                    "node_modules",
-                    "**/node_modules/**",
-                    "../../node_modules/**",
-                  ],
-                },
-              }
-            : {
-                // Standard configuration for all other packages
-                clean: true,
-                include: [
-                  "*.ts+(|x)",
-                  "**/*.ts+(|x)",
-                  "**/*.cts",
-                  "**/*.mts",
-                  "*.js+(|x)",
-                  "**/*.js+(|x)",
-                  "**/*.cjs",
-                  "**/*.mjs",
-                ],
-                useTsconfigDeclarationDir: true,
-              }
-        ),
+        typescript({
+          clean: true,
+          include: [
+            "*.ts+(|x)",
+            "**/*.ts+(|x)",
+            "**/*.cts",
+            "**/*.mts",
+            "*.js+(|x)",
+            "**/*.js+(|x)",
+            "**/*.cjs",
+            "**/*.mjs",
+          ],
+          useTsconfigDeclarationDir: true,
+        }),
       replace({
         preventAssignment: true,
         PACKAGE_CURRENT_VERSION: JSON.stringify(package.version),
