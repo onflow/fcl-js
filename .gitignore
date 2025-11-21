@@ -19,6 +19,3 @@ packages/*/types/
 
 # generated documentation
 /docs-generator/output/*
-
-# ai
-.claude/*
