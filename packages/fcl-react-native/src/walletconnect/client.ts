@@ -2,6 +2,7 @@ import {invariant} from "@onflow/util-invariant"
 import {CoreTypes} from "@walletconnect/types"
 import {SignClient} from "@walletconnect/sign-client"
 import {makeServicePlugin} from "./service"
+import * as Linking from "expo-linking"
 
 // NOTE: SignClient is now imported at the top to avoid Expo async require issues
 // The crypto polyfill (react-native-get-random-values) must still be loaded first from config/flow.ts
@@ -46,7 +47,6 @@ export interface FclWalletConnectConfig {
   wcRequestHook?: any
   disableNotifications?: boolean
   wallets?: any[] // Optional array of wallet services to add
-  redirect?: string // Optional redirect URI for wallet to return to dApp after approval (mobile deep linking)
 }
 
 const DEFAULT_RELAY_URL = "wss://relay.walletconnect.com"
@@ -57,11 +57,9 @@ let clientPromise: Promise<any> = Promise.resolve(null)
 const initClient = async ({
   projectId,
   metadata,
-  redirect,
 }: {
   projectId: string
   metadata?: CoreTypes.Metadata
-  redirect?: string
 }) => {
   invariant(
     projectId != null,
@@ -79,7 +77,14 @@ const initClient = async ({
     await initializeWalletConnect()
     console.log("WalletConnect initClient: Compat layer ready")
 
-    // Build metadata with redirect if provided
+    // Auto-detect redirect URI using expo-linking (always available as dependency)
+    const redirect = Linking.createURL("")
+    console.log(
+      "WalletConnect initClient: Auto-detected redirect URI:",
+      redirect
+    )
+
+    // Build metadata
     const clientMetadata = metadata || {
       name: "Flow dApp",
       description: "Flow dApp powered by FCL",
@@ -87,17 +92,11 @@ const initClient = async ({
       icons: ["https://avatars.githubusercontent.com/u/62387156?v=4"],
     }
 
-    // Add redirect URI if provided (for automatic return to dApp after wallet approval)
-    if (redirect) {
-      clientMetadata.redirect = {
-        native: redirect,
-        universal: redirect,
-      } as any
-      console.log(
-        "WalletConnect initClient: Redirect URI configured:",
-        redirect
-      )
-    }
+    // Add auto-detected redirect URI
+    clientMetadata.redirect = {
+      native: redirect,
+      universal: redirect,
+    } as any
 
     // SignClient will automatically use @walletconnect/keyvaluestorage
     // which has a React Native version that uses AsyncStorage internally
@@ -146,7 +145,6 @@ export const initLazy = (config: FclWalletConnectConfig) => {
         return initClient({
           projectId: config.projectId,
           metadata: config.metadata,
-          redirect: config.redirect,
         })
       }
     })

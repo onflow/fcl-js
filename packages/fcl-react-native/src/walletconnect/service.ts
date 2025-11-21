@@ -65,11 +65,8 @@ const makeExec = (
       service.uid
     )
 
-    const {
-      wcRequestHook,
-      disableNotifications: _appDisabledNotifications,
-      redirect,
-    } = config
+    const {wcRequestHook, disableNotifications: _appDisabledNotifications} =
+      config
 
     const appDisabledNotifications =
       service.params?.disableNotifications ?? _appDisabledNotifications
@@ -78,6 +75,10 @@ const makeExec = (
     const client = await signerPromise
     invariant(!!client, "WalletConnect is not initialized")
     console.log("WalletConnect: Client ready")
+
+    // Get redirect URI from WalletConnect client metadata (auto-detected during initialization)
+    const redirect =
+      client.metadata?.redirect?.native || client.metadata?.redirect?.universal
 
     const method = service.endpoint
     const appLink = service.uid

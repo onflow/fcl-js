@@ -28,8 +28,6 @@ export interface FlowClientConfig {
   // WalletConnect configuration
   walletconnectProjectId?: string
   walletconnectDisableNotifications?: boolean
-  // React Native specific, it's the deep link redirect URI
-  walletconnectRedirect?: string
 
   // Storage configuration
   storage?: StorageProvider
@@ -62,7 +60,6 @@ export async function createFlowClient(params: FlowClientConfig) {
   // Auto-load WalletConnect plugin when projectId is provided
   loadFclWc({
     walletConnectProjectId: params.walletconnectProjectId,
-    walletConnectRedirect: params.walletconnectRedirect,
     walletConnectDisableNotifications: params.walletconnectDisableNotifications,
     appDetailTitle: params.appDetailTitle,
     appDetailIcon: params.appDetailIcon,

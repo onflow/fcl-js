@@ -4,7 +4,6 @@ import {initLazy} from "./client"
 
 interface WalletConnectConfig {
   walletConnectProjectId?: string
-  walletConnectRedirect?: string
   walletConnectDisableNotifications?: boolean
   walletConnectWallets?: any[]
   appDetailTitle?: string
@@ -26,7 +25,6 @@ let isLoaded = false
 
 function loadFclWc(wcConfig: WalletConnectConfig) {
   const projectId = wcConfig.walletConnectProjectId
-  const redirect = wcConfig.walletConnectRedirect
 
   if (!projectId) {
     return
@@ -45,7 +43,6 @@ function loadFclWc(wcConfig: WalletConnectConfig) {
   const {FclWcServicePlugin} = initLazy({
     projectId,
     metadata: getMetadata(wcConfig),
-    redirect: redirect || "",
     disableNotifications:
       wcConfig.walletConnectDisableNotifications ?? undefined,
     wallets: wallets,
@@ -58,7 +55,6 @@ export function initFclWcLoader() {
   config.subscribe(async (fullConfig: any) => {
     const wcConfig: WalletConnectConfig = {
       walletConnectProjectId: fullConfig["walletconnect.projectId"],
-      walletConnectRedirect: fullConfig["walletconnect.redirect"],
       walletConnectDisableNotifications:
         fullConfig["walletconnect.disableNotifications"],
       walletConnectWallets: fullConfig["walletconnect.wallets"],
