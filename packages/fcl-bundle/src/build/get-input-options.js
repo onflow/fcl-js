@@ -23,7 +23,7 @@ const SUPPRESSED_WARNING_CODES = [
 ]
 
 module.exports = function getInputOptions(package, build) {
-  // ensure that that package has the required dependencies
+  // ensure that package has the required dependencies
   if (!package.dependencies["@babel/runtime"]) {
     throw new Error(
       `${package.name} is missing required @babel/runtime dependency.  Please add this to the package.json and try again.`
