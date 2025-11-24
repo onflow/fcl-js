@@ -4,9 +4,6 @@ import {SignClient} from "@walletconnect/sign-client"
 import {makeServicePlugin} from "./service"
 import * as Linking from "expo-linking"
 
-// NOTE: SignClient is now imported at the top to avoid Expo async require issues
-// The crypto polyfill (react-native-get-random-values) must still be loaded first from config/flow.ts
-
 let walletConnectInitialized = false
 
 async function initializeWalletConnect() {
@@ -75,8 +72,8 @@ const initClient = async ({
 
     // Build metadata
     const clientMetadata = metadata || {
-      name: "Flow dApp",
-      description: "Flow dApp powered by FCL",
+      name: "Flow dapp",
+      description: "Flow dapp powered by FCL",
       url: "https://flow.com",
       icons: ["https://avatars.githubusercontent.com/u/62387156?v=4"],
     }
@@ -94,10 +91,9 @@ const initClient = async ({
       relayUrl: DEFAULT_RELAY_URL,
       projectId: projectId,
       metadata: clientMetadata,
-      // NOTE: Don't pass storage parameter - let SignClient use default keyvaluestorage
+      // NOTE: Don't pass storage parameter, let SignClient use default keyvaluestorage
       // which will automatically use the React Native version with AsyncStorage
     })
-
     return client
   } catch (error) {
     throw error
@@ -129,7 +125,6 @@ export const initLazy = (config: FclWalletConnectConfig) => {
     })
 
   const FclWcServicePlugin = makeServicePlugin(clientPromise, config)
-
   return {
     FclWcServicePlugin,
     clientPromise,

@@ -91,13 +91,12 @@ export const currentUser = getCurrentUser({
 export const mutate = getMutate(currentUser)
 
 export const authenticate = async (opts: any = {}) => {
-  // If service is explicitly provided, use direct authentication (backward compatible)
+  // If service is explicitly provided, use direct authentication
   if (opts.service) {
     return currentUser().authenticate(opts)
   }
 
   // Otherwise, use mobile-specific authentication with auto-modal
-  // This replicates browser FCL's automatic discovery UI behavior
   return authenticateWithDiscovery(
     {authenticate: currentUser().authenticate, config},
     opts
@@ -111,39 +110,25 @@ export const unauthenticate = async () => {
   // Then disconnect WalletConnect (both sessions and pairings for complete cleanup)
   try {
     const client = await getClient()
-    if (client) {
-      // Get all sessions and pairings
-      const sessions = client.session.getAll()
-      const pairings = client.core.pairing.pairings.getAll()
+    if (!client) return
 
-      console.log(
-        `Disconnecting ${sessions.length} session(s) and ${pairings.length} pairing(s)`
-      )
+    const sessions = client.session.getAll()
+    const pairings = client.core.pairing.pairings.getAll()
 
-      // Disconnect all sessions first
-      for (const session of sessions) {
-        try {
-          await client.disconnect({
-            topic: session.topic,
-            reason: {code: 6000, message: "User disconnected"},
-          })
-        } catch (error) {
-          console.warn(`Failed to disconnect session: ${error}`)
-        }
-      }
-      // Then disconnect all pairings (ensures wallet shows fully disconnected)
-      for (const pairing of pairings) {
-        try {
-          await client.core.pairing.disconnect({topic: pairing.topic})
-        } catch (error) {
-          console.warn(`Failed to disconnect pairing: ${error}`)
-        }
-      }
-
-      console.log("WalletConnect fully disconnected")
-    }
-  } catch (error) {
-    console.error("Failed to disconnect WalletConnect:", error)
+    // Disconnect all in parallel
+    await Promise.allSettled([
+      ...sessions.map((session: any) =>
+        client.disconnect({
+          topic: session.topic,
+          reason: {code: 6000, message: "User disconnected"},
+        })
+      ),
+      ...pairings.map((pairing: any) =>
+        client.core.pairing.disconnect({topic: pairing.topic})
+      ),
+    ])
+  } catch {
+    // WC client not initialized or disconnect failed (safe to ignore)
   }
 }
 
