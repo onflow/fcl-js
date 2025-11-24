@@ -67,22 +67,11 @@ const initClient = async ({
   )
 
   try {
-    console.log(
-      "WalletConnect initClient: Starting initialization, project ID:",
-      projectId.substring(0, 8) + "..."
-    )
-
     // Initialize WalletConnect compat first
-    console.log("WalletConnect initClient: Initializing compat layer...")
     await initializeWalletConnect()
-    console.log("WalletConnect initClient: Compat layer ready")
 
     // Auto-detect redirect URI using expo-linking (always available as dependency)
     const redirect = Linking.createURL("")
-    console.log(
-      "WalletConnect initClient: Auto-detected redirect URI:",
-      redirect
-    )
 
     // Build metadata
     const clientMetadata = metadata || {
@@ -100,7 +89,6 @@ const initClient = async ({
 
     // SignClient will automatically use @walletconnect/keyvaluestorage
     // which has a React Native version that uses AsyncStorage internally
-    console.log("WalletConnect initClient: Creating SignClient...")
     const client = await SignClient.init({
       logger: DEFAULT_LOGGER,
       relayUrl: DEFAULT_RELAY_URL,
@@ -109,13 +97,9 @@ const initClient = async ({
       // NOTE: Don't pass storage parameter - let SignClient use default keyvaluestorage
       // which will automatically use the React Native version with AsyncStorage
     })
-    console.log("WalletConnect initClient: SignClient created successfully")
 
     return client
   } catch (error) {
-    if (error instanceof Error) {
-      console.error(`${error.name} fcl-wc Init Client`, error.message)
-    }
     throw error
   }
 }
@@ -125,23 +109,15 @@ export const initLazy = (config: FclWalletConnectConfig) => {
   //  - Initialize the client if it doesn't exist
   //  - If it does exist, return existing client
   //  - If existing client fails to initialize, reinitialize
-  console.log("WalletConnect initLazy: Called")
 
   clientPromise = clientPromise
     .catch(() => {
-      console.log("WalletConnect initLazy: Promise catch triggered")
       return null
     })
     .then(_client => {
-      console.log(
-        "WalletConnect initLazy: Promise then - client exists:",
-        _client !== null
-      )
       if (_client) {
-        console.log("WalletConnect initLazy: Reusing existing client")
         return _client
       } else {
-        console.log("WalletConnect initLazy: Calling initClient")
         return initClient({
           projectId: config.projectId,
           metadata: config.metadata,
@@ -149,11 +125,6 @@ export const initLazy = (config: FclWalletConnectConfig) => {
       }
     })
     .catch(e => {
-      console.log("WalletConnect initLazy: Error caught:", e.message || e)
-      console.error(
-        "WalletConnect Client Initialization Error",
-        e.message ? e.message : e
-      )
       throw e
     })
 

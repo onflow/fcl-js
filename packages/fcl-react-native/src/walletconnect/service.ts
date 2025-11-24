@@ -62,23 +62,10 @@ const makeExec = (
     user: any
     config: any
   }) => {
-    console.log(
-      "WalletConnect Service Request Started - Method:",
-      service.endpoint,
-      "Service:",
-      service.uid
-    )
+    const {wcRequestHook} = config
 
-    const {wcRequestHook, disableNotifications: _appDisabledNotifications} =
-      config
-
-    const appDisabledNotifications =
-      service.params?.disableNotifications ?? _appDisabledNotifications
-
-    console.log("WalletConnect: Waiting for client...")
     const client = await signerPromise
     invariant(!!client, "WalletConnect is not initialized")
-    console.log("WalletConnect: Client ready")
 
     // Get redirect URI from WalletConnect client metadata (auto-detected during initialization)
     const redirect =
@@ -95,18 +82,13 @@ const makeExec = (
       // This is the initial authn request - store the wallet's deep link URL
       appLink = service.uid
       walletAppLink = appLink
-      console.log("WalletConnect: Storing wallet app link from authn:", appLink)
     } else if (walletAppLink) {
       // Use the stored wallet app link for all subsequent requests
       appLink = walletAppLink
-      console.log("WalletConnect: Using stored wallet app link:", appLink)
     } else {
       // Fallback to service.uid (shouldn't happen in normal flow)
       appLink = service.uid
-      console.log("WalletConnect: Using service uid as fallback:", appLink)
     }
-
-    console.log("WalletConnect: App link:", appLink)
 
     // Check if service has a session topic in params (from injected PreAuthzResponse)
     const sessionTopic = service.params?.sessionTopic
@@ -116,17 +98,9 @@ const makeExec = (
 
     // If we have a session topic from params, use it directly
     if (sessionTopic) {
-      console.log(
-        "WalletConnect: Using session topic from params:",
-        sessionTopic
-      )
       try {
         session = client.session.get(sessionTopic)
-        console.log("WalletConnect: Found session from topic")
       } catch (e) {
-        console.log(
-          "WalletConnect: Session not found for topic, will search for active sessions"
-        )
         // Session not found, fall through to session lookup
       }
     }
@@ -134,10 +108,6 @@ const makeExec = (
     // If no session yet, find an existing session
     if (!session) {
       const activeSessions = client.session.getAll()
-      console.log(
-        "WalletConnect: Active sessions count:",
-        activeSessions.length
-      )
 
       // If there are no active sessions, fall through to create new session
 
@@ -164,13 +134,22 @@ const makeExec = (
           } else if (!isAcknowledged) {
             foundSession = null
           } else {
-            // Final check: verify the session still exists in the client
+            // Final check: verify the session still exists and is responsive
             try {
               const stillExists = client.session.get(foundSession.topic)
               if (stillExists) {
+                // Ping the session to ensure it's actually alive
+                await client.ping({topic: foundSession.topic})
                 session = foundSession
               }
             } catch (e) {
+              // Session doesn't exist or ping failed - disconnect and clear
+              try {
+                await client.disconnect({
+                  topic: foundSession.topic,
+                  reason: {code: 6000, message: "Session not responsive"},
+                })
+              } catch {}
               foundSession = null
             }
           }
@@ -232,7 +211,7 @@ const makeExec = (
           session = null
         }
       } catch (e) {
-        console.warn("WalletConnect: Failed to validate network:", e)
+        // Failed to validate network
       }
     }
 
@@ -269,12 +248,6 @@ const makeExec = (
     }
 
     // Send the request (don't await yet)
-    console.log(
-      "WalletConnect: Sending request to wallet - Method:",
-      method,
-      "Session topic:",
-      session?.topic
-    )
     const requestPromise = request({
       method: method,
       body: body,
@@ -283,16 +256,12 @@ const makeExec = (
       abortSignal,
       disableNotifications: service.params?.disableNotifications,
     }).then((response: any) => {
-      console.log("WalletConnect: Response f_type:", response?.f_type)
-
       // For PreAuthzResponse, we need to inject our session topic into the returned services
       // so FCL knows to route follow-up requests through our WalletConnect plugin
       if (
         method === FLOW_METHODS.FLOW_PRE_AUTHZ &&
         response?.f_type === "PreAuthzResponse"
       ) {
-        console.log("WalletConnect: Processing PreAuthzResponse")
-
         // Helper to inject session params into a service
         const injectSessionParams = (svc: any) => {
           if (!svc) return svc
@@ -322,7 +291,6 @@ const makeExec = (
           authorization: response.authorization?.map(injectSessionParams),
         }
 
-        console.log("WalletConnect: Modified PreAuthzResponse services")
         return modifiedResponse
       }
       return response
@@ -335,12 +303,10 @@ const makeExec = (
     // 3. Redirect back to the app after approval
     //
     // IMPORTANT: For newly created sessions, the wallet was already opened during connectWc()
-    // for session approval. For flow_authn specifically, the wallet handles both session
-    // approval AND authentication in one screen, so we should NOT open it again.
-    // For other methods (authz, pre_authz, user_sign), we DO need to open the wallet again.
-    const shouldOpenWallet =
-      session !== null &&
-      !(isNewlyCreatedSession && method === FLOW_METHODS.FLOW_AUTHN)
+    // for session approval. The wallet remains open and can immediately handle the request,
+    // so we should NOT open it again. This applies to ALL methods (authn, authz, pre_authz, etc.)
+    // to prevent double-opening the wallet during reconnection flows.
+    const shouldOpenWallet = session !== null && !isNewlyCreatedSession
 
     if (shouldOpenWallet) {
       // The WalletConnect client.request() posts to relay synchronously, then waits for response
@@ -351,10 +317,8 @@ const makeExec = (
       const params = new URLSearchParams({topic: session.topic})
       if (redirect) {
         params.append("redirect", redirect)
-        console.log("WalletConnect: Including redirect in deep link:", redirect)
       }
       const deepLinkUrl = `${appLink}?${params.toString()}`
-      console.log("WalletConnect: Opening wallet with deep link:", deepLinkUrl)
 
       // Open wallet right away - the request is already on the relay
       // Use setImmediate to avoid blocking the request promise
@@ -364,16 +328,7 @@ const makeExec = (
     }
 
     // Now wait for the response
-    console.log("WalletConnect: Waiting for wallet response...")
-    console.log(
-      "WalletConnect: Wallet should automatically return to app via redirect URI after approval"
-    )
-
     const finalResponse = await requestPromise
-    console.log(
-      "WalletConnect: Response received! Request completed successfully - Method:",
-      method
-    )
     return finalResponse
   }
 }
@@ -442,9 +397,6 @@ async function connectWc({
         reject(new Error("Session request aborted"))
       }
       abortSignal?.addEventListener("abort", () => {
-        console.log(
-          "WalletConnect: Session request aborted, cleaning up listeners"
-        )
         if (cleanup) {
           cleanup() // Remove display_uri listener
         }
@@ -460,12 +412,6 @@ async function connectWc({
 
     return session
   } catch (error) {
-    if (error instanceof Error) {
-      console.error(
-        `${error.name} Error establishing WalletConnect session`,
-        `${error.message}\nuri: ${_uri}`
-      )
-    }
     onClose()
     throw error
   }
@@ -476,13 +422,10 @@ async function openDeeplink(url: string) {
   try {
     // Just try opening directly and let the OS handle it
     await Linking.openURL(url)
-    console.log("WalletConnect: Successfully opened wallet app")
   } catch (error) {
     // If opening fails, the wallet app is likely not installed or URL is invalid
     const errorMessage =
       "Cannot open wallet app. Please ensure Flow Reference Wallet is installed and try again."
-
-    console.error("WalletConnect Deep Link Error", errorMessage)
 
     // Re-throw with user-friendly message
     throw new Error(errorMessage)

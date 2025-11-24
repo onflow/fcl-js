@@ -79,19 +79,11 @@ export const request = async ({
   const [chainId, addr, address] = makeSessionData(session)
   const data = JSON.stringify({...body, addr, address})
 
-  console.log(
-    "WalletConnect Request: Preparing request - Method:",
-    method,
-    "Topic:",
-    session.topic.substring(0, 10) + "..."
-  )
-
   const abortPromise = new Promise((_, reject) => {
     if (abortSignal?.aborted) {
       reject(new Error("WalletConnect Request aborted"))
     }
     abortSignal?.addEventListener("abort", () => {
-      console.log("WalletConnect Request: ABORTED - Method:", method)
       reject(new Error("WalletConnect Request aborted"))
     })
   })
@@ -106,19 +98,11 @@ export const request = async ({
       },
     }
 
-    console.log("WalletConnect Request: Sending to relay - Method:", method)
     // Note: WalletConnect SDK has built-in 5-minute timeout (wc_sessionRequest.req.ttl)
     const result: any = await Promise.race([
       client.request(requestPayload),
       abortPromise,
     ])
-
-    console.log(
-      "WalletConnect Request: Received result - Method:",
-      method,
-      "Status:",
-      result?.status
-    )
 
     if (typeof result !== "object" || result == null) {
       return
