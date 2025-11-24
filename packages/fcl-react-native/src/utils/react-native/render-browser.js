@@ -16,35 +16,25 @@ export async function renderBrowser(src, opts = {}) {
   const url = new URL(src.toString())
   url.searchParams.append(FCL_REDIRECT_URL_PARAM_NAME, redirectUrl)
 
-  console.log("Opening Browser Auth Session - URL:", url.toString())
-
   const webbrowser = WebBrowser.openAuthSessionAsync(url.toString())
 
   const unmount = () => {
     try {
       WebBrowser.dismissAuthSession()
-      console.log(
-        "Browser Auth Session Dismissed - Auth session closed successfully"
-      )
     } catch (error) {
       // Ignore errors on dismissal
-      console.log(
-        "Browser Auth Session Dismissal Error:",
-        error.message || error
-      )
     }
   }
 
   // Call onClose when the webbrowser is closed
   webbrowser
     .then(result => {
-      console.log("Browser Auth Session Completed - Result type:", result.type)
       if (opts?.onClose) {
         opts.onClose()
       }
     })
     .catch(error => {
-      console.log("Browser Auth Session Error:", error.message || error)
+      // Ignore errors
     })
 
   return [webbrowser, unmount]

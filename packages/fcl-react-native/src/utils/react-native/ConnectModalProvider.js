@@ -6,9 +6,6 @@ let modalManager = null
 
 export function showModal(ModalComponent, props) {
   if (!modalManager) {
-    console.warn(
-      "ConnectModalProvider not mounted. Add <fcl.ConnectModalProvider> to your app root to enable automatic wallet discovery UI."
-    )
     return null
   }
   return modalManager.show(ModalComponent, props)

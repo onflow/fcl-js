@@ -21,55 +21,31 @@ export async function browser(service, config, body, opts = {}) {
     onMessage,
   })
   const parseDeeplink = result => {
-    console.log(
-      "Browser Deeplink Callback - Result type:",
-      result?.type || "unknown"
-    )
-
     // Handle both deep link callback (with url) and browser result (with type)
     const url = result?.url || result?.url
     if (!url) {
       if (result?.type === "dismiss" || result?.type === "cancel") {
-        console.log(
-          "Browser Dismissed by User - User closed browser without completing authentication"
-        )
         close()
       }
       return
     }
 
-    console.log("Parsing Browser Callback URL - URL received:", url)
-
     const {queryParams} = Linking.parse(url)
 
     const eventDataRaw = queryParams[FCL_RESPONSE_PARAM_NAME]
     if (!eventDataRaw) {
-      console.log(
-        "No FCL Response in URL - URL does not contain FCL response parameter, ignoring"
-      )
       return
     }
 
     try {
       const eventData = JSON.parse(eventDataRaw)
 
-      console.log(
-        "Browser Callback Parsed - Event type:",
-        eventData?.type || "unknown"
-      )
-
       handler({data: eventData})
 
       // Auto-close browser after successful authentication
-      console.log(
-        "Auto-closing Browser - Authentication complete, closing browser"
-      )
       close()
     } catch (error) {
-      console.log(
-        "Browser Callback Parse Error - Failed to parse FCL response:",
-        error.message || error
-      )
+      // Ignore parse errors
     }
   }
 
@@ -79,8 +55,8 @@ export async function browser(service, config, body, opts = {}) {
   // Android deeplink parsing
   Linking.addEventListener("url", parseDeeplink)
   // iOS deeplink parsing
-  browser.then(parseDeeplink).catch(error => {
-    console.log("Browser Promise Error:", error.message || error)
+  browser.then(parseDeeplink).catch(() => {
+    // Ignore errors
   })
   return {send: noop, close}
 
@@ -89,10 +65,7 @@ export async function browser(service, config, body, opts = {}) {
       unmount()
       onClose()
     } catch (error) {
-      console.log(
-        "Frame Close Error - Error closing frame:",
-        error.message || error
-      )
+      // Ignore close errors
     }
   }
 }

@@ -31,34 +31,23 @@ export async function authenticateWithDiscovery(fclContext, opts = {}) {
   const serviceRegistry = getServiceRegistry()
   const wallets = serviceRegistry.getServices()
 
-  console.log(`[FCL Mobile Auth] Found ${wallets.length} wallet(s) in registry`)
-
   // Show modal even with single wallet (as requested by user)
   // This matches browser FCL behavior where discovery UI always shows
   return new Promise((resolve, reject) => {
     const handleAuthenticate = async service => {
-      console.log(
-        `[FCL Mobile Auth] User selected wallet:`,
-        service?.provider?.name || service?.uid
-      )
-
       // Close modal
       hideModal()
 
       try {
         // Authenticate with selected service
         const user = await fclContext.authenticate({...opts, service})
-        console.log(`[FCL Mobile Auth] Authentication successful:`, user.addr)
         resolve(user)
       } catch (error) {
-        console.error(`[FCL Mobile Auth] Authentication failed:`, error)
         reject(error)
       }
     }
 
     const handleClose = () => {
-      console.log(`[FCL Mobile Auth] User cancelled wallet selection`)
-
       // Close modal
       hideModal()
 

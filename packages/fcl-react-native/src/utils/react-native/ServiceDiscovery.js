@@ -145,18 +145,12 @@ export const useServiceDiscovery = ({fcl}) => {
       setServices(mergedServices)
       setIsLoading(false)
     } catch (error) {
-      console.error("Discovery: Failed to fetch services:", error.message)
-
       // Fallback: use plugin services only
       try {
         const serviceRegistry = getServiceRegistry()
         const fallbackServices = serviceRegistry.getServices()
         setServices(fallbackServices)
       } catch (pluginError) {
-        console.error(
-          "Discovery: Plugin services also failed:",
-          pluginError.message
-        )
         setServices([])
       }
       setIsLoading(false)

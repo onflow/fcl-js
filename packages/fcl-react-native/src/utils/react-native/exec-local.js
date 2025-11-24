@@ -21,14 +21,5 @@ export async function execLocal(
   opts = {serviceEndpoint: () => {}, onClose: () => {}}
 ) {
   const {serviceEndpoint} = opts
-  try {
-    return VIEWS[service.method](serviceEndpoint(service), opts)
-  } catch (error) {
-    console.log(
-      "execLocal Error - Error executing service method",
-      service.method + ":",
-      error.message || error
-    )
-    throw error
-  }
+  return VIEWS[service.method](serviceEndpoint(service), opts)
 }

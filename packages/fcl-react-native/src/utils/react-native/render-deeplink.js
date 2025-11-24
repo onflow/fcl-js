@@ -30,21 +30,8 @@ export async function renderDeeplink(src, opts = {}) {
     )
   }
 
-  console.log("Opening Deeplink - URL:", url.toString())
-
   // Link to the target url
-  try {
-    await Linking.openURL(url.toString())
-    console.log("Deeplink Opened Successfully - URL:", url.toString())
-  } catch (error) {
-    console.log(
-      "Deeplink Error - Failed to open URL:",
-      url.toString(),
-      "Error:",
-      error.message || error
-    )
-    throw error
-  }
+  await Linking.openURL(url.toString())
 
   const onClose = opts.onClose || (() => {})
 
