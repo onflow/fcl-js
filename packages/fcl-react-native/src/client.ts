@@ -1,4 +1,8 @@
-import {createFlowClientCore, type FlowClientCoreConfig} from "@onflow/fcl-core"
+import {
+  createFlowClientCore,
+  type FlowClientCoreConfig,
+  type StorageProvider,
+} from "@onflow/fcl-core"
 import {getAsyncStorage} from "./utils/react-native/storage"
 import {loadFclWc} from "./walletconnect/loader"
 import {execLocal} from "./utils/react-native/exec-local"
@@ -14,8 +18,15 @@ export const discoveryOpts = {
  * Extends core configuration with mobile-specific features like WalletConnect.
  */
 export interface FlowClientConfig
-  extends Omit<FlowClientCoreConfig, "platform" | "discovery"> {
-  // WalletConnect configuration
+  extends Omit<
+    FlowClientCoreConfig,
+    "platform" | "discovery" | "computeLimit" | "storage"
+  > {
+  // Override to make optional (defaults provided by implementation)
+  computeLimit?: number
+  storage?: StorageProvider
+
+  // WalletConnect configuration (mobile-specific)
   walletconnectProjectId?: string
   walletconnectDisableNotifications?: boolean
 }
@@ -46,7 +57,7 @@ export async function createFlowClient(params: FlowClientConfig) {
     flowNetwork: params.flowNetwork,
     flowJson: params.flowJson,
     accessNodeUrl: params.accessNodeUrl,
-    computeLimit: params.computeLimit,
+    computeLimit: params.computeLimit || 9999,
     transport: params.transport,
     platform: PLATFORM,
     storage,

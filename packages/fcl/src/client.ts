@@ -1,4 +1,8 @@
-import {createFlowClientCore, type FlowClientCoreConfig} from "@onflow/fcl-core"
+import {
+  createFlowClientCore,
+  type FlowClientCoreConfig,
+  type StorageProvider,
+} from "@onflow/fcl-core"
 import {LOCAL_STORAGE} from "./fcl"
 import {execStrategyHook} from "./discovery/exec-hook"
 import {loadFclWc} from "./utils/walletconnect/loader"
@@ -14,8 +18,15 @@ export const discoveryOpts = {
  * Extends core configuration with web-specific features like WalletConnect.
  */
 export interface FlowClientConfig
-  extends Omit<FlowClientCoreConfig, "platform" | "discovery"> {
-  // WalletConnect configuration
+  extends Omit<
+    FlowClientCoreConfig,
+    "platform" | "discovery" | "computeLimit" | "storage"
+  > {
+  // Override to make optional (defaults provided by implementation)
+  computeLimit?: number
+  storage?: StorageProvider
+
+  // WalletConnect configuration (web-specific)
   walletconnectProjectId?: string
   walletconnectDisableNotifications?: boolean
 }
@@ -109,7 +120,7 @@ export function createFlowClient(params: FlowClientConfig) {
     flowNetwork: params.flowNetwork,
     flowJson: params.flowJson,
     accessNodeUrl: params.accessNodeUrl,
-    computeLimit: params.computeLimit,
+    computeLimit: params.computeLimit || 9999,
     transport: params.transport,
     platform: PLATFORM,
     storage: params.storage || LOCAL_STORAGE,
