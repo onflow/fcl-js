@@ -6,13 +6,23 @@ import {
   TabPanel as HeadlessTabPanel,
   TabPanels as HeadlessTabPanels,
 } from "@headlessui/react"
+import {useDarkMode} from "../../provider/DarkModeProvider"
 import {twMerge} from "tailwind-merge"
 
 export interface TabGroupProps
   extends React.ComponentProps<typeof HeadlessTabGroup> {}
 
 export const TabGroup: React.FC<TabGroupProps> = ({className, ...props}) => {
-  return <HeadlessTabGroup className={twMerge(className)} {...props} />
+  const {isDark} = useDarkMode()
+  return (
+    <HeadlessTabGroup
+      className={twMerge(
+        isDark ? "flow-dark" : "",
+        className
+      )}
+      {...props}
+    />
+  )
 }
 
 export interface TabListProps
