@@ -3,4 +3,4 @@
 "@onflow/sdk": minor
 ---
 
-Add optional `blockId` field to `GetTransactionResult`. This is used to disambiguate system transactions sharing IDs between blocks and is not applicable to most developers.
+Add support for scheduled transaction API changes, including UInt64 transaction IDs and automatic fallback to legacy polling when WebSocket subscriptions are not supported.
