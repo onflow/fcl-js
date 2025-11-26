@@ -23,7 +23,6 @@ import {
   isSealed,
   isExpired,
 } from "./utils"
-import {TXID_REGEXP} from "./constants"
 
 const POLL = "POLL"
 const TIMEOUT = "TIMEOUT"
@@ -118,10 +117,6 @@ export function transaction(
   transactionId,
   opts = {txNotFoundTimeout: 12500, pollRate: 1000}
 ) {
-  // Validate transactionId as 64 byte hash
-  if (!TXID_REGEXP.test(scoped(transactionId)))
-    throw new Error("Invalid transactionId")
-
   function snapshot() {
     return snapshoter(transactionId, spawnTransaction(opts))
   }
