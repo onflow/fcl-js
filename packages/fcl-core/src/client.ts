@@ -25,7 +25,7 @@ export interface FlowClientCoreConfig {
   discoveryAuthnExclude?: string[]
 
   // Compute limit for transactions
-  computeLimit: number
+  computeLimit?: number
 
   // Storage configuration
   storage: StorageProvider
@@ -57,6 +57,7 @@ export function createFlowClientCore(params: FlowClientCoreConfig) {
   const context = createFCLContext({
     ...params,
     transport: params.transport || httpTransport,
+    computeLimit: params.computeLimit || 9999,
   })
 
   return {

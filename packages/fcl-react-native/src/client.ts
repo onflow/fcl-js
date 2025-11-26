@@ -46,7 +46,7 @@ export async function createFlowClient(params: FlowClientConfig) {
     flowNetwork: params.flowNetwork,
     flowJson: params.flowJson,
     accessNodeUrl: params.accessNodeUrl,
-    computeLimit: params.computeLimit || 9999,
+    computeLimit: params.computeLimit,
     transport: params.transport,
     platform: PLATFORM,
     storage,
