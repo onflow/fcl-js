@@ -288,7 +288,7 @@ const makeExec = (
     // for session approval. The wallet remains open and can immediately handle the request,
     // so we should NOT open it again. This applies to ALL methods (authn, authz, pre_authz, etc.)
     // to prevent double-opening the wallet during reconnection flows.
-    const shouldOpenWallet = session !== null && !isNewlyCreatedSession
+    const shouldOpenWallet = !isNewlyCreatedSession
 
     if (shouldOpenWallet) {
       // The WalletConnect client.request() posts to relay synchronously, then waits for response

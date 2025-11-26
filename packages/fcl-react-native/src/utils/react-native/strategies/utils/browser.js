@@ -22,7 +22,7 @@ export async function browser(service, config, body, opts = {}) {
   })
   const parseDeeplink = result => {
     // Handle both deep link callback (with url) and browser result (with type)
-    const url = result?.url || result?.url
+    const url = result?.url
     if (!url) {
       if (result?.type === "dismiss" || result?.type === "cancel") {
         close()
