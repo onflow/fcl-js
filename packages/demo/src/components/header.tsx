@@ -314,7 +314,14 @@ export function Header({
             )}
           </button>
 
-          <Connect variant="primary" />
+          <Connect
+            variant="primary"
+            modalConfig={{
+              scheduledTransactions: {
+                show: true,
+              },
+            }}
+          />
         </div>
       </div>
     </header>

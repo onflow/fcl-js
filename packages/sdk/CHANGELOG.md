@@ -1,5 +1,55 @@
 # @onflow/sdk
 
+## 1.11.2
+
+### Patch Changes
+
+- [#2698](https://github.com/onflow/fcl-js/pull/2698) [`9c5bed0ed542e85d038e1763c6d94e38614d9a0e`](https://github.com/onflow/fcl-js/commit/9c5bed0ed542e85d038e1763c6d94e38614d9a0e) Thanks [@chasefleming](https://github.com/chasefleming)! - Add support for Cadence import aliasing
+
+- Updated dependencies [[`9c5bed0ed542e85d038e1763c6d94e38614d9a0e`](https://github.com/onflow/fcl-js/commit/9c5bed0ed542e85d038e1763c6d94e38614d9a0e)]:
+  - @onflow/config@1.6.3
+
+## 1.11.1
+
+### Patch Changes
+
+- [#2689](https://github.com/onflow/fcl-js/pull/2689) [`bfb2665f759dd406fdd12900dd5bbdf7619dbc73`](https://github.com/onflow/fcl-js/commit/bfb2665f759dd406fdd12900dd5bbdf7619dbc73) Thanks [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)! - Added support for UFix128 and Fix128 types to @onflow/types package and decoder support to @onflow/sdk package. These fixed-point number types have been added to the Flow protocol and are now available for use in Cadence transactions and scripts. UFix128 and Fix128 support up to 24 decimal places of precision.
+
+  The decoder in @onflow/sdk now properly handles UFix128 and Fix128 values when decoding responses from Flow scripts and transactions.
+
+- Updated dependencies [[`bfb2665f759dd406fdd12900dd5bbdf7619dbc73`](https://github.com/onflow/fcl-js/commit/bfb2665f759dd406fdd12900dd5bbdf7619dbc73), [`c8b0b880d147840c66b8913894a8fe1e9804d557`](https://github.com/onflow/fcl-js/commit/c8b0b880d147840c66b8913894a8fe1e9804d557)]:
+  - @onflow/types@1.5.0
+  - @onflow/config@1.6.2
+
+## 1.11.0
+
+### Minor Changes
+
+- [#2669](https://github.com/onflow/fcl-js/pull/2669) [`ef3fb70d694e83bc19c2bd6b6d6ea44b6df6ac23`](https://github.com/onflow/fcl-js/commit/ef3fb70d694e83bc19c2bd6b6d6ea44b6df6ac23) Thanks [@mfbz](https://github.com/mfbz)! - Added support for mixed cadence imports
+
+- [#2638](https://github.com/onflow/fcl-js/pull/2638) [`d9d994cdaca8fe82cce0a3bcf48b5b4f7d3dc960`](https://github.com/onflow/fcl-js/commit/d9d994cdaca8fe82cce0a3bcf48b5b4f7d3dc960) Thanks [@jribbink](https://github.com/jribbink)! - Adds support for signature extension data introduced by [FLIP 264](https://github.com/onflow/flips/blob/main/protocol/20250203-webauthn-credential-support.md).
+
+  Users can now include signature extension data in their transactions by returning an additional `extensionData` property in their signing functions.
+
+  ```typescript
+  const authz = (ix: Interaction) => {
+    return {
+      addr: "0x1234567890abcdef",
+      keyId: 0,
+      signingFunction: (signable: Signable) => ({
+        signature: "1234",
+        extensionData: "1234",
+      }),
+    }
+  }
+  ```
+
+### Patch Changes
+
+- Updated dependencies [[`d9d994cdaca8fe82cce0a3bcf48b5b4f7d3dc960`](https://github.com/onflow/fcl-js/commit/d9d994cdaca8fe82cce0a3bcf48b5b4f7d3dc960)]:
+  - @onflow/transport-http@1.14.0
+  - @onflow/typedefs@1.8.0
+
 ## 1.10.2
 
 ### Patch Changes

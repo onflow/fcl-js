@@ -1,14 +1,15 @@
 {
   "name": "@onflow/demo",
   "private": true,
-  "version": "1.0.0",
+  "version": "1.2.0",
   "type": "module",
   "scripts": {
     "dev": "cross-env VITE_FLOW_NETWORK=emulator vite",
     "dev-wait": "npm run dev & wait-on tcp:8888 tcp:8701 tcp:3000",
     "dev:emulator": "concurrently \"npm run flow:emulator\" \"npm run flow:dev-wallet\" \"npm run dev-wait\"",
-    "dev:testnet": "cross-env VITE_FLOW_NETWORK=testnet vite",
-    "dev:mainnet": "cross-env VITE_FLOW_NETWORK=mainnet vite",
+    "dev:testnet": "concurrently \"npm run watch:react-sdk\" \"cross-env VITE_FLOW_NETWORK=testnet vite\"",
+    "dev:mainnet": "concurrently \"npm run watch:react-sdk\" \"cross-env VITE_FLOW_NETWORK=mainnet vite\"",
+    "watch:react-sdk": "cd ../react-sdk && npm run start",
     "flow:emulator": "flow emulator",
     "flow:dev-wallet": "flow dev-wallet",
     "build": "tsc -b && vite build",

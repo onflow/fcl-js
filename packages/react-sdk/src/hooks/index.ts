@@ -1,4 +1,5 @@
 export {useFlowCurrentUser} from "./useFlowCurrentUser"
+export {useFlowAuthz} from "./useFlowAuthz"
 export {useFlowAccount} from "./useFlowAccount"
 export {useFlowBlock} from "./useFlowBlock"
 export {useFlowChainId} from "./useFlowChainId"
@@ -15,5 +16,18 @@ export {useFlowTransaction} from "./useFlowTransaction"
 export {useFlowTransactionStatus} from "./useFlowTransactionStatus"
 export {useCrossVmSpendNft} from "./useCrossVmSpendNft"
 export {useCrossVmSpendToken} from "./useCrossVmSpendToken"
+export {useCrossVmBridgeNftFromEvm} from "./useCrossVmBridgeNftFromEvm"
+export {useCrossVmBridgeNftToEvm} from "./useCrossVmBridgeNftToEvm"
+export {useCrossVmBridgeTokenFromEvm} from "./useCrossVmBridgeTokenFromEvm"
+export {useCrossVmBridgeTokenToEvm} from "./useCrossVmBridgeTokenToEvm"
 export {useCrossVmTransactionStatus} from "./useCrossVmTransactionStatus"
 export {useFlowNftMetadata, type NftViewResult} from "./useFlowNftMetadata"
+export {
+  useFlowScheduledTransactionList,
+  ScheduledTransactionPriority,
+  ScheduledTransactionStatus,
+  type ScheduledTransaction,
+} from "./useFlowScheduledTransactionList"
+export {useFlowScheduledTransaction} from "./useFlowScheduledTransaction"
+export {useFlowScheduledTransactionSetup} from "./useFlowScheduledTransactionSetup"
+export {useFlowScheduledTransactionCancel} from "./useFlowScheduledTransactionCancel"

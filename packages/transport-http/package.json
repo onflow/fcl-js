@@ -1,6 +1,6 @@
 {
   "name": "@onflow/transport-http",
-  "version": "1.13.2",
+  "version": "1.14.0",
   "description": "Flow SDK HTTP Transport Module",
   "license": "Apache-2.0",
   "author": "Flow Foundation",
@@ -15,8 +15,8 @@
   "devDependencies": {
     "@onflow/fcl-bundle": "1.7.1",
     "@onflow/rlp": "1.2.4",
-    "@onflow/sdk": "1.10.2",
-    "@onflow/types": "1.4.2",
+    "@onflow/sdk": "1.11.2",
+    "@onflow/types": "1.5.0",
     "jest": "^29.7.0",
     "jest-websocket-mock": "^2.5.0",
     "mock-socket": "^9.3.1"

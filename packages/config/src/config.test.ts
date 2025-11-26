@@ -404,6 +404,156 @@ describe("config()", () => {
             ).resolves.toBe("0x2")
           })
         })
+
+        describe("with canonical field", () => {
+          describe("contract with canonical", () => {
+            beforeEach(async () => {
+              flowJSON = {
+                networks: {
+                  emulator: "127.0.0.1:3569",
+                },
+                contracts: {
+                  FUSD1: {
+                    source: "./contracts/FUSD.cdc",
+                    aliases: {
+                      emulator: "0xe223d8a629e49c68",
+                    },
+                    canonical: "FUSD",
+                  },
+                },
+              }
+              await config().load({flowJSON})
+              await idle()
+            })
+
+            test("should set contract address", async () => {
+              await expect(
+                config().get("system.contracts.FUSD1")
+              ).resolves.toBe("0xe223d8a629e49c68")
+              await expect(config().get("0xFUSD1")).resolves.toBe(
+                "0xe223d8a629e49c68"
+              )
+            })
+
+            test("should set canonical reference", async () => {
+              await expect(
+                config().get("system.contracts.FUSD1.canonical")
+              ).resolves.toBe("FUSD")
+            })
+          })
+
+          describe("multiple contracts with same canonical", () => {
+            beforeEach(async () => {
+              flowJSON = {
+                networks: {
+                  emulator: "127.0.0.1:3569",
+                },
+                contracts: {
+                  FUSD1: {
+                    source: "./contracts/FUSD.cdc",
+                    aliases: {
+                      emulator: "0xe223d8a629e49c68",
+                    },
+                    canonical: "FUSD",
+                  },
+                  FUSD2: {
+                    source: "./contracts/FUSD.cdc",
+                    aliases: {
+                      emulator: "0x0f9df91c9121c460",
+                    },
+                    canonical: "FUSD",
+                  },
+                },
+              }
+              await config().load({flowJSON})
+              await idle()
+            })
+
+            test("should set both contract addresses", async () => {
+              await expect(
+                config().get("system.contracts.FUSD1")
+              ).resolves.toBe("0xe223d8a629e49c68")
+              await expect(
+                config().get("system.contracts.FUSD2")
+              ).resolves.toBe("0x0f9df91c9121c460")
+            })
+
+            test("should set both canonical references", async () => {
+              await expect(
+                config().get("system.contracts.FUSD1.canonical")
+              ).resolves.toBe("FUSD")
+              await expect(
+                config().get("system.contracts.FUSD2.canonical")
+              ).resolves.toBe("FUSD")
+            })
+          })
+
+          describe("contract without canonical field", () => {
+            beforeEach(async () => {
+              flowJSON = {
+                networks: {
+                  emulator: "127.0.0.1:3569",
+                },
+                contracts: {
+                  RegularContract: {
+                    source: "./contracts/Regular.cdc",
+                    aliases: {
+                      emulator: "0x123456",
+                    },
+                  },
+                },
+              }
+              await config().load({flowJSON})
+              await idle()
+            })
+
+            test("should set contract address", async () => {
+              await expect(
+                config().get("system.contracts.RegularContract")
+              ).resolves.toBe("0x123456")
+            })
+
+            test("should not set canonical reference", async () => {
+              await expect(
+                config().get("system.contracts.RegularContract.canonical")
+              ).resolves.toBeUndefined()
+            })
+          })
+
+          describe("dependency with canonical field", () => {
+            beforeEach(async () => {
+              flowJSON = {
+                networks: {
+                  emulator: "127.0.0.1:3569",
+                },
+                dependencies: {
+                  FungibleTokenV2: {
+                    source: "mainnet://f233dcee88fe0abe.FungibleToken",
+                    hash: "abc123",
+                    aliases: {
+                      emulator: "0xf233dcee88fe0abe",
+                    },
+                    canonical: "FungibleToken",
+                  },
+                },
+              }
+              await config().load({flowJSON})
+              await idle()
+            })
+
+            test("should set dependency address", async () => {
+              await expect(
+                config().get("system.contracts.FungibleTokenV2")
+              ).resolves.toBe("0xf233dcee88fe0abe")
+            })
+
+            test("should set canonical reference", async () => {
+              await expect(
+                config().get("system.contracts.FungibleTokenV2.canonical")
+              ).resolves.toBe("FungibleToken")
+            })
+          })
+        })
       })
     })
   })

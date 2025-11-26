@@ -88,7 +88,7 @@ npm install --save @onflow/sdk
     - **hashAlgo** `int` -- The hash algorithm for this key
     - **weight** `int` -- The weight for this key
     - **sequenceNumber** `int` -- The sequence number for this key
-- **block** _GetBlock_ -- The block retured from a GetBlock* request
+- **block** _GetBlock_ -- The block returned from a GetBlock* request
   - **id** `string` -- ID of the block
   - **parentId** `string` -- Parent ID of the block
   - **height** `number` -- Height of the block

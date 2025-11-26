@@ -25,6 +25,12 @@ const sidebarItems: SidebarItem[] = [
     description: "Wallet connection component",
   },
   {
+    id: "profile",
+    label: "Profile",
+    category: "components",
+    description: "Standalone profile display",
+  },
+  {
     id: "transactionbutton",
     label: "Transaction Button",
     category: "components",
@@ -41,6 +47,18 @@ const sidebarItems: SidebarItem[] = [
     label: "Transaction Link",
     category: "components",
     description: "Transaction link component",
+  },
+  {
+    id: "nftcard",
+    label: "NFT Card",
+    category: "components",
+    description: "NFT card component",
+  },
+  {
+    id: "scheduledtransactionlist",
+    label: "Scheduled Transaction List",
+    category: "components",
+    description: "List of scheduled transactions",
   },
 
   // Hooks section
@@ -111,10 +129,40 @@ const sidebarItems: SidebarItem[] = [
     description: "Track transaction status",
   },
   {
+    id: "usecrossvmbridgenftfromevm",
+    label: "Bridge NFT from EVM",
+    category: "hooks",
+    description: "Bridge NFTs from EVM to Cadence",
+  },
+  {
+    id: "usecrossvmbridgenfttoevm",
+    label: "Bridge NFT to EVM",
+    category: "hooks",
+    description: "Bridge NFTs from Cadence to EVM",
+  },
+  {
+    id: "usecrossvmbridgetokenfromevm",
+    label: "Bridge Token from EVM",
+    category: "hooks",
+    description: "Bridge tokens from EVM to Cadence",
+  },
+  {
+    id: "usecrossvmbridgetokentoevm",
+    label: "Bridge Token to EVM",
+    category: "hooks",
+    description: "Bridge tokens from Cadence to EVM",
+  },
+  {
     id: "useflownftmetadata",
     label: "NFT Metadata",
     category: "hooks",
     description: "Fetch NFT metadata and traits",
+  },
+  {
+    id: "useflowscheduledtransaction",
+    label: "Scheduled Transactions",
+    category: "hooks",
+    description: "Manage Scheduled Transactions",
   },
 
   // Advanced section

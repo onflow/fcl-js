@@ -83,7 +83,7 @@ cease to exist.
 ## 0007 Deprecate Opts First Arg Latest Block
 
 - **Date:** Feb 2nd 2021
-- **Type:** Deprecation of options as first arguemnt to latestBlock
+- **Type:** Deprecation of options as first argument to latestBlock
 - **Removed:** Jan 14th 2022
 
 For JS-SDK versions 0.0.44 and below, getting the latest block looked like this:

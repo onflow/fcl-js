@@ -207,6 +207,9 @@ transaction(
  * Hook to send a cross-VM FT spend transaction. This function will
  * bundle multiple EVM calls into one atomic Cadence transaction and return the transaction ID.
  *
+ * @deprecated This hook has been renamed to `useCrossVmBridgeTokenToEvm` for better clarity.
+ * Please use `useCrossVmBridgeTokenToEvm` instead. This hook will be removed in a future version.
+ *
  * @returns The mutation object used to send the transaction.
  */
 export function useCrossVmSpendToken({

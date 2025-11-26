@@ -1,5 +1,54 @@
 # @onflow/react-sdk
 
+## 0.12.1
+
+### Patch Changes
+
+- [#2696](https://github.com/onflow/fcl-js/pull/2696) [`3bf349056b623cdd19ca5f135120250814bcf810`](https://github.com/onflow/fcl-js/commit/3bf349056b623cdd19ca5f135120250814bcf810) Thanks [@jribbink](https://github.com/jribbink)! - Add support for `discoveryAuthnExclude` configuration option in React SDK. This allows users to exclude specific wallet providers from the discovery service, complementing the existing `discoveryAuthnInclude` option.
+
+- Updated dependencies [[`3bf349056b623cdd19ca5f135120250814bcf810`](https://github.com/onflow/fcl-js/commit/3bf349056b623cdd19ca5f135120250814bcf810), [`a5e84666b0482547fe9411064f4821e8067e5238`](https://github.com/onflow/fcl-js/commit/a5e84666b0482547fe9411064f4821e8067e5238)]:
+  - @onflow/fcl@1.20.5
+
+## 0.12.0
+
+### Minor Changes
+
+- [#2677](https://github.com/onflow/fcl-js/pull/2677) [`58f953381ee0826bfeb6d068c28bf8853b470915`](https://github.com/onflow/fcl-js/commit/58f953381ee0826bfeb6d068c28bf8853b470915) Thanks [@mfbz](https://github.com/mfbz)! - Added `NftCard` component for displaying NFT metadata. The component automatically fetches and renders NFT information including image, name, description, collection details, traits, and external links. Features loading states, error handling, dark mode support and optional display of traits and additional metadata through `showTraits` and `showExtra` props.
+
+- [#2685](https://github.com/onflow/fcl-js/pull/2685) [`f47dd3bd1efce2498b3ab731ca08da2326604f5f`](https://github.com/onflow/fcl-js/commit/f47dd3bd1efce2498b3ab731ca08da2326604f5f) Thanks [@mfbz](https://github.com/mfbz)! - Added standalone Profile component for displaying wallet information. The Profile component has been extracted from the Connect component modal to provide a reusable profile display that can be used independently. The component automatically detects connection state, showing a compact "No connected wallet" message when disconnected and full profile information when connected (including address, balance with cross-VM support, multi-token selector, copy/disconnect actions, and optional scheduled transactions).
+
+- [#2679](https://github.com/onflow/fcl-js/pull/2679) [`8ef9cc6933f61c45e32a69c9d723ab669a7757ec`](https://github.com/onflow/fcl-js/commit/8ef9cc6933f61c45e32a69c9d723ab669a7757ec) Thanks [@mfbz](https://github.com/mfbz)! - Added `ScheduledTransactionList` component, a scrollable list that displays scheduled transactions for a Flow account with support for MetadataViews.Display (thumbnails, names, descriptions), transaction cancellation, automatic refresh, responsive design and dark mode. Each card shows the scheduled execution time, fee, priority, and effort with an optional cancel button for pending transactions.
+
+  Enhanced `Connect` component to display scheduled transactions in the profile modal. The modal now shows the user's scheduled transactions below their account info with a configurable `modalConfig` prop to control visibility.
+
+- [#2680](https://github.com/onflow/fcl-js/pull/2680) [`b7d73c709f009b192bed02f476edcc997538213d`](https://github.com/onflow/fcl-js/commit/b7d73c709f009b192bed02f476edcc997538213d) Thanks [@mfbz](https://github.com/mfbz)! - Enhanced the Connect component to enable visualizing different tokens like USDC and other stablecoins within the Connect modal.
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @onflow/fcl@1.20.4
+
+## 0.11.0
+
+### Minor Changes
+
+- [#2592](https://github.com/onflow/fcl-js/pull/2592) [`52688c33eb41862a5daa4226e2fdfa98afab79a4`](https://github.com/onflow/fcl-js/commit/52688c33eb41862a5daa4226e2fdfa98afab79a4) Thanks [@mfbz](https://github.com/mfbz)! - Added `useCrossVmBridgeTokenFromEvm` hook for bridging fungible tokens from Flow EVM to Cadence. This hook withdraws tokens from the signer's Cadence-Owned Account (COA) in EVM and deposits them into their Cadence vault, automatically configuring the vault if needed.
+
+- [#2652](https://github.com/onflow/fcl-js/pull/2652) [`879ae914da9f4cffa3bccffddef462ffbe8ed8c7`](https://github.com/onflow/fcl-js/commit/879ae914da9f4cffa3bccffddef462ffbe8ed8c7) Thanks [@mfbz](https://github.com/mfbz)! - Added `useFlowAuthz` hook for handling Flow transaction authorization. This hook returns an authorization function that can be used when sending a transaction, defaulting to the current user's wallet authorization when no custom authorization is provided.
+
+- [#2624](https://github.com/onflow/fcl-js/pull/2624) [`7963d7aa2984e4fd0ad94182a65c8c4065f1d98c`](https://github.com/onflow/fcl-js/commit/7963d7aa2984e4fd0ad94182a65c8c4065f1d98c) Thanks [@mfbz](https://github.com/mfbz)! - Added `useCrossVmBridgeNftFromEvm` hook for bridging NFTs from Flow EVM to Cadence. This hook withdraws an NFT from the signer's Cadence-Owned Account (COA) in EVM and deposits it into their Cadence collection, automatically configuring the collection if needed.
+
+- [#2661](https://github.com/onflow/fcl-js/pull/2661) [`e651d625af8e516d935e74d885524eca741dd9e6`](https://github.com/onflow/fcl-js/commit/e651d625af8e516d935e74d885524eca741dd9e6) Thanks [@mfbz](https://github.com/mfbz)! - Add `useFlowNftMetadata` hook to fetch NFT metadata including name, description, thumbnail, traits, and collection information from Flow blockchain accounts.
+
+- [#2653](https://github.com/onflow/fcl-js/pull/2653) [`9ff0f852c5f350e41996c7b8b62e9feb9dd1ee89`](https://github.com/onflow/fcl-js/commit/9ff0f852c5f350e41996c7b8b62e9feb9dd1ee89) Thanks [@mfbz](https://github.com/mfbz)! - Added `useFlowSchedule` hook for managing scheduled transactions. This hook provides methods to list, get, setup, and cancel scheduled transactions with support for handler data resolution and transaction status tracking.
+
+- [#2660](https://github.com/onflow/fcl-js/pull/2660) [`54672e6b16234d33fa33889d2b48451697fc8f8e`](https://github.com/onflow/fcl-js/commit/54672e6b16234d33fa33889d2b48451697fc8f8e) Thanks [@mfbz](https://github.com/mfbz)! - Fixed transaction management so that it clears up transaction state on error
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @onflow/fcl@1.20.3
+
 ## 0.10.3
 
 ### Patch Changes

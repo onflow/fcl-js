@@ -50,6 +50,7 @@ export function FlowProvider({
         discoveryWalletMethod: initialConfig.discoveryWalletMethod,
         discoveryAuthnEndpoint: initialConfig.discoveryAuthnEndpoint,
         discoveryAuthnInclude: initialConfig.discoveryAuthnInclude,
+        discoveryAuthnExclude: initialConfig.discoveryAuthnExclude,
         flowJson: flowJson,
         flowNetwork: initialConfig.flowNetwork,
         computeLimit: initialConfig.computeLimit,

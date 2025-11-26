@@ -15,6 +15,7 @@ interface FCLConfig {
   discoveryWalletMethod?: string
   discoveryAuthnEndpoint?: string
   discoveryAuthnInclude?: string[]
+  discoveryAuthnExclude?: string[]
   flowNetwork?: string
   storage: StorageProvider
   discovery?: {
@@ -123,6 +124,7 @@ export function createConfigService(config: FCLConfig): ConfigService {
     ["discovery.wallet.method", config.discoveryWalletMethod],
     ["discovery.authn.endpoint", config.discoveryAuthnEndpoint],
     ["discovery.authn.include", config.discoveryAuthnInclude],
+    ["discovery.authn.exclude", config.discoveryAuthnExclude],
     ["flow.network", config.flowNetwork],
     ["accessNode.api", config.accessNodeUrl],
     ["fcl.limit", config.computeLimit],

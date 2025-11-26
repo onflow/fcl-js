@@ -24,8 +24,22 @@ describe("Get Transaction", () => {
       },
       payer: "1654653399040a61",
       authorizers: [],
-      payload_signatures: [],
-      envelope_signatures: [],
+      payload_signatures: [
+        {
+          address: "1654653399040a61",
+          key_index: "1",
+          signature: "001122",
+          extension_data: Buffer.from("abcd", "hex").toString("base64"),
+        },
+      ],
+      envelope_signatures: [
+        {
+          address: "1654653399040a61",
+          key_index: "1",
+          signature: "aabbcc",
+          extension_data: Buffer.from("deadbeef", "hex").toString("base64"),
+        },
+      ],
     }
 
     httpRequestMock.mockReturnValue(returnedTransaction)
@@ -69,8 +83,22 @@ describe("Get Transaction", () => {
       },
       payer: "1654653399040a61",
       authorizers: [],
-      payloadSignatures: [],
-      envelopeSignatures: [],
+      payloadSignatures: [
+        {
+          address: "1654653399040a61",
+          keyId: 1,
+          signature: "001122",
+          extensionData: "abcd",
+        },
+      ],
+      envelopeSignatures: [
+        {
+          address: "1654653399040a61",
+          keyId: 1,
+          signature: "aabbcc",
+          extensionData: "deadbeef",
+        },
+      ],
     })
   })
 
