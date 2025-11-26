@@ -101,4 +101,47 @@ describe("Get Transaction", () => {
       ],
     })
   })
+
+  test("GetTransaction with decimal transaction id passes through", async () => {
+    const httpRequestMock = jest.fn()
+
+    const returnedTransaction = {
+      script: "Q2FkZW5jZSBDb2Rl",
+      arguments: [],
+      reference_block_id: "a1b2c3",
+      gas_limit: "123",
+      proposal_key: {
+        address: "1654653399040a61",
+        key_index: "1",
+        signer_index: "0",
+        sequence_number: "1",
+      },
+      payer: "1654653399040a61",
+      authorizers: [],
+      payload_signatures: [],
+      envelope_signatures: [],
+    }
+
+    httpRequestMock.mockReturnValue(returnedTransaction)
+
+    await sendGetTransaction(
+      await resolve(await build([getTransaction("12453151")])),
+      {
+        response: responseADT,
+        Buffer,
+      },
+      {
+        httpRequest: httpRequestMock,
+        node: "localhost",
+      }
+    )
+
+    const valueSent = httpRequestMock.mock.calls[0][0]
+    expect(valueSent).toEqual({
+      hostname: "localhost",
+      path: "/v1/transactions/12453151",
+      method: "GET",
+      body: null,
+    })
+  })
 })

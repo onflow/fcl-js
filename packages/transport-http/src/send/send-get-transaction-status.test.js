@@ -77,4 +77,84 @@ describe("Get Transaction Status", () => {
       ],
     })
   })
+
+  test("GetTransactionResult with decimal transaction id passes through", async () => {
+    const httpRequestMock = jest.fn()
+
+    const returnedTransactionStatus = {
+      status: "Sealed",
+      status_code: 0,
+      error_message: "",
+      computation_used: "100",
+      block_id: "abc123",
+      events: [],
+    }
+
+    httpRequestMock.mockReturnValue(returnedTransactionStatus)
+
+    await sendGetTransactionStatus(
+      await resolve(await build([getTransactionStatus("12453151")])),
+      {
+        response: responseADT,
+        Buffer,
+      },
+      {
+        httpRequest: httpRequestMock,
+        node: "localhost",
+      }
+    )
+
+    const valueSent = httpRequestMock.mock.calls[0][0]
+    expect(valueSent).toEqual({
+      hostname: "localhost",
+      path: "/v1/transaction_results/12453151",
+      method: "GET",
+      body: null,
+    })
+  })
+
+  test("GetTransactionResult with block_id query when atBlockId is provided", async () => {
+    const httpRequestMock = jest.fn()
+
+    const returnedTransactionStatus = {
+      status: "Sealed",
+      status_code: 0,
+      error_message: "",
+      computation_used: "100",
+      block_id: "blockABC",
+      events: [],
+    }
+
+    httpRequestMock.mockReturnValue(returnedTransactionStatus)
+
+    const response = await sendGetTransactionStatus(
+      await resolve(
+        await build([
+          getTransactionStatus("MyTxID"),
+          // set block id through existing builder
+          ix => ({...ix, block: {...ix.block, id: "blockABC"}}),
+        ])
+      ),
+      {
+        response: responseADT,
+        Buffer,
+      },
+      {
+        httpRequest: httpRequestMock,
+        node: "localhost",
+      }
+    )
+
+    expect(httpRequestMock.mock.calls.length).toEqual(1)
+    const valueSent = httpRequestMock.mock.calls[0][0]
+
+    expect(valueSent).toEqual({
+      hostname: "localhost",
+      path: "/v1/transaction_results/MyTxID?block_id=blockABC",
+      method: "GET",
+      body: null,
+    })
+
+    expect(response.transactionStatus.blockId).toBe("blockABC")
+  })
 })
