@@ -1,8 +1,4 @@
-import {
-  createFlowClientCore,
-  SdkTransport,
-  StorageProvider,
-} from "@onflow/fcl-core"
+import {createFlowClientCore, type FlowClientCoreConfig} from "@onflow/fcl-core"
 import {getAsyncStorage} from "./utils/react-native/storage"
 import {loadFclWc} from "./walletconnect/loader"
 import {execLocal} from "./utils/react-native/exec-local"
@@ -13,40 +9,15 @@ export const discoveryOpts = {
   execStrategy: execLocal,
 }
 
-export interface FlowClientConfig {
-  // Core network configuration (most commonly used)
-  accessNodeUrl: string // Required - must specify which network to connect to
-  flowNetwork?: string
-  flowJson?: any
-
-  // Wallet/Discovery configuration
-  discoveryWallet?: string
-  discoveryWalletMethod?: string
-  discoveryAuthnEndpoint?: string
-  discoveryAuthnInclude?: string[]
-  discoveryAuthnExclude?: string[]
-
+/**
+ * Configuration for creating a Flow client on React Native.
+ * Extends core configuration with mobile-specific features like WalletConnect.
+ */
+export interface FlowClientConfig
+  extends Omit<FlowClientCoreConfig, "platform" | "discovery"> {
   // WalletConnect configuration
   walletconnectProjectId?: string
   walletconnectDisableNotifications?: boolean
-
-  // Storage configuration
-  storage?: StorageProvider
-
-  // App detail properties
-  appDetailTitle?: string
-  appDetailIcon?: string
-  appDetailDescription?: string
-  appDetailUrl?: string
-
-  // Service configuration
-  serviceOpenIdScopes?: string[]
-
-  // Advanced/SDK configuration (least commonly used)
-  transport?: SdkTransport
-  computeLimit?: number
-  customResolver?: any
-  customDecoders?: any
 }
 
 /**
