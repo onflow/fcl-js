@@ -8,9 +8,7 @@ interface FundProps {
   variant?: ButtonProps["variant"]
 }
 
-export const Fund: React.FC<FundProps> = ({
-  variant = "primary",
-}) => {
+export const Fund: React.FC<FundProps> = ({variant = "primary"}) => {
   const [open, setOpen] = useState(false)
 
   const handleButtonClick = () => {
