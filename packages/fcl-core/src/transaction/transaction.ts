@@ -27,6 +27,15 @@ const FLOW_EMULATOR = "local"
 // Used for shared global singleton to prevent duplicate subscriptions
 const registry = new Map<string, ReturnType<typeof createObservable>>()
 
+/**
+ * Check if a transaction ID is a scheduled transaction ID (UInt64 format)
+ * Scheduled transaction IDs are numeric strings that are NOT 64 characters
+ * (to avoid collision with all-digit transaction hashes)
+ */
+function isScheduledTransactionId(txId: string): boolean {
+  return /^\d+$/.test(txId) && txId.length !== 64
+}
+
 export function createTransaction(context: Pick<FCLContext, "sdk" | "config">) {
   /**
    * @description Creates a transaction monitor that provides methods for tracking and subscribing to
@@ -116,9 +125,17 @@ export function createTransaction(context: Pick<FCLContext, "sdk" | "config">) {
     onceExecuted: () => Promise<TransactionStatus>
     onceSealed: () => Promise<TransactionStatus>
   } {
-    // Validate transactionId as 64 byte hash
-    if (!TXID_REGEXP.test(scoped(transactionId)))
+    // Validate transactionId format
+    // Must be either:
+    // 1. A 64-character hex hash (normal transaction), OR
+    // 2. A numeric string that's not 64 chars (scheduled transaction UInt64)
+    const scopedId = scoped(transactionId)
+    const isValidHash = TXID_REGEXP.test(scopedId)
+    const isScheduledTxId = isScheduledTransactionId(scopedId)
+
+    if (!isValidHash && !isScheduledTxId) {
       throw new Error("Invalid transactionId")
+    }
 
     function getObservable() {
       let observable = registry.get(transactionId)
@@ -218,6 +235,16 @@ function createObservable(
   init().catch(error)
 
   async function init() {
+    // Check if this is a scheduled transaction ID (UInt64 format)
+    // Scheduled transaction IDs are not supported by WebSocket, so we fall back to REST polling
+    const isScheduledTxId = isScheduledTransactionId(scoped(txId))
+
+    if (isScheduledTxId) {
+      // Use legacy polling for scheduled transaction IDs
+      fallbackLegacyPolling()
+      return
+    }
+
     const flowNetwork = await createGetChainId(context)()
 
     // As of Flow CLI v2.2.8, WebSocket subscriptions are not supported on the Flow emulator
