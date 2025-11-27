@@ -40,9 +40,18 @@ export async function execDiscoveryRN({
       return
     }
 
+    // Store abort listener reference for cleanup
+    let abortListener = null
+
     const handleAuthenticate = walletService => {
       try {
         hideModal()
+
+        // Clean up abort listener to prevent memory leak
+        if (abortListener && abortSignal) {
+          abortSignal.removeEventListener("abort", abortListener)
+          abortListener = null
+        }
 
         // Return REDIRECT to tell FCL core to execute the selected wallet service
         resolve({
@@ -59,6 +68,13 @@ export async function execDiscoveryRN({
     const handleClose = () => {
       try {
         hideModal()
+
+        // Clean up abort listener to prevent memory leak
+        if (abortListener && abortSignal) {
+          abortSignal.removeEventListener("abort", abortListener)
+          abortListener = null
+        }
+
         reject(new Error("User cancelled wallet selection"))
       } catch (error) {
         reject(new Error(`Failed to close modal: ${error.message}`))
@@ -87,14 +103,15 @@ export async function execDiscoveryRN({
 
     // Handle abort signal after modal shown
     if (abortSignal) {
-      abortSignal.addEventListener("abort", () => {
+      abortListener = () => {
         try {
           hideModal()
           reject(new Error("Authentication aborted by user"))
         } catch (error) {
           reject(new Error(`Failed to abort authentication: ${error.message}`))
         }
-      })
+      }
+      abortSignal.addEventListener("abort", abortListener)
     }
   })
 }

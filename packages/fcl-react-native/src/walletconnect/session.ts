@@ -46,14 +46,6 @@ export async function createSessionProposal({
   displayUriListener = onDisplayUri
   client.on("display_uri", onDisplayUri)
 
-  // Cleanup function to remove the display_uri listener
-  const cleanup = () => {
-    if (displayUriListener) {
-      client.removeListener("display_uri", displayUriListener)
-      displayUriListener = null
-    }
-  }
-
   try {
     const {uri: connectionUri, approval} = await client.connect({
       pairingTopic: existingPairing,
@@ -65,12 +57,11 @@ export async function createSessionProposal({
       uri: connectionUri,
       approval: () => approval(),
       cleanup: () => {
-        // Clean up display_uri listener on successful cleanup
+        // Clean up display_uri listener (already handled by finally block above)
         if (displayUriListener) {
           client.removeListener("display_uri", displayUriListener)
           displayUriListener = null
         }
-        if (cleanup) cleanup()
       },
     }
   } finally {
