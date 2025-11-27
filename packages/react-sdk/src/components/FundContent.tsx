@@ -1,16 +1,13 @@
 import React from "react"
-import {
-  Tab,
-  TabGroup,
-  TabList,
-  TabPanel,
-  TabPanels,
-} from "./internal/Tabs"
+import {Tab, TabGroup, TabList, TabPanel, TabPanels} from "./internal/Tabs"
 
 export const FundContent: React.FC = () => {
   return (
     <div>
-      <h2 className="flow-text-lg flow-font-semibold flow-text-slate-900 dark:flow-text-slate-100 flow-mb-4">
+      <h2
+        className="flow-text-lg flow-font-semibold flow-text-slate-900 dark:flow-text-slate-100
+          flow-mb-4"
+      >
         Fund
       </h2>
       <TabGroup>
@@ -20,7 +17,10 @@ export const FundContent: React.FC = () => {
               <>
                 Tab 1
                 {selected && (
-                  <div className="flow-absolute flow-bottom-0 flow-left-0 flow-right-0 flow-h-0.5 flow-bg-slate-900 dark:flow-bg-slate-100" />
+                  <div
+                    className="flow-absolute flow-bottom-0 flow-left-0 flow-right-0 flow-h-0.5
+                      flow-bg-slate-900 dark:flow-bg-slate-100"
+                  />
                 )}
               </>
             )}
@@ -30,7 +30,10 @@ export const FundContent: React.FC = () => {
               <>
                 Tab 2
                 {selected && (
-                  <div className="flow-absolute flow-bottom-0 flow-left-0 flow-right-0 flow-h-0.5 flow-bg-slate-900 dark:flow-bg-slate-100" />
+                  <div
+                    className="flow-absolute flow-bottom-0 flow-left-0 flow-right-0 flow-h-0.5
+                      flow-bg-slate-900 dark:flow-bg-slate-100"
+                  />
                 )}
               </>
             )}

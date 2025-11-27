@@ -44,7 +44,7 @@ export function FundCard() {
               darkMode
                 ? "bg-gray-900/50 border-white/10"
                 : "bg-gray-50 border-black/5"
-            }`}
+              }`}
           >
             <PlusGridIcon placement="top left" className="absolute" />
             <h4
@@ -62,7 +62,7 @@ export function FundCard() {
               darkMode
                 ? "bg-gray-900/50 border-white/10"
                 : "bg-gray-50 border-black/5"
-            }`}
+              }`}
           >
             <PlusGridIcon placement="top right" className="absolute" />
             <h4
@@ -80,7 +80,7 @@ export function FundCard() {
               darkMode
                 ? "bg-gray-900/50 border-white/10"
                 : "bg-gray-50 border-black/5"
-            }`}
+              }`}
           >
             <PlusGridIcon placement="bottom left" className="absolute" />
             <h4
@@ -102,14 +102,13 @@ export function FundCard() {
               darkMode
                 ? "bg-gray-900/50 border-white/10"
                 : "bg-gray-50 border-black/5"
-            }`}
+              }`}
           >
             {isLoading ? (
               <div className="text-center py-12">
                 <div
                   className={`inline-block animate-spin rounded-full h-8 w-8 border-b-2 ${
-                    darkMode ? "border-white" : "border-black"
-                  }`}
+                    darkMode ? "border-white" : "border-black" }`}
                 ></div>
               </div>
             ) : (
@@ -124,7 +123,7 @@ export function FundCard() {
               darkMode
                 ? "bg-gray-900/50 border-white/10"
                 : "bg-gray-50 border-black/5"
-            }`}
+              }`}
           >
             <div>
               <label
@@ -139,7 +138,7 @@ export function FundCard() {
                       key={variantOption}
                       onClick={() => setVariant(variantOption)}
                       className={`w-full text-sm px-3 py-2 rounded-lg transition-colors text-left ${
-                        variant === variantOption
+                      variant === variantOption
                           ? darkMode
                             ? "bg-blue-600 hover:bg-blue-700 text-white"
                             : "bg-blue-500 hover:bg-blue-600 text-white"

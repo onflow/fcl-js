@@ -16,10 +16,7 @@ export const TabGroup: React.FC<TabGroupProps> = ({className, ...props}) => {
   const {isDark} = useDarkMode()
   return (
     <HeadlessTabGroup
-      className={twMerge(
-        isDark ? "flow-dark" : "",
-        className
-      )}
+      className={twMerge(isDark ? "flow-dark" : "", className)}
       {...props}
     />
   )
@@ -32,7 +29,8 @@ export const TabList: React.FC<TabListProps> = ({className, ...props}) => {
   return (
     <HeadlessTabList
       className={twMerge(
-        "flow-flex flow-gap-6 flow-border-b flow-border-slate-200 dark:flow-border-slate-700",
+        `flow-flex flow-gap-6 flow-border-b flow-border-slate-200
+        dark:flow-border-slate-700`,
         className
       )}
       {...props}
@@ -61,20 +59,14 @@ export const Tab: React.FC<TabProps> = ({className, ...props}) => {
 export interface TabPanelsProps
   extends React.ComponentProps<typeof HeadlessTabPanels> {}
 
-export const TabPanels: React.FC<TabPanelsProps> = ({
-  className,
-  ...props
-}) => {
+export const TabPanels: React.FC<TabPanelsProps> = ({className, ...props}) => {
   return <HeadlessTabPanels className={twMerge(className)} {...props} />
 }
 
 export interface TabPanelProps
   extends React.ComponentProps<typeof HeadlessTabPanel> {}
 
-export const TabPanel: React.FC<TabPanelProps> = ({
-  className,
-  ...props
-}) => {
+export const TabPanel: React.FC<TabPanelProps> = ({className, ...props}) => {
   return (
     <HeadlessTabPanel
       className={twMerge("flow-pt-4 focus:flow-outline-none", className)}
