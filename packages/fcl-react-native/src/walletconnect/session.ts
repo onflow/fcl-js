@@ -36,28 +36,49 @@ export async function createSessionProposal({
     },
   }
 
-  let cleanup: () => void
-  const uri = new Promise<string>((resolve, reject) => {
-    const onDisplayUri = (uri: string) => {
-      resolve(uri)
-    }
-    client.on("display_uri", onDisplayUri)
-    cleanup = () => {
-      client.removeListener("display_uri", onDisplayUri)
-      reject(new Error("WalletConnect Session Request aborted"))
-    }
-  })
+  let displayUriListener: ((uri: string) => void) | null = null
 
-  const {uri: connectionUri, approval} = await client.connect({
-    pairingTopic: existingPairing,
-    requiredNamespaces,
-    optionalNamespaces,
-  })
+  // Set up display_uri listener to track the connection URI
+  const onDisplayUri = (_uri: string) => {
+    // URI is available via client.connect() return value, but we need
+    // to register a listener to prevent WalletConnect SDK warnings
+  }
+  displayUriListener = onDisplayUri
+  client.on("display_uri", onDisplayUri)
 
-  return {
-    uri: connectionUri,
-    approval: () => approval(),
-    cleanup: () => cleanup(),
+  // Cleanup function to remove the display_uri listener
+  const cleanup = () => {
+    if (displayUriListener) {
+      client.removeListener("display_uri", displayUriListener)
+      displayUriListener = null
+    }
+  }
+
+  try {
+    const {uri: connectionUri, approval} = await client.connect({
+      pairingTopic: existingPairing,
+      requiredNamespaces,
+      optionalNamespaces,
+    })
+
+    return {
+      uri: connectionUri,
+      approval: () => approval(),
+      cleanup: () => {
+        // Clean up display_uri listener on successful cleanup
+        if (displayUriListener) {
+          client.removeListener("display_uri", displayUriListener)
+          displayUriListener = null
+        }
+        if (cleanup) cleanup()
+      },
+    }
+  } finally {
+    // Always remove listener after connect completes (success or error)
+    if (displayUriListener) {
+      client.removeListener("display_uri", displayUriListener)
+      displayUriListener = null
+    }
   }
 }
 
@@ -79,13 +100,16 @@ export const request = async ({
   const [chainId, addr, address] = makeSessionData(session)
   const data = JSON.stringify({...body, addr, address})
 
+  let abortListener: (() => void) | null = null
   const abortPromise = new Promise((_, reject) => {
     if (abortSignal?.aborted) {
       reject(new Error("WalletConnect Request aborted"))
+      return
     }
-    abortSignal?.addEventListener("abort", () => {
+    abortListener = () => {
       reject(new Error("WalletConnect Request aborted"))
-    })
+    }
+    abortSignal?.addEventListener("abort", abortListener)
   })
 
   try {
@@ -157,6 +181,12 @@ export const request = async ({
     }
   } catch (error) {
     throw error
+  } finally {
+    // Clean up abort listener after Promise.race resolves
+    if (abortListener && abortSignal) {
+      abortSignal.removeEventListener("abort", abortListener)
+      abortListener = null
+    }
   }
 }
 

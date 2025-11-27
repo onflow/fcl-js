@@ -359,19 +359,32 @@ async function connectWc({
     openDeeplink(url)
 
     // Set up abort handling with proper cleanup
+    let abortListener: (() => void) | null = null
     const abortPromise = new Promise<never>((_, reject) => {
-      if (abortSignal?.aborted) reject(new Error("Session request aborted"))
+      if (abortSignal?.aborted) {
+        reject(new Error("Session request aborted"))
+        return
+      }
 
-      abortSignal?.addEventListener("abort", () => {
+      abortListener = () => {
         if (cleanup) cleanup()
         reject(new Error("Session request aborted"))
-      })
+      }
+      abortSignal?.addEventListener("abort", abortListener)
     })
 
-    const session = await Promise.race([approval(), abortPromise])
-    if (session == null) throw new Error("Session request failed")
+    try {
+      const session = await Promise.race([approval(), abortPromise])
+      if (session == null) throw new Error("Session request failed")
 
-    return session
+      return session
+    } finally {
+      // Clean up abort listener after Promise.race resolves
+      if (abortListener && abortSignal) {
+        abortSignal.removeEventListener("abort", abortListener)
+        abortListener = null
+      }
+    }
   } catch (error) {
     onClose()
     throw error

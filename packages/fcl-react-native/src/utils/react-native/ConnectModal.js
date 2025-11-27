@@ -1,5 +1,5 @@
 import {Image} from "expo-image"
-import {createElement, useEffect, useRef} from "react"
+import {createElement, useEffect, useRef, useState} from "react"
 import {
   Animated,
   Modal,
@@ -96,6 +96,9 @@ export const ConnectModal = ({
   const backdropOpacity = useRef(new Animated.Value(0)).current
   const slideAnim = useRef(new Animated.Value(300)).current
 
+  // Double-click protection
+  const [isAuthenticating, setIsAuthenticating] = useState(false)
+
   // Animate backdrop and content when modal visibility changes
   useEffect(() => {
     if (visible) {
@@ -113,14 +116,22 @@ export const ConnectModal = ({
         friction: 10,
         useNativeDriver: true,
       }).start()
+
+      // Reset authentication state when modal opens
+      setIsAuthenticating(false)
     } else {
       // Reset animations when modal closes
       backdropOpacity.setValue(0)
       slideAnim.setValue(300)
+      setIsAuthenticating(false)
     }
   }, [visible, backdropOpacity, slideAnim])
 
   const handleServiceSelect = service => {
+    // Prevent double-click: ignore if already authenticating
+    if (isAuthenticating) return
+
+    setIsAuthenticating(true)
     // onAuthenticate handles modal closing internally, don't call onClose()
     onAuthenticate(service)
   }
