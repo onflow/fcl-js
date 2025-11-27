@@ -90,18 +90,7 @@ export const currentUser = getCurrentUser({
 })
 export const mutate = getMutate(currentUser)
 
-export const authenticate = async (opts: any = {}) => {
-  // If service is explicitly provided, use direct authentication
-  if (opts.service) {
-    return currentUser().authenticate(opts)
-  }
-
-  // Otherwise, use mobile-specific authentication with auto-modal
-  return authenticateWithDiscovery(
-    {authenticate: currentUser().authenticate, config},
-    opts
-  )
-}
+export const authenticate = (opts = {}) => currentUser().authenticate(opts)
 
 export const unauthenticate = async () => {
   // First unauthenticate from FCL
@@ -146,10 +135,8 @@ import {
   coreStrategies,
   getDefaultConfig,
   useServiceDiscovery,
-  ServiceDiscovery,
   ConnectModal,
   ConnectModalProvider,
-  authenticateWithDiscovery,
 } from "./utils/react-native"
 import {getAsyncStorage} from "./utils/react-native/storage"
 import {initFclWcLoader} from "./walletconnect/loader"
@@ -167,7 +154,6 @@ initFclWcLoader()
 
 export {
   useServiceDiscovery,
-  ServiceDiscovery,
   ConnectModal,
   ConnectModalProvider,
   getServiceRegistry,

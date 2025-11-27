@@ -1,4 +1,4 @@
-export {ServiceDiscovery, useServiceDiscovery} from "./ServiceDiscovery"
+export {useServiceDiscovery} from "./ServiceDiscovery"
 export {ConnectModal} from "./ConnectModal"
 export {getDefaultConfig} from "./default-config"
 export {coreStrategies} from "./coreStrategies"
@@ -7,4 +7,3 @@ export {
   showModal,
   hideModal,
 } from "./ConnectModalProvider"
-export {authenticateWithDiscovery} from "./authenticate-mobile"

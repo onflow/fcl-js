@@ -5,13 +5,9 @@ import {
 } from "@onflow/fcl-core"
 import {getAsyncStorage} from "./utils/react-native/storage"
 import {loadFclWc} from "./walletconnect/loader"
-import {execLocal} from "./utils/react-native/exec-local"
+import {DISCOVERY_RN_METHOD} from "./utils/react-native/constants"
 
 const PLATFORM = "react-native"
-
-export const discoveryOpts = {
-  execStrategy: execLocal,
-}
 
 /**
  * Configuration for creating a Flow client on React Native.
@@ -61,8 +57,7 @@ export async function createFlowClient(params: FlowClientConfig) {
     transport: params.transport,
     platform: PLATFORM,
     storage,
-    discovery: discoveryOpts,
-    discoveryWalletMethod: params.discoveryWalletMethod || "POP/RPC",
+    discoveryWalletMethod: params.discoveryWalletMethod || DISCOVERY_RN_METHOD,
     discoveryAuthnEndpoint: params.discoveryAuthnEndpoint,
     discoveryAuthnInclude: params.discoveryAuthnInclude,
     discoveryAuthnExclude: params.discoveryAuthnExclude,
