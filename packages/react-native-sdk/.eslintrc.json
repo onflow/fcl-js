@@ -1,0 +1,47 @@
+{
+  "env": {
+    "browser": true,
+    "es2021": true,
+    "jest": true,
+    "node": true
+  },
+  "extends": [
+    "eslint:recommended",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:jsdoc/recommended"
+  ],
+  "parser": "@typescript-eslint/parser",
+  "plugins": ["@typescript-eslint", "jsdoc"],
+  "parserOptions": {
+    "ecmaVersion": "latest",
+    "sourceType": "module",
+    "ecmaFeatures": {
+      "jsx": true
+    }
+  },
+  "globals": {
+    "JSX": "readonly"
+  },
+  "ignorePatterns": [
+    "**/dist/",
+    "**/types/",
+    "**/__tests__/**",
+    "**/*.test.ts",
+    "**/*.test.tsx"
+  ],
+  "rules": {
+    "@typescript-eslint/no-explicit-any": "warn",
+    "@typescript-eslint/explicit-module-boundary-types": "off",
+    "jsdoc/require-jsdoc": 0,
+    "jsdoc/tag-lines": 0,
+    "jsdoc/require-param-description": 0,
+    "jsdoc/valid-types": 0,
+    "jsdoc/require-returns-description": 0,
+    "no-undef": 1
+  },
+  "settings": {
+    "react": {
+      "version": "detect"
+    }
+  }
+}

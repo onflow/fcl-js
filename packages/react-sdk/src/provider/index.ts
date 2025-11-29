@@ -1,3 +1,5 @@
-export {FlowProvider} from "./FlowProvider"
+export {FlowProvider, defaultQueryOptions} from "./FlowProvider"
+export type {ColorMode} from "./FlowProvider"
 export {FlowQueryClientProvider, useFlowQueryClient} from "./FlowQueryClient"
 export {DarkModeProvider, useDarkMode} from "./DarkModeProvider"
+export {GlobalTransactionProvider} from "./GlobalTransactionProvider"

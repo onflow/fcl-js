@@ -19,7 +19,7 @@ interface FlowProviderProps {
   colorMode?: ColorMode
 }
 
-const defaultQueryOptions: DefaultOptions = {
+export const defaultQueryOptions: DefaultOptions = {
   queries: {
     retry: false,
     staleTime: 0,

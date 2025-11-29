@@ -8,10 +8,10 @@ let walletConnectInitialized = false
 
 async function initializeWalletConnect() {
   if (!walletConnectInitialized) {
-    // Verify crypto polyfill is available
+    // Verify crypto polyfill is available (should be auto-loaded via client.ts)
     if (typeof global.crypto?.getRandomValues !== "function") {
       throw new Error(
-        "crypto.getRandomValues is not available. Please import 'react-native-get-random-values' at the top of your app entry point (e.g., app/_layout.tsx or index.js) before any other imports."
+        "crypto.getRandomValues is not available. The polyfill should be automatically loaded by @onflow/fcl-react-native. If you see this error, please ensure you have react-native-get-random-values installed as a peer dependency."
       )
     }
 

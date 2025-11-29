@@ -1,4 +1,4 @@
-export * from "./core/types"
+export * from "./core"
 export * from "./hooks"
 export * from "./components"
 export * from "./provider"

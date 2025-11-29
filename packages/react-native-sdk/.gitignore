@@ -1,0 +1,25 @@
+# Type definitions (generated)
+types/
+
+# Dependencies
+node_modules/
+
+# Testing
+coverage/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+npm-debug.log*
+
+# Optional: dist (if we add build later)
+dist/

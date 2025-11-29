@@ -1,0 +1,19 @@
+# Source files (we publish dist/)
+src/
+
+# Development files
+.babelrc
+tsconfig.json
+jest.config.js
+.eslintrc.json
+
+# Test files
+**/*.test.ts
+**/*.test.tsx
+**/__tests__/
+
+# Documentation
+docs/
+
+# CI/CD
+.github/
