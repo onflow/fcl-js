@@ -3,6 +3,7 @@ import {
   useFlowConfig,
   useFlowCurrentUser,
   useFlowQuery,
+  type FlowNetwork,
 } from "@onflow/react-sdk"
 import {useState} from "react"
 import {getContractAddress} from "../../constants"
@@ -31,7 +32,7 @@ export function UseFlowQueryCard() {
   const {darkMode} = useDarkMode()
   const config = useFlowConfig()
   const {user: currentUser} = useFlowCurrentUser()
-  const currentNetwork = config.flowNetwork || "emulator"
+  const currentNetwork = (config.flowNetwork || "emulator") as FlowNetwork
   const [cadenceScript, setCadenceScript] = useState(
     `access(all) fun main(): String {
     return "Hello, World!"

@@ -1,6 +1,6 @@
 import React, {useState} from "react"
-import {useFlowCurrentUser} from "../hooks"
-import {UseCrossVmTokenBalanceData} from "../hooks/useCrossVmTokenBalance"
+import {useFlowCurrentUser} from "@onflow/react-core"
+import {UseCrossVmTokenBalanceData} from "@onflow/react-core"
 import {Button, ButtonProps} from "./internal/Button"
 import {Dialog} from "./internal/Dialog"
 import {StyleWrapper} from "./internal/StyleWrapper"

@@ -1,5 +1,6 @@
 module.exports = {
   testEnvironment: "jsdom",
+  passWithNoTests: true,
   moduleNameMapper: {
     "^@walletconnect": "<rootDir>/src/__mocks__/noop.ts",
     "^preact": "<rootDir>/src/__mocks__/noop.ts",

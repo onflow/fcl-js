@@ -5,8 +5,8 @@ import {
   ScheduledTransaction,
   ScheduledTransactionPriority,
   ScheduledTransactionStatus,
-} from "../hooks/useFlowScheduledTransactionList"
-import {useFlowScheduledTransactionCancel} from "../hooks/useFlowScheduledTransactionCancel"
+} from "@onflow/react-core"
+import {useFlowScheduledTransactionCancel} from "@onflow/react-core"
 import {StyleWrapper} from "./internal/StyleWrapper"
 import {AlertCircleIcon} from "../icons/AlertCircleIcon"
 import {LoaderCircleIcon} from "../icons/LoaderCircleIcon"
@@ -15,8 +15,8 @@ import {FlowIcon} from "../icons/FlowIcon"
 import {ExternalLinkIcon} from "../icons/ExternalLink"
 import {twMerge} from "tailwind-merge"
 import {useFlowQueryClient} from "../provider/FlowQueryClient"
-import {useFlowChainId} from "../hooks/useFlowChainId"
-import {getFlowscanScheduledTxUrl} from "../utils/flowscan"
+import {useFlowChainId} from "@onflow/react-core"
+import {getFlowscanScheduledTxUrl} from "@onflow/react-core"
 
 const getPriorityLabel = (priority: ScheduledTransactionPriority): string => {
   switch (priority) {

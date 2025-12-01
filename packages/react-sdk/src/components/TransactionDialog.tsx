@@ -4,7 +4,7 @@ import {Button} from "./internal/Button"
 import {TransactionLink} from "./TransactionLink"
 import {LoaderCircleIcon} from "../icons/LoaderCircleIcon"
 import {CircleCheckIcon} from "../icons/CircleCheckIcon"
-import {useFlowTransactionStatus} from "../hooks/useFlowTransactionStatus"
+import {useFlowTransactionStatus} from "@onflow/react-core"
 
 interface TransactionDialogProps {
   open: boolean

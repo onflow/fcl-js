@@ -1,4 +1,4 @@
-import {useFlowEvents, useFlowConfig} from "@onflow/react-sdk"
+import {useFlowEvents, useFlowConfig, type FlowNetwork} from "@onflow/react-sdk"
 import {useState, useCallback} from "react"
 import type {Event} from "@onflow/typedefs"
 import {getEventType} from "../../constants"
@@ -23,7 +23,7 @@ useFlowEvents({
 export function UseFlowEventsCard() {
   const {darkMode} = useDarkMode()
   const config = useFlowConfig()
-  const currentNetwork = config.flowNetwork || "emulator"
+  const currentNetwork = (config.flowNetwork || "emulator") as FlowNetwork
 
   const [eventTypes, setEventTypes] = useState([
     getEventType("FlowToken", "TokensWithdrawn", currentNetwork),

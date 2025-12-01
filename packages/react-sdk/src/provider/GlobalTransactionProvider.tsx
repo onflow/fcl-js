@@ -1,6 +1,6 @@
 import {TransactionExecutionStatus} from "@onflow/typedefs"
 import React, {createContext, useContext, useState, useEffect} from "react"
-import {useFlowClient} from "../hooks/useFlowClient"
+import {useFlowClient} from "@onflow/react-core"
 
 interface GlobalTransactionContextValue {
   /** Check if a global transaction is currently running */
@@ -37,13 +37,13 @@ export const GlobalTransactionProvider: React.FC<
 
     // Subscribe to transaction updates
     const unsub = fcl.tx(txId).subscribe(
-      txStatus => {
+      (txStatus: any) => {
         if (txStatus.status >= TransactionExecutionStatus.EXECUTED) {
           // Transaction has been executed, reset the global transaction ID
           setTxId(null)
         }
       },
-      error => {
+      (error: any) => {
         // Handle subscription errors
         console.error("Transaction status subscription error:", error)
         // Clear the transaction ID to prevent button from staying in processing state
