@@ -1,7 +1,11 @@
-import React from "react"
+import React, {useState} from "react"
 import {Tab, TabGroup, TabList, TabPanel, TabPanels} from "./internal/Tabs"
+import {Input} from "./internal/Input"
+import {Button} from "./internal/Button"
 
 export const FundContent: React.FC = () => {
+  const [amount, setAmount] = useState("")
+
   return (
     <div>
       <h2
@@ -40,7 +44,31 @@ export const FundContent: React.FC = () => {
           </Tab>
         </TabList>
         <TabPanels>
-          <TabPanel>Content 1</TabPanel>
+          <TabPanel>
+            <div className="flow-space-y-4">
+              <div className="flow-space-y-2">
+                <label className="flow-text-sm flow-font-medium flow-text-slate-700 dark:flow-text-slate-300">
+                  Amount
+                </label>
+                <div className="flow-flex flow-items-center flow-gap-2">
+                  <Input
+                    type="number"
+                    placeholder="0.00"
+                    value={amount}
+                    onChange={e => setAmount(e.target.value)}
+                    className="flow-flex-1"
+                  />
+                  <span className="flow-text-sm flow-font-medium flow-text-slate-600 dark:flow-text-slate-400 flow-whitespace-nowrap">
+                    USD
+                  </span>
+                </div>
+                <p className="flow-text-sm flow-text-slate-500 dark:flow-text-slate-400">
+                  ≈ 0 FLOW
+                </p>
+              </div>
+              <Button className="flow-w-full">Continue</Button>
+            </div>
+          </TabPanel>
           <TabPanel>Content 2</TabPanel>
         </TabPanels>
       </TabGroup>
