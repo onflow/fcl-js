@@ -24,6 +24,14 @@
     "test:watch": "jest --watch",
     "start": "fcl-bundle --watch"
   },
+  "peerDependencies": {
+    "@onflow/fcl": ">=1.0.0"
+  },
+  "peerDependenciesMeta": {
+    "@onflow/fcl": {
+      "optional": true
+    }
+  },
   "devDependencies": {
     "@babel/preset-typescript": "^7.25.7",
     "@onflow/fcl": "*",

@@ -6,14 +6,7 @@
 import type {createFlowClient} from "@onflow/fcl"
 import type {Network} from "./constants"
 
-/**
- * Contract addresses for Flow EVM Bridge
- *
- * NOTE: These addresses are duplicated from @onflow/react-sdk/src/constants.ts
- * to avoid a circular dependency. If these addresses change, both locations must be updated.
- *
- * Source of truth: https://github.com/onflow/fcl-js/blob/main/packages/react-sdk/src/constants.ts
- */
+/** Contract addresses for Flow EVM Bridge */
 const BRIDGE_ADDRESSES = {
   testnet: {
     EVM: "0x8c5303eaa26202d6",

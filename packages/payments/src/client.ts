@@ -5,7 +5,7 @@ import type {
   CryptoFundingIntent,
 } from "./types"
 import type {createFlowClient} from "@onflow/fcl"
-import {FLOW, ADDRESS_PATTERN, type Network} from "./constants"
+import {FLOW_CHAIN_ID, ADDRESS_PATTERN, type Network} from "./constants"
 import {getEvmAddressFromVaultType} from "./bridge-service"
 
 /**
@@ -26,8 +26,8 @@ export interface PaymentsClient {
 export interface PaymentsClientConfig {
   /** Array of funding providers to use (in priority order) */
   providers: FundingProvider[]
-  /** Optional Flow client for enabling Cadence vault ID support */
-  flowClient?: ReturnType<typeof createFlowClient>
+  /** Flow client (FCL or SDK) for network detection and Cadence vault ID conversion */
+  flowClient: ReturnType<typeof createFlowClient>
 }
 
 /**
@@ -35,11 +35,11 @@ export interface PaymentsClientConfig {
  */
 function resolveNetwork(chainId: string): Network {
   switch (chainId) {
-    case FLOW.MAINNET_CHAIN_ID:
+    case FLOW_CHAIN_ID.MAINNET:
       return "mainnet"
-    case FLOW.TESTNET_CHAIN_ID:
+    case FLOW_CHAIN_ID.TESTNET:
       return "testnet"
-    case FLOW.LOCAL_CHAIN_ID:
+    case FLOW_CHAIN_ID.LOCAL:
       return "local"
     default:
       throw new Error(`Unknown Flow chain ID: ${chainId}`)
@@ -149,17 +149,14 @@ export function createPaymentsClient(
     async createSession(intent) {
       let lastError: unknown = undefined
 
-      // Convert Cadence vault identifiers to EVM addresses if flowClient is provided
-      let processedIntent = intent
-      if (config.flowClient) {
-        const chainId = await config.flowClient.getChainId()
-        const network = resolveNetwork(chainId)
-        processedIntent = await convertCadenceCurrencies(
-          intent,
-          config.flowClient,
-          network
-        )
-      }
+      // Convert Cadence vault identifiers to EVM addresses
+      const chainId = await config.flowClient.getChainId()
+      const network = resolveNetwork(chainId)
+      const processedIntent = await convertCadenceCurrencies(
+        intent,
+        config.flowClient,
+        network
+      )
 
       for (const provider of config.providers) {
         try {

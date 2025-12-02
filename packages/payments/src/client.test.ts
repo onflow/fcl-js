@@ -3,20 +3,20 @@ import {FundingProvider, FundingIntent, FundingSession} from "./types"
 
 describe("createPaymentsClient", () => {
   const mockFlowClient = {
-    query: jest.fn().mockResolvedValue(null), // Default: no bridge association
+    getChainId: jest.fn().mockResolvedValue("747"),
+    query: jest.fn().mockResolvedValue(null),
   } as any
 
   it("should create a client with createSession method", () => {
     const mockProvider: FundingProvider = {
       id: "mock",
-      getCapabilities: jest
-        .fn()
-        .mockResolvedValue([{type: "crypto", vms: ["evm"]}]),
+      getCapabilities: jest.fn().mockResolvedValue([{type: "crypto"}]),
       startSession: jest.fn(),
     }
 
     const client = createPaymentsClient({
       providers: [mockProvider],
+      flowClient: mockFlowClient,
     })
     expect(client.createSession).toBeInstanceOf(Function)
   })
@@ -31,14 +31,13 @@ describe("createPaymentsClient", () => {
 
     const mockProvider: FundingProvider = {
       id: "mock",
-      getCapabilities: jest
-        .fn()
-        .mockResolvedValue([{type: "crypto", vms: ["evm", "cadence"]}]),
+      getCapabilities: jest.fn().mockResolvedValue([{type: "crypto"}]),
       startSession: jest.fn().mockResolvedValue(mockSession),
     }
 
     const client = createPaymentsClient({
       providers: [mockProvider],
+      flowClient: mockFlowClient,
     })
     const intent: FundingIntent = {
       kind: "crypto",
@@ -64,22 +63,19 @@ describe("createPaymentsClient", () => {
 
     const failingProvider: FundingProvider = {
       id: "failing",
-      getCapabilities: jest
-        .fn()
-        .mockResolvedValue([{type: "crypto", vms: ["evm", "cadence"]}]),
+      getCapabilities: jest.fn().mockResolvedValue([{type: "crypto"}]),
       startSession: jest.fn().mockRejectedValue(new Error("Provider 1 failed")),
     }
 
     const workingProvider: FundingProvider = {
       id: "provider2",
-      getCapabilities: jest
-        .fn()
-        .mockResolvedValue([{type: "crypto", vms: ["evm", "cadence"]}]),
+      getCapabilities: jest.fn().mockResolvedValue([{type: "crypto"}]),
       startSession: jest.fn().mockResolvedValue(mockSession),
     }
 
     const client = createPaymentsClient({
       providers: [failingProvider, workingProvider],
+      flowClient: mockFlowClient,
     })
     const intent: FundingIntent = {
       kind: "crypto",
@@ -99,22 +95,19 @@ describe("createPaymentsClient", () => {
   it("should throw if all providers fail", async () => {
     const provider1: FundingProvider = {
       id: "provider1",
-      getCapabilities: jest
-        .fn()
-        .mockResolvedValue([{type: "crypto", vms: ["evm"]}]),
+      getCapabilities: jest.fn().mockResolvedValue([{type: "crypto"}]),
       startSession: jest.fn().mockRejectedValue(new Error("Error 1")),
     }
 
     const provider2: FundingProvider = {
       id: "provider2",
-      getCapabilities: jest
-        .fn()
-        .mockResolvedValue([{type: "crypto", vms: ["evm"]}]),
+      getCapabilities: jest.fn().mockResolvedValue([{type: "crypto"}]),
       startSession: jest.fn().mockRejectedValue(new Error("Error 2")),
     }
 
     const client = createPaymentsClient({
       providers: [provider1, provider2],
+      flowClient: mockFlowClient,
     })
     const intent: FundingIntent = {
       kind: "crypto",
@@ -130,6 +123,7 @@ describe("createPaymentsClient", () => {
   it("should throw if no providers are given", async () => {
     const client = createPaymentsClient({
       providers: [],
+      flowClient: mockFlowClient,
     })
     const intent: FundingIntent = {
       kind: "crypto",
@@ -174,6 +168,7 @@ describe("createPaymentsClient", () => {
 
       const client = createPaymentsClient({
         providers: [provider1, provider2],
+        flowClient: mockFlowClient,
       })
       const intent: FundingIntent = {
         kind: "crypto",
@@ -185,7 +180,6 @@ describe("createPaymentsClient", () => {
 
       const result = await client.createSession(intent)
 
-      // Should use first provider
       expect(result).toEqual(session1)
       expect(provider1.startSession).toHaveBeenCalledTimes(1)
       expect(provider2.startSession).not.toHaveBeenCalled()
@@ -207,6 +201,7 @@ describe("createPaymentsClient", () => {
 
       const client = createPaymentsClient({
         providers: [fiatProvider],
+        flowClient: mockFlowClient,
       })
       const intent: FundingIntent = {
         kind: "fiat",
@@ -250,6 +245,7 @@ describe("createPaymentsClient", () => {
 
       const client = createPaymentsClient({
         providers: [mockProvider],
+        flowClient: mockFlowClient,
       })
       const intent: FundingIntent = {
         kind: "crypto",
@@ -283,6 +279,7 @@ describe("createPaymentsClient", () => {
 
       const client = createPaymentsClient({
         providers: [mockProvider],
+        flowClient: mockFlowClient,
       })
       const intent: FundingIntent = {
         kind: "crypto",

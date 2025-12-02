@@ -47,17 +47,12 @@ export const CAIP = {
 } as const
 
 /**
- * Flow blockchain identifiers
+ * Flow chain IDs (numeric, as returned by flowClient.getChainId())
  */
-export const FLOW = {
-  /** Flow EVM chain ID in CAIP-2 format */
-  EVM_CHAIN_ID: "eip155:747",
-  /** Flow mainnet chain ID */
-  MAINNET_CHAIN_ID: "747",
-  /** Flow testnet chain ID */
-  TESTNET_CHAIN_ID: "545",
-  /** Flow local/emulator chain ID */
-  LOCAL_CHAIN_ID: "646",
+export const FLOW_CHAIN_ID = {
+  MAINNET: "747",
+  TESTNET: "545",
+  LOCAL: "646",
 } as const
 
 /**
