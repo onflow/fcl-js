@@ -1,5 +1,11 @@
 # @onflow/transport-http
 
+## 1.15.0
+
+### Minor Changes
+
+- [#2664](https://github.com/onflow/fcl-js/pull/2664) [`50d3808b9fe8ee00db9349f571da77707df1f212`](https://github.com/onflow/fcl-js/commit/50d3808b9fe8ee00db9349f571da77707df1f212) Thanks [@jribbink](https://github.com/jribbink)! - Add support for scheduled transaction API changes, including UInt64 transaction IDs and automatic fallback to legacy polling when WebSocket subscriptions are not supported.
+
 ## 1.14.0
 
 ### Minor Changes

@@ -4,7 +4,7 @@ import {useFlowClient} from "./useFlowClient"
 import {TransactionError} from "@onflow/fcl"
 
 export interface UseFlowTransactionStatusArgs {
-  /** The Flow transaction ID to monitor */
+  /** The transaction ID (256-bit hash as hex string) or scheduled transaction ID (UInt64 as decimal string) to monitor */
   id?: string | null
   flowClient?: ReturnType<typeof useFlowClient>
 }
@@ -22,7 +22,7 @@ export interface UseFlowTransactionStatusResult {
  * @remarks
  * This hook was previously named `useFlowTransaction`.
  *
- * @param args.id - The Flow transaction ID to watch
+ * @param args.id - The transaction ID (256-bit hash as hex string) or scheduled transaction ID (UInt64 as decimal string) to watch
  * @returns {UseFlowTransactionStatusResult}
  */
 export function useFlowTransactionStatus({
