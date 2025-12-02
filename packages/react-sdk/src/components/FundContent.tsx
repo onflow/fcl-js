@@ -58,7 +58,10 @@ export const FundContent: React.FC = () => {
                     onChange={e => setAmount(e.target.value)}
                     className="flow-flex-1"
                   />
-                  <span className="flow-text-sm flow-font-medium flow-text-slate-600 dark:flow-text-slate-400 flow-whitespace-nowrap">
+                  <span
+                    className="flow-text-sm flow-font-medium flow-text-slate-600 dark:flow-text-slate-400
+                      flow-whitespace-nowrap"
+                  >
                     USD
                   </span>
                 </div>
