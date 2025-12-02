@@ -19,7 +19,7 @@ import {relayProvider} from "@onflow/payments/providers"
 
 const client = createPaymentsClient({
   providers: [relayProvider()],
-  flowClient: fcl,
+  flowClient: fcl, // Optional: enables Cadence vault ID → EVM address conversion
 })
 
 const session = await client.createSession({
@@ -94,12 +94,12 @@ currency: "USDC"
 currency: "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48"
 ```
 
-**3. Cadence Vault Identifiers:**
+**3. Cadence Vault Identifiers (requires `flowClient`):**
 ```ts
 currency: "A.1654653399040a61.FlowToken.Vault"
 ```
 
-When you provide a **Cadence vault identifier**, the client queries the **Flow EVM Bridge** to automatically convert the vault ID to the corresponding EVM address before passing to providers.
+When you provide a **Cadence vault identifier** and configure the client with a `flowClient`, it queries the **Flow EVM Bridge** to automatically convert the vault ID to the corresponding EVM address before passing to providers.
 
 ## Development
 
