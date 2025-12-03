@@ -29,12 +29,10 @@ export interface ListboxButtonProps
 export const ListboxButton: React.FC<ListboxButtonProps> = ({
   className,
   children,
-  type = "button",
   ...props
 }) => {
   return (
     <HeadlessListboxButton
-      type={type}
       className={twMerge(
         "flow-w-full flow-px-4 flow-py-2 flow-text-left flow-rounded-md flow-border",
         "flow-bg-white dark:flow-bg-slate-800",
