@@ -117,7 +117,9 @@ describe("createPaymentsClient", () => {
       sourceCurrency: "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
     }
 
-    await expect(client.createSession(intent)).rejects.toThrow("Error 2")
+    await expect(client.createSession(intent)).rejects.toThrow(
+      "No provider could create a session"
+    )
   })
 
   it("should throw if no providers are given", async () => {

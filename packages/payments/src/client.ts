@@ -1,9 +1,4 @@
-import type {
-  FundingIntent,
-  FundingSession,
-  FundingProvider,
-  CryptoFundingIntent,
-} from "./types"
+import type {FundingIntent, FundingSession, FundingProvider} from "./types"
 import type {createFlowClient} from "@onflow/fcl"
 import {ADDRESS_PATTERN} from "./constants"
 import {getEvmAddressFromVaultType} from "./bridge-service"
@@ -44,31 +39,21 @@ async function convertCadenceCurrencies(
   intent: FundingIntent,
   flowClient: ReturnType<typeof createFlowClient>
 ): Promise<FundingIntent> {
-  if (intent.kind !== "crypto") {
+  if (!isCadenceVaultIdentifier(intent.currency)) {
     return intent
   }
 
-  const cryptoIntent = intent as CryptoFundingIntent
-
-  // Convert destination currency if it's a Cadence vault identifier
-  if (isCadenceVaultIdentifier(cryptoIntent.currency)) {
-    const evmAddress = await getEvmAddressFromVaultType({
-      flowClient,
-      vaultIdentifier: cryptoIntent.currency,
-    })
-    if (!evmAddress) {
-      throw new Error(
-        `Cadence vault type "${cryptoIntent.currency}" is not bridged to EVM. ` +
-          `Make sure the token is onboarded to the Flow EVM Bridge.`
-      )
-    }
-    return {
-      ...cryptoIntent,
-      currency: evmAddress,
-    }
+  const evmAddress = await getEvmAddressFromVaultType({
+    flowClient,
+    vaultIdentifier: intent.currency,
+  })
+  if (!evmAddress) {
+    throw new Error(
+      `Cadence vault type "${intent.currency}" is not bridged to EVM. ` +
+        `Make sure the token is onboarded to the Flow EVM Bridge.`
+    )
   }
-
-  return intent
+  return {...intent, currency: evmAddress}
 }
 
 /**
@@ -113,8 +98,6 @@ export function createPaymentsClient(
 ): PaymentsClient {
   return {
     async createSession(intent) {
-      let lastError: unknown = undefined
-
       // Convert Cadence vault identifiers to EVM addresses
       const processedIntent = await convertCadenceCurrencies(
         intent,
@@ -124,12 +107,11 @@ export function createPaymentsClient(
       for (const provider of config.providers) {
         try {
           return await provider.startSession(processedIntent)
-        } catch (e) {
-          lastError = e
+        } catch {
           continue
         }
       }
-      throw lastError ?? new Error("No provider could create a session")
+      throw new Error("No provider could create a session")
     },
   }
 }
