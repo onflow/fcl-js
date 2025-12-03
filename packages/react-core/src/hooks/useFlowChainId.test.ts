@@ -1,5 +1,4 @@
 import {renderHook, act, waitFor} from "@testing-library/react"
-import * as fcl from "@onflow/fcl"
 import {
   TestProvider,
   setMockFlowClient,
@@ -7,8 +6,6 @@ import {
 } from "../__mocks__/TestProvider"
 import {useFlowChainId} from "./useFlowChainId"
 import {createMockFclInstance, MockFclInstance} from "../__mocks__/flow-client"
-
-jest.mock("@onflow/fcl", () => require("../__mocks__/fcl").default)
 
 describe("useFlowChainId", () => {
   let mockFcl: MockFclInstance
@@ -18,7 +15,6 @@ describe("useFlowChainId", () => {
     queryClient.clear()
     mockFcl = createMockFclInstance()
     setMockFlowClient(mockFcl.mockFclInstance)
-    jest.mocked(fcl.createFlowClient).mockReturnValue(mockFcl.mockFclInstance)
   })
 
   afterEach(() => {

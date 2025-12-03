@@ -1,5 +1,4 @@
 import {renderHook, act} from "@testing-library/react"
-import * as fcl from "@onflow/fcl"
 import {useFlowCurrentUser} from "./useFlowCurrentUser"
 // Import directly from the new hook, not from the deprecated one
 import {
@@ -11,8 +10,6 @@ import {CurrentUser} from "@onflow/typedefs"
 import {defaultUser, authenticatedUser} from "../__mocks__/user"
 import {createMockFclInstance, MockFclInstance} from "../__mocks__/flow-client"
 
-jest.mock("@onflow/fcl", () => require("../__mocks__/fcl").default)
-
 describe("useFlowCurrentUser", () => {
   let mockFcl: MockFclInstance
 
@@ -20,7 +17,6 @@ describe("useFlowCurrentUser", () => {
     queryClient.clear()
     mockFcl = createMockFclInstance()
     setMockFlowClient(mockFcl.mockFclInstance)
-    jest.mocked(fcl.createFlowClient).mockReturnValue(mockFcl.mockFclInstance)
   })
 
   afterEach(() => {

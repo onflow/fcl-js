@@ -1,5 +1,4 @@
 import {renderHook, act, waitFor} from "@testing-library/react"
-import * as fcl from "@onflow/fcl"
 import {
   TestProvider,
   setMockFlowClient,
@@ -13,7 +12,6 @@ import {
 import {useFlowChainId} from "./useFlowChainId"
 import {createMockFclInstance, MockFclInstance} from "../__mocks__/flow-client"
 
-jest.mock("@onflow/fcl", () => require("../__mocks__/fcl").default)
 jest.mock("viem", () => ({
   encodeFunctionData: jest.fn(),
   bytesToHex: jest.fn(x => `0x${x}`),
@@ -52,7 +50,6 @@ describe("useBatchEvmTransaction", () => {
 
     mockFcl = createMockFclInstance()
     setMockFlowClient(mockFcl.mockFclInstance)
-    jest.mocked(fcl.createFlowClient).mockReturnValue(mockFcl.mockFclInstance)
   })
 
   describe("encodeCalls", () => {

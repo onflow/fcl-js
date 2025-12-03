@@ -5,7 +5,7 @@ import {
 } from "@tanstack/react-query"
 import {useCallback} from "react"
 import {useFlowQueryClient} from "../provider/FlowQueryClient"
-import type {FlowClient} from "../types"
+import type {FlowClientCore} from "@onflow/fcl-core"
 import {useFlowClient} from "./useFlowClient"
 
 /**
@@ -16,7 +16,7 @@ import {useFlowClient} from "./useFlowClient"
  */
 export interface UseFlowMutateArgs {
   mutation?: Omit<UseMutationOptions<string, Error, any>, "mutationFn">
-  flowClient?: FlowClient
+  flowClient?: FlowClientCore
 }
 
 /**

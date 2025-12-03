@@ -1,5 +1,4 @@
 import {renderHook, act, waitFor} from "@testing-library/react"
-import * as fcl from "@onflow/fcl"
 import {
   TestProvider,
   setMockFlowClient,
@@ -12,7 +11,6 @@ import {
 import {useFlowChainId} from "./useFlowChainId"
 import {createMockFclInstance, MockFclInstance} from "../__mocks__/flow-client"
 
-jest.mock("@onflow/fcl", () => require("../__mocks__/fcl").default)
 jest.mock("./useFlowChainId", () => ({
   useFlowChainId: jest.fn(),
 }))
@@ -55,7 +53,6 @@ describe("useCrossVmBridgeNftToEvm", () => {
 
     mockFcl = createMockFclInstance()
     setMockFlowClient(mockFcl.mockFclInstance)
-    jest.mocked(fcl.createFlowClient).mockReturnValue(mockFcl.mockFclInstance)
   })
 
   describe("getCrossVmBridgeNftToEvmTransaction", () => {

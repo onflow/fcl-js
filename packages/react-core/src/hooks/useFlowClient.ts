@@ -1,8 +1,10 @@
 import {useContext} from "react"
-import type {FlowClient} from "../types"
+import type {FlowClientCore} from "@onflow/fcl-core"
 import {FlowClientContext} from "../core/context"
 
-export function useFlowClient({flowClient}: {flowClient?: FlowClient} = {}) {
+export function useFlowClient({
+  flowClient,
+}: {flowClient?: FlowClientCore} = {}) {
   const contextClient = useContext(FlowClientContext)
   const _flowClient = flowClient ?? contextClient
   if (!_flowClient) {

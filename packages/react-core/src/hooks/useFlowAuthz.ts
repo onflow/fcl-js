@@ -1,5 +1,5 @@
 import type {InteractionAccount} from "@onflow/typedefs"
-import type {FlowClient} from "../types"
+import type {FlowClientCore} from "@onflow/fcl-core"
 import {useFlowClient} from "./useFlowClient"
 
 export type AuthorizationFunction = (
@@ -10,7 +10,7 @@ interface UseFlowAuthzArgs {
   /** Custom authorization function. If not provided, uses current user's wallet authorization. */
   authz?: AuthorizationFunction
   /** Optional FlowClient instance to use instead of the default */
-  flowClient?: FlowClient
+  flowClient?: FlowClientCore
 }
 
 /**

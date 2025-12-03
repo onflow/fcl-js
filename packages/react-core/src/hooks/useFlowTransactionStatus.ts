@@ -1,12 +1,12 @@
 import {useState, useEffect} from "react"
 import type {TransactionStatus} from "@onflow/typedefs"
-import type {FlowClient} from "../types"
+import type {FlowClientCore} from "@onflow/fcl-core"
 import {useFlowClient} from "./useFlowClient"
 
 export interface UseFlowTransactionStatusArgs {
   /** The transaction ID (256-bit hash as hex string) or scheduled transaction ID (UInt64 as decimal string) to monitor */
   id?: string | null
-  flowClient?: FlowClient
+  flowClient?: FlowClientCore
 }
 
 export interface UseFlowTransactionStatusResult {

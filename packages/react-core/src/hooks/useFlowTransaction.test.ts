@@ -1,5 +1,4 @@
 import {renderHook, act, waitFor} from "@testing-library/react"
-import * as fcl from "@onflow/fcl"
 import {
   TestProvider,
   setMockFlowClient,
@@ -9,15 +8,12 @@ import {useFlowTransaction} from "./useFlowTransaction"
 import type {Transaction} from "@onflow/typedefs"
 import {createMockFclInstance, MockFclInstance} from "../__mocks__/flow-client"
 
-jest.mock("@onflow/fcl", () => require("../__mocks__/fcl").default)
-
 describe("useFlowTransaction", () => {
   let mockFcl: MockFclInstance
   beforeEach(() => {
     queryClient.clear()
     mockFcl = createMockFclInstance()
     setMockFlowClient(mockFcl.mockFclInstance)
-    jest.mocked(fcl.createFlowClient).mockReturnValue(mockFcl.mockFclInstance)
   })
 
   afterEach(() => {
@@ -53,10 +49,8 @@ describe("useFlowTransaction", () => {
       envelopeSignatures: [],
     }
 
-    const getTransactionMock = jest.mocked(
-      mockFcl.mockFclInstance.getTransaction
-    )
-    getTransactionMock.mockResolvedValue(mockTransaction as any)
+    // Set up mock to return transaction via send/decode pattern
+    mockFcl.setMockSendResponse(mockTransaction)
 
     let hookResult: any
 
@@ -73,16 +67,15 @@ describe("useFlowTransaction", () => {
 
     expect(hookResult.current.data).toEqual(mockTransaction)
     expect(hookResult.current.error).toBeNull()
-    expect(getTransactionMock).toHaveBeenCalledWith("abc123")
+    expect(mockFcl.mockFclInstance.send).toHaveBeenCalled()
+    expect(mockFcl.mockFclInstance.decode).toHaveBeenCalled()
   })
 
   test("handles error when fetching transaction fails", async () => {
     const testError = new Error("Failed to fetch transaction")
 
-    const getTransactionMock = jest.mocked(
-      mockFcl.mockFclInstance.getTransaction
-    )
-    getTransactionMock.mockRejectedValue(testError)
+    // Make send reject with error
+    mockFcl.mockFclInstance.send = jest.fn().mockRejectedValue(testError)
 
     let hookResult: any
 
@@ -103,7 +96,7 @@ describe("useFlowTransaction", () => {
     expect(hookResult.current.error?.message).toEqual(
       "Failed to fetch transaction"
     )
-    expect(getTransactionMock).toHaveBeenCalledWith("def456")
+    expect(mockFcl.mockFclInstance.send).toHaveBeenCalled()
   })
 
   test("refetch function works correctly", async () => {
@@ -129,11 +122,8 @@ describe("useFlowTransaction", () => {
       gasLimit: 2000,
     }
 
-    const getTransactionMock = jest.mocked(
-      mockFcl.mockFclInstance.getTransaction
-    )
-    getTransactionMock.mockResolvedValueOnce(mockTransaction as any)
-    getTransactionMock.mockResolvedValueOnce(updatedTransaction as any)
+    // Set initial response
+    mockFcl.setMockSendResponse(mockTransaction)
 
     let hookResult: any
     await act(async () => {
@@ -149,6 +139,9 @@ describe("useFlowTransaction", () => {
 
     expect(hookResult.current.data).toEqual(mockTransaction)
 
+    // Update response for refetch
+    mockFcl.setMockSendResponse(updatedTransaction)
+
     act(() => {
       hookResult.current.refetch()
     })
@@ -158,6 +151,6 @@ describe("useFlowTransaction", () => {
     })
 
     expect(hookResult.current.data).toEqual(updatedTransaction)
-    expect(getTransactionMock).toHaveBeenCalledTimes(2)
+    expect(mockFcl.mockFclInstance.send).toHaveBeenCalledTimes(2)
   })
 })

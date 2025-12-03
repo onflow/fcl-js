@@ -1,4 +1,3 @@
-import * as fcl from "@onflow/fcl"
 import {renderHook, waitFor} from "@testing-library/react"
 import {createMockFclInstance, MockFclInstance} from "../__mocks__/flow-client"
 import {
@@ -13,7 +12,6 @@ import {
 } from "./useFlowScheduledTransactionList"
 import {useFlowScheduledTransaction} from "./useFlowScheduledTransaction"
 
-jest.mock("@onflow/fcl", () => require("../__mocks__/fcl").default)
 jest.mock("./useFlowChainId", () => ({
   useFlowChainId: jest.fn(),
 }))
@@ -31,7 +29,6 @@ describe("useFlowScheduledTransaction", () => {
 
     mockFcl = createMockFclInstance()
     setMockFlowClient(mockFcl.mockFclInstance)
-    jest.mocked(fcl.createFlowClient).mockReturnValue(mockFcl.mockFclInstance)
   })
 
   test("gets a transaction by ID", async () => {

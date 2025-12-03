@@ -1,6 +1,6 @@
-import {createFlowClient} from "@onflow/fcl"
-import {tx as realTx} from "@onflow/fcl"
 import {authenticatedUser, defaultUser} from "./user"
+import type {FlowClientCore} from "@onflow/fcl-core"
+import {tx as realTx} from "@onflow/fcl-core"
 
 const sharedSubscribe = jest.fn(callback => {
   callback({
@@ -13,6 +13,9 @@ const sharedSubscribe = jest.fn(callback => {
 let currentUserState = defaultUser
 
 export const createMockFclInstance = () => {
+  // Store the response that will be returned by send/decode
+  let mockSendResponse: any = {}
+
   let mockTxResponse = {
     snapshot: jest.fn(),
     subscribe: jest.fn(),
@@ -21,6 +24,7 @@ export const createMockFclInstance = () => {
     onceSealed: jest.fn(),
   }
   const mockTx = Object.assign(jest.fn().mockReturnValue(mockTxResponse), {
+    // Use real transaction status helpers from fcl-core
     isUnknown: jest.fn().mockImplementation(realTx.isUnknown),
     isPending: jest.fn().mockImplementation(realTx.isPending),
     isFinalized: jest.fn().mockImplementation(realTx.isFinalized),
@@ -49,7 +53,7 @@ export const createMockFclInstance = () => {
     resolveArgument: jest.fn(),
   }
 
-  const mockFclInstance: jest.Mocked<ReturnType<typeof createFlowClient>> = {
+  const mockFclInstance: jest.Mocked<FlowClientCore> = {
     account: jest.fn(),
     block: jest.fn(),
     events: jest.fn(),
@@ -58,13 +62,11 @@ export const createMockFclInstance = () => {
     queryRaw: jest.fn(),
     tx: mockTx,
     send: jest.fn().mockImplementation(args => {
-      // The real FCL returns an object that allows chaining with .then(fcl.decode)
-      return {
-        then: (callback: (value: any) => any) => callback({}),
-      }
+      // The real FCL returns a promise that can be chained with .then(fcl.decode)
+      return Promise.resolve(mockSendResponse)
     }),
     decode: jest.fn().mockImplementation(result => {
-      return result
+      return Promise.resolve(result)
     }),
 
     currentUser: mockCurrentUser,
@@ -76,7 +78,10 @@ export const createMockFclInstance = () => {
       currentUserState = defaultUser
     }),
     getChainId: jest.fn().mockResolvedValue("mainnet"),
-    getTransaction: jest.fn().mockResolvedValue(null),
+    getTransaction: jest.fn().mockImplementation((txId: string) => {
+      // Make getTransaction set the response that send/decode will return
+      return Promise.resolve(mockSendResponse)
+    }),
     subscribe: jest.fn(),
     subscribeRaw: jest.fn(),
     resolve: jest.fn(),
@@ -90,6 +95,10 @@ export const createMockFclInstance = () => {
   return {
     mockFclInstance,
     mockTx,
+    // Helper to set what send/decode should return
+    setMockSendResponse: (response: any) => {
+      mockSendResponse = response
+    },
   }
 }
 

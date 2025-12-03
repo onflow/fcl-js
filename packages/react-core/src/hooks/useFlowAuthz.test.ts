@@ -1,4 +1,3 @@
-import * as fcl from "@onflow/fcl"
 import {InteractionAccount} from "@onflow/typedefs"
 import {act, renderHook} from "@testing-library/react"
 import {createMockFclInstance, MockFclInstance} from "../__mocks__/flow-client"
@@ -8,8 +7,6 @@ import {
   queryClient,
 } from "../__mocks__/TestProvider"
 import {useFlowAuthz} from "./useFlowAuthz"
-
-jest.mock("@onflow/fcl", () => require("../__mocks__/fcl").default)
 
 const createMockAccount = (): Partial<InteractionAccount> => ({
   tempId: "MOCK_TEMP_ID",
@@ -23,7 +20,6 @@ describe("useFlowAuthz", () => {
     queryClient.clear()
     mockFcl = createMockFclInstance()
     setMockFlowClient(mockFcl.mockFclInstance)
-    jest.mocked(fcl.createFlowClient).mockReturnValue(mockFcl.mockFclInstance)
   })
 
   afterEach(() => {

@@ -9,7 +9,7 @@ import {
 import {useFlowChainId} from "./useFlowChainId"
 import {useFlowQueryClient} from "../provider/FlowQueryClient"
 import {CONTRACT_ADDRESSES, DEFAULT_EVM_GAS_LIMIT} from "../constants"
-import type {FlowClient} from "../types"
+import type {FlowClientCore} from "@onflow/fcl-core"
 import {useFlowClient} from "./useFlowClient"
 
 // Helper function to remove "0x" prefix
@@ -27,7 +27,7 @@ export interface UseCrossVmBatchTransactionArgs {
     UseMutationOptions<string, Error, UseCrossVmBatchTransactionMutateArgs>,
     "mutationFn"
   >
-  flowClient?: FlowClient
+  flowClient?: FlowClientCore
 }
 
 export interface UseCrossVmBatchTransactionResult

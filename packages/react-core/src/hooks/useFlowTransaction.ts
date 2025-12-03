@@ -1,5 +1,6 @@
+import {getTransaction} from "@onflow/fcl-core"
 import type {Transaction} from "@onflow/typedefs"
-import type {FlowClient} from "../types"
+import type {FlowClientCore} from "@onflow/fcl-core"
 import {useQuery, UseQueryResult, UseQueryOptions} from "@tanstack/react-query"
 import {useCallback} from "react"
 import {useFlowQueryClient} from "../provider/FlowQueryClient"
@@ -14,7 +15,7 @@ export interface UseFlowTransactionArgs {
     "queryKey" | "queryFn"
   >
   /** Optional flowClient */
-  flowClient?: FlowClient
+  flowClient?: FlowClientCore
 }
 
 /**
@@ -34,13 +35,10 @@ export function useFlowTransaction({
 
   const fetchTransaction = useCallback(async () => {
     if (!txId) return null
-    // Note: FlowClient implementations must provide getTransaction method
-    // or send/decode methods with getTransaction builder
-    if (typeof fcl.getTransaction === "function") {
-      return fcl.getTransaction(txId)
-    }
-    // Fallback: assume send/decode are available (they should be on FlowClient)
-    throw new Error("FlowClient must implement getTransaction method")
+
+    return fcl
+      .send([getTransaction(txId)])
+      .then(fcl.decode) as Promise<Transaction>
   }, [txId, fcl])
 
   return useQuery<Transaction | null, Error>(

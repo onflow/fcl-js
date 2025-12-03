@@ -5,10 +5,7 @@ import {
   queryClient,
 } from "../__mocks__/TestProvider"
 import {useFlowQuery, encodeQueryArgs} from "./useFlowQuery"
-import * as fcl from "@onflow/fcl"
 import {createMockFclInstance, MockFclInstance} from "../__mocks__/flow-client"
-
-jest.mock("@onflow/fcl", () => require("../__mocks__/fcl").default)
 
 describe("useFlowQuery", () => {
   let mockFcl: MockFclInstance
@@ -17,7 +14,6 @@ describe("useFlowQuery", () => {
     queryClient.clear()
     mockFcl = createMockFclInstance()
     setMockFlowClient(mockFcl.mockFclInstance)
-    jest.mocked(fcl.createFlowClient).mockReturnValue(mockFcl.mockFclInstance)
   })
 
   afterEach(() => {

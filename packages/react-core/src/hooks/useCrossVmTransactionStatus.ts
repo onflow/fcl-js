@@ -1,5 +1,5 @@
 import type {TransactionStatus} from "@onflow/typedefs"
-import type {FlowClient} from "../types"
+import type {FlowClientCore} from "@onflow/fcl-core"
 import {CONTRACT_ADDRESSES} from "../constants"
 import {useFlowChainId} from "./useFlowChainId"
 import {useFlowTransactionStatus} from "./useFlowTransactionStatus"
@@ -13,7 +13,7 @@ function sansPrefix(address: string): string {
 export interface UseCrossVmTransactionStatusArgs {
   /** The Flow transaction ID to monitor */
   id?: string
-  flowClient?: FlowClient
+  flowClient?: FlowClientCore
 }
 
 export interface UseCrossVmTransactionStatusResult {

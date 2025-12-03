@@ -1,5 +1,4 @@
 import {renderHook} from "@testing-library/react"
-import * as fcl from "@onflow/fcl"
 import {
   TestProvider,
   setMockFlowClient,
@@ -8,8 +7,6 @@ import {
 import {useFlowMutate} from "./useFlowMutate"
 import {createMockFclInstance, MockFclInstance} from "../__mocks__/flow-client"
 
-jest.mock("@onflow/fcl", () => require("../__mocks__/fcl").default)
-
 describe("useFlowMutate", () => {
   let mockFcl: MockFclInstance
 
@@ -17,7 +14,6 @@ describe("useFlowMutate", () => {
     queryClient.clear()
     mockFcl = createMockFclInstance()
     setMockFlowClient(mockFcl.mockFclInstance)
-    jest.mocked(fcl.createFlowClient).mockReturnValue(mockFcl.mockFclInstance)
   })
 
   afterEach(() => {

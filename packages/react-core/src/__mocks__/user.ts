@@ -1,13 +1,10 @@
-import {CurrentUser} from "@onflow/react-core"
-
-const mockSubscribe = () => () => {}
+import {CurrentUser} from "@onflow/typedefs"
 
 export const defaultUser: CurrentUser = {
   f_type: "USER",
   f_vsn: "1.0.0",
   loggedIn: false,
   services: [],
-  subscribe: mockSubscribe,
 }
 
 export const authenticatedUser: CurrentUser = {
@@ -16,5 +13,4 @@ export const authenticatedUser: CurrentUser = {
   loggedIn: true,
   addr: "0x1234",
   services: [],
-  subscribe: mockSubscribe,
 }

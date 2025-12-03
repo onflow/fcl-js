@@ -1,5 +1,5 @@
 import {useState, useEffect} from "react"
-import {CurrentUser} from "../types"
+import type {CurrentUser} from "@onflow/typedefs"
 import {useFlowClient} from "./useFlowClient"
 
 interface UseFlowCurrentUserArgs {

@@ -1,4 +1,3 @@
-import {createMockFclInstance} from "./flow-client"
 import {authenticatedUser, defaultUser} from "./user"
 
 const sharedSubscribe = jest.fn(callback => {
@@ -12,7 +11,7 @@ const sharedSubscribe = jest.fn(callback => {
 let currentUserState = defaultUser
 
 export default {
-  ...jest.requireActual("@onflow/fcl"),
+  ...jest.requireActual("@onflow/fcl-core"),
   account: jest.fn(),
   block: jest.fn(),
   events: jest.fn(),

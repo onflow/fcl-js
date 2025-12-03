@@ -1,5 +1,4 @@
 import {renderHook, act} from "@testing-library/react"
-import * as fcl from "@onflow/fcl"
 import {useFlowTransactionStatus} from "./useFlowTransactionStatus"
 import {TransactionStatus} from "@onflow/typedefs"
 import {
@@ -10,8 +9,6 @@ import {
 import {defaultTxStatus, errorTxStatus} from "../__mocks__/tx"
 import {createMockFclInstance, MockFclInstance} from "../__mocks__/flow-client"
 
-jest.mock("@onflow/fcl", () => require("../__mocks__/fcl").default)
-
 describe("useFlowTransactionStatus", () => {
   let mockFcl: MockFclInstance
 
@@ -19,7 +16,6 @@ describe("useFlowTransactionStatus", () => {
     queryClient.clear()
     mockFcl = createMockFclInstance()
     setMockFlowClient(mockFcl.mockFclInstance)
-    jest.mocked(fcl.createFlowClient).mockReturnValue(mockFcl.mockFclInstance)
   })
 
   afterEach(() => {
