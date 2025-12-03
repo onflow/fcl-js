@@ -8,7 +8,10 @@ import {
 import {twMerge} from "tailwind-merge"
 
 export interface ListboxProps<T>
-  extends Omit<React.ComponentProps<typeof HeadlessListbox>, "value" | "onChange"> {
+  extends Omit<
+    React.ComponentProps<typeof HeadlessListbox>,
+    "value" | "onChange"
+  > {
   value: T
   onChange: (value: T) => void
 }
@@ -89,8 +92,10 @@ export function ListboxOption<T>({
         "flow-px-4 flow-py-2 flow-cursor-pointer flow-text-sm",
         "flow-text-slate-900 dark:flow-text-slate-100",
         "data-[focus]:flow-bg-slate-100 data-[focus]:dark:flow-bg-slate-700",
-        "data-[selected]:flow-bg-flow-primary/10 data-[selected]:dark:flow-bg-flow-primary/20",
-        "data-[selected]:flow-text-flow-primary dark:data-[selected]:flow-text-flow-primary",
+        `data-[selected]:flow-bg-flow-primary/10
+        data-[selected]:dark:flow-bg-flow-primary/20`,
+        `data-[selected]:flow-text-flow-primary
+        dark:data-[selected]:flow-text-flow-primary`,
         "flow-transition-colors",
         className
       )}
