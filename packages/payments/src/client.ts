@@ -5,8 +5,24 @@ import type {
   CryptoFundingIntent,
 } from "./types"
 import type {createFlowClient} from "@onflow/fcl"
-import {FLOW_CHAIN_ID, ADDRESS_PATTERN, type Network} from "./constants"
+import {FLOW_CHAIN_ID, ADDRESS_PATTERN} from "./constants"
 import {getEvmAddressFromVaultType} from "./bridge-service"
+
+type FlowNetwork = "emulator" | "testnet" | "mainnet"
+
+/** Resolve Flow network from chain ID */
+function resolveNetwork(chainId: string): FlowNetwork {
+  switch (chainId) {
+    case FLOW_CHAIN_ID.MAINNET:
+      return "mainnet"
+    case FLOW_CHAIN_ID.TESTNET:
+      return "testnet"
+    case FLOW_CHAIN_ID.LOCAL:
+      return "emulator"
+    default:
+      throw new Error(`Unknown Flow chain ID: ${chainId}`)
+  }
+}
 
 /**
  * Client for creating funding sessions
@@ -26,24 +42,8 @@ export interface PaymentsClient {
 export interface PaymentsClientConfig {
   /** Array of funding providers to use (in priority order) */
   providers: FundingProvider[]
-  /** Flow client (FCL or SDK) for network detection and Cadence vault ID conversion */
+  /** Flow client (FCL or SDK) for Cadence vault ID conversion */
   flowClient: ReturnType<typeof createFlowClient>
-}
-
-/**
- * Resolve Flow network from chain ID
- */
-function resolveNetwork(chainId: string): Network {
-  switch (chainId) {
-    case FLOW_CHAIN_ID.MAINNET:
-      return "mainnet"
-    case FLOW_CHAIN_ID.TESTNET:
-      return "testnet"
-    case FLOW_CHAIN_ID.LOCAL:
-      return "local"
-    default:
-      throw new Error(`Unknown Flow chain ID: ${chainId}`)
-  }
 }
 
 /**
@@ -60,7 +60,7 @@ function isCadenceVaultIdentifier(currency: string): boolean {
 async function convertCadenceCurrencies(
   intent: FundingIntent,
   flowClient: ReturnType<typeof createFlowClient>,
-  network: Network
+  network: FlowNetwork
 ): Promise<FundingIntent> {
   if (intent.kind !== "crypto") {
     return intent
