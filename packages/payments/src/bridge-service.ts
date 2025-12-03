@@ -81,16 +81,11 @@ export async function getEvmAddressFromVaultType(
   vaultIdentifier: string,
   network: Network
 ): Promise<string | null> {
-  try {
-    const result = await flowClient.query({
-      cadence: GET_EVM_ADDRESS_SCRIPT(network),
-      args: (arg: any, t: any) => [arg(vaultIdentifier, t.String)],
-    })
-    return result || null
-  } catch (error) {
-    // If query fails, the type might not be bridged
-    return null
-  }
+  const result = await flowClient.query({
+    cadence: GET_EVM_ADDRESS_SCRIPT(network),
+    args: (arg: any, t: any) => [arg(vaultIdentifier, t.String)],
+  })
+  return result || null
 }
 
 /**
@@ -105,16 +100,11 @@ export async function getVaultTypeFromEvmAddress(
   evmAddress: string,
   network: Network
 ): Promise<string | null> {
-  try {
-    const result = await flowClient.query({
-      cadence: GET_VAULT_TYPE_SCRIPT(network),
-      args: (arg: any, t: any) => [arg(evmAddress, t.String)],
-    })
-    return result || null
-  } catch (error) {
-    // If query fails, the address might not be bridged
-    return null
-  }
+  const result = await flowClient.query({
+    cadence: GET_VAULT_TYPE_SCRIPT(network),
+    args: (arg: any, t: any) => [arg(evmAddress, t.String)],
+  })
+  return result || null
 }
 
 /**
@@ -129,17 +119,9 @@ export async function getTokenDecimals(
   evmAddress: string,
   network: Network
 ): Promise<number> {
-  try {
-    const result = await flowClient.query({
-      cadence: GET_TOKEN_DECIMALS_SCRIPT(network),
-      args: (arg: any, t: any) => [arg(evmAddress, t.String)],
-    })
-    return Number(result)
-  } catch (error) {
-    throw new Error(
-      `Failed to get decimals for EVM address "${evmAddress}": ${
-        error instanceof Error ? error.message : String(error)
-      }`
-    )
-  }
+  const result = await flowClient.query({
+    cadence: GET_TOKEN_DECIMALS_SCRIPT(network),
+    args: (arg: any, t: any) => [arg(evmAddress, t.String)],
+  })
+  return Number(result)
 }

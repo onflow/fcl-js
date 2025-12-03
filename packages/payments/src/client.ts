@@ -67,9 +67,6 @@ async function convertCadenceCurrencies(
   }
 
   const cryptoIntent = intent as CryptoFundingIntent
-  let converted = false
-  let newCurrency = cryptoIntent.currency
-  let newSourceCurrency = cryptoIntent.sourceCurrency
 
   // Convert destination currency if it's a Cadence vault identifier
   if (isCadenceVaultIdentifier(cryptoIntent.currency)) {
@@ -84,32 +81,9 @@ async function convertCadenceCurrencies(
           `Make sure the token is onboarded to the Flow EVM Bridge.`
       )
     }
-    newCurrency = evmAddress
-    converted = true
-  }
-
-  // Convert source currency if it's a Cadence vault identifier
-  if (isCadenceVaultIdentifier(cryptoIntent.sourceCurrency)) {
-    const evmAddress = await getEvmAddressFromVaultType(
-      flowClient,
-      cryptoIntent.sourceCurrency,
-      network
-    )
-    if (!evmAddress) {
-      throw new Error(
-        `Cadence vault type "${cryptoIntent.sourceCurrency}" is not bridged to EVM. ` +
-          `Make sure the token is onboarded to the Flow EVM Bridge.`
-      )
-    }
-    newSourceCurrency = evmAddress
-    converted = true
-  }
-
-  if (converted) {
     return {
       ...cryptoIntent,
-      currency: newCurrency,
-      sourceCurrency: newSourceCurrency,
+      currency: evmAddress,
     }
   }
 
