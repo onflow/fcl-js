@@ -47,15 +47,6 @@ export const CAIP = {
 } as const
 
 /**
- * Flow chain IDs (numeric, as returned by flowClient.getChainId())
- */
-export const FLOW_CHAIN_ID = {
-  MAINNET: "747",
-  TESTNET: "545",
-  LOCAL: "646",
-} as const
-
-/**
  * Address format patterns
  */
 export const ADDRESS_PATTERN = {

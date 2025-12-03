@@ -3,7 +3,7 @@ import {FundingProvider, FundingIntent, FundingSession} from "./types"
 
 describe("createPaymentsClient", () => {
   const mockFlowClient = {
-    getChainId: jest.fn().mockResolvedValue("747"),
+    getChainId: jest.fn().mockResolvedValue("mainnet"),
     query: jest.fn().mockResolvedValue(null),
   } as any
 

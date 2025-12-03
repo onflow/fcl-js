@@ -13,8 +13,19 @@ import GET_TOKEN_DECIMALS_SCRIPT from "../cadence/scripts/get-token-decimals.cdc
 
 type FlowNetwork = "emulator" | "testnet" | "mainnet"
 
+interface BridgeQueryOptions {
+  flowClient: ReturnType<typeof createFlowClient>
+}
+
 /** Resolve `import "ContractName"` syntax using our bundled flow.json */
-function resolveCadence(cadence: string, network: FlowNetwork): string {
+async function resolveCadence(
+  flowClient: ReturnType<typeof createFlowClient>,
+  cadence: string
+): Promise<string> {
+  const chainId = await flowClient.getChainId()
+  const n = chainId.replace(/^flow-/, "").toLowerCase()
+  const network: FlowNetwork = n === "local" ? "emulator" : (n as FlowNetwork)
+
   const contracts = getContracts(flowJSON, network)
   return cadence.replace(/import\s+"(\w+)"/g, (match, name) =>
     contracts[name] ? `import ${name} from 0x${contracts[name]}` : match
@@ -24,13 +35,12 @@ function resolveCadence(cadence: string, network: FlowNetwork): string {
 /**
  * Query the bridge to get the EVM address for a Cadence vault identifier
  */
-export async function getEvmAddressFromVaultType(
-  flowClient: ReturnType<typeof createFlowClient>,
-  vaultIdentifier: string,
-  network: FlowNetwork
-): Promise<string | null> {
+export async function getEvmAddressFromVaultType({
+  flowClient,
+  vaultIdentifier,
+}: BridgeQueryOptions & {vaultIdentifier: string}): Promise<string | null> {
   const result = await flowClient.query({
-    cadence: resolveCadence(GET_EVM_ADDRESS_SCRIPT, network),
+    cadence: await resolveCadence(flowClient, GET_EVM_ADDRESS_SCRIPT),
     args: (arg: any, t: any) => [arg(vaultIdentifier, t.String)],
   })
   return result || null
@@ -39,13 +49,12 @@ export async function getEvmAddressFromVaultType(
 /**
  * Query the bridge to get the Cadence vault type for an EVM address
  */
-export async function getVaultTypeFromEvmAddress(
-  flowClient: ReturnType<typeof createFlowClient>,
-  evmAddress: string,
-  network: FlowNetwork
-): Promise<string | null> {
+export async function getVaultTypeFromEvmAddress({
+  flowClient,
+  evmAddress,
+}: BridgeQueryOptions & {evmAddress: string}): Promise<string | null> {
   const result = await flowClient.query({
-    cadence: resolveCadence(GET_VAULT_TYPE_SCRIPT, network),
+    cadence: await resolveCadence(flowClient, GET_VAULT_TYPE_SCRIPT),
     args: (arg: any, t: any) => [arg(evmAddress, t.String)],
   })
   return result || null
@@ -54,13 +63,12 @@ export async function getVaultTypeFromEvmAddress(
 /**
  * Query the bridge to get the token decimals for an EVM address
  */
-export async function getTokenDecimals(
-  flowClient: ReturnType<typeof createFlowClient>,
-  evmAddress: string,
-  network: FlowNetwork
-): Promise<number> {
+export async function getTokenDecimals({
+  flowClient,
+  evmAddress,
+}: BridgeQueryOptions & {evmAddress: string}): Promise<number> {
   const result = await flowClient.query({
-    cadence: resolveCadence(GET_TOKEN_DECIMALS_SCRIPT, network),
+    cadence: await resolveCadence(flowClient, GET_TOKEN_DECIMALS_SCRIPT),
     args: (arg: any, t: any) => [arg(evmAddress, t.String)],
   })
   return Number(result)

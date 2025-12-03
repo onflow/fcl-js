@@ -5,24 +5,8 @@ import type {
   CryptoFundingIntent,
 } from "./types"
 import type {createFlowClient} from "@onflow/fcl"
-import {FLOW_CHAIN_ID, ADDRESS_PATTERN} from "./constants"
+import {ADDRESS_PATTERN} from "./constants"
 import {getEvmAddressFromVaultType} from "./bridge-service"
-
-type FlowNetwork = "emulator" | "testnet" | "mainnet"
-
-/** Resolve Flow network from chain ID */
-function resolveNetwork(chainId: string): FlowNetwork {
-  switch (chainId) {
-    case FLOW_CHAIN_ID.MAINNET:
-      return "mainnet"
-    case FLOW_CHAIN_ID.TESTNET:
-      return "testnet"
-    case FLOW_CHAIN_ID.LOCAL:
-      return "emulator"
-    default:
-      throw new Error(`Unknown Flow chain ID: ${chainId}`)
-  }
-}
 
 /**
  * Client for creating funding sessions
@@ -55,12 +39,10 @@ function isCadenceVaultIdentifier(currency: string): boolean {
 
 /**
  * Convert Cadence vault identifiers to EVM addresses in a funding intent
- * This allows providers to only deal with EVM addresses and symbols
  */
 async function convertCadenceCurrencies(
   intent: FundingIntent,
-  flowClient: ReturnType<typeof createFlowClient>,
-  network: FlowNetwork
+  flowClient: ReturnType<typeof createFlowClient>
 ): Promise<FundingIntent> {
   if (intent.kind !== "crypto") {
     return intent
@@ -70,11 +52,10 @@ async function convertCadenceCurrencies(
 
   // Convert destination currency if it's a Cadence vault identifier
   if (isCadenceVaultIdentifier(cryptoIntent.currency)) {
-    const evmAddress = await getEvmAddressFromVaultType(
+    const evmAddress = await getEvmAddressFromVaultType({
       flowClient,
-      cryptoIntent.currency,
-      network
-    )
+      vaultIdentifier: cryptoIntent.currency,
+    })
     if (!evmAddress) {
       throw new Error(
         `Cadence vault type "${cryptoIntent.currency}" is not bridged to EVM. ` +
@@ -135,12 +116,9 @@ export function createPaymentsClient(
       let lastError: unknown = undefined
 
       // Convert Cadence vault identifiers to EVM addresses
-      const chainId = await config.flowClient.getChainId()
-      const network = resolveNetwork(chainId)
       const processedIntent = await convertCadenceCurrencies(
         intent,
-        config.flowClient,
-        network
+        config.flowClient
       )
 
       for (const provider of config.providers) {
