@@ -6,7 +6,7 @@ export interface BaseFundingIntent {
   kind: string
   /** Destination address in CAIP-10 format: `namespace:chainId:address` (e.g., `"eip155:747:0x..."`) */
   destination: string
-  /** Token identifier - can be a symbol (`"USDC"`), EVM address (`"0xa0b8..."`), or Cadence vault identifier (`"A.xxx.Token.Vault"`) */
+  /** Token identifier - EVM address (`"0xa0b8..."`) or Cadence vault identifier (`"A.xxx.Token.Vault"`) */
   currency: string
   /** Amount in human-readable decimal format (e.g., `"1.5"` for 1.5 tokens). Provider converts to appropriate format (base units for EVM, UFix64 for Cadence). */
   amount?: string
@@ -19,7 +19,7 @@ export interface CryptoFundingIntent extends BaseFundingIntent {
   kind: "crypto"
   /** Source blockchain in CAIP-2 format: `namespace:chainId` (e.g., `"eip155:1"` for Ethereum mainnet) */
   sourceChain: string
-  /** Source token identifier - can be a symbol (`"USDC"`), EVM address (`"0xa0b8..."`), or Cadence vault identifier (`"A.xxx.Token.Vault"`) */
+  /** Source token identifier - EVM address on the source chain */
   sourceCurrency: string
 }
 
@@ -88,7 +88,7 @@ import type {VM} from "./constants"
  * Base capabilities supported by a funding provider
  */
 export interface BaseProviderCapability {
-  /** List of supported token identifiers (symbols, addresses, or vault IDs) */
+  /** List of supported token identifiers (EVM addresses or Cadence vault IDs) */
   currencies?: string[]
   /** Minimum funding amount in human-readable format */
   minAmount?: string

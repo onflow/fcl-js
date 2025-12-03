@@ -42,9 +42,9 @@ describe("createPaymentsClient", () => {
     const intent: FundingIntent = {
       kind: "crypto",
       destination: "eip155:1:0x123",
-      currency: "USDC",
+      currency: "0x833589fcd6edb6e08f4c7c32d4f71b54bda02913",
       sourceChain: "eip155:1",
-      sourceCurrency: "USDC",
+      sourceCurrency: "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
     }
 
     const result = await client.createSession(intent)
@@ -80,9 +80,9 @@ describe("createPaymentsClient", () => {
     const intent: FundingIntent = {
       kind: "crypto",
       destination: "eip155:1:0x123",
-      currency: "USDC",
+      currency: "0x833589fcd6edb6e08f4c7c32d4f71b54bda02913",
       sourceChain: "eip155:1",
-      sourceCurrency: "USDC",
+      sourceCurrency: "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
     }
 
     const result = await client.createSession(intent)
@@ -112,9 +112,9 @@ describe("createPaymentsClient", () => {
     const intent: FundingIntent = {
       kind: "crypto",
       destination: "eip155:1:0x123",
-      currency: "USDC",
+      currency: "0x833589fcd6edb6e08f4c7c32d4f71b54bda02913",
       sourceChain: "eip155:1",
-      sourceCurrency: "USDC",
+      sourceCurrency: "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
     }
 
     await expect(client.createSession(intent)).rejects.toThrow("Error 2")
@@ -128,9 +128,9 @@ describe("createPaymentsClient", () => {
     const intent: FundingIntent = {
       kind: "crypto",
       destination: "eip155:1:0x123",
-      currency: "USDC",
+      currency: "0x833589fcd6edb6e08f4c7c32d4f71b54bda02913",
       sourceChain: "eip155:1",
-      sourceCurrency: "USDC",
+      sourceCurrency: "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
     }
 
     await expect(client.createSession(intent)).rejects.toThrow(
@@ -173,9 +173,9 @@ describe("createPaymentsClient", () => {
       const intent: FundingIntent = {
         kind: "crypto",
         destination: "eip155:1:0x123",
-        currency: "USDC",
+        currency: "0x833589fcd6edb6e08f4c7c32d4f71b54bda02913",
         sourceChain: "eip155:1",
-        sourceCurrency: "USDC",
+        sourceCurrency: "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
       }
 
       const result = await client.createSession(intent)
@@ -206,7 +206,7 @@ describe("createPaymentsClient", () => {
       const intent: FundingIntent = {
         kind: "fiat",
         destination: "eip155:1:0x123",
-        currency: "USDC",
+        currency: "0x833589fcd6edb6e08f4c7c32d4f71b54bda02913",
         paymentType: "card",
       }
 
@@ -250,9 +250,9 @@ describe("createPaymentsClient", () => {
       const intent: FundingIntent = {
         kind: "crypto",
         destination: "eip155:1:0x123",
-        currency: "USDC",
+        currency: "0x833589fcd6edb6e08f4c7c32d4f71b54bda02913",
         sourceChain: "eip155:1",
-        sourceCurrency: "USDC",
+        sourceCurrency: "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
       }
 
       const result1 = await client.createSession(intent)
@@ -284,10 +284,10 @@ describe("createPaymentsClient", () => {
       const intent: FundingIntent = {
         kind: "crypto",
         destination: "eip155:747:0xRecipient",
-        currency: "USDC",
+        currency: "0x833589fcd6edb6e08f4c7c32d4f71b54bda02913",
         amount: "1000000",
         sourceChain: "eip155:1",
-        sourceCurrency: "USDC",
+        sourceCurrency: "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
       }
 
       await client.createSession(intent)

@@ -103,16 +103,27 @@ async function convertCadenceCurrencies(
  *
  * const client = createPaymentsClient({
  *   providers: [relayProvider()],
- *   flowClient: fcl, // Optional: enables Cadence vault ID support
+ *   flowClient: fcl,
  * })
  *
+ * // Using EVM addresses
  * const session = await client.createSession({
  *   kind: "crypto",
- *   destination: "eip155:8453:0xRecipient",
- *   currency: "USDC",
- *   amount: "1000.0",
+ *   destination: "eip155:747:0xRecipient",
+ *   currency: "0x833589fcd6edb6e08f4c7c32d4f71b54bda02913", // USDC on Flow EVM
+ *   amount: "100.0",
  *   sourceChain: "eip155:1",
- *   sourceCurrency: "USDC",
+ *   sourceCurrency: "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48", // USDC on Ethereum
+ * })
+ *
+ * // Or using Cadence vault identifiers (auto-converted to EVM)
+ * const session2 = await client.createSession({
+ *   kind: "crypto",
+ *   destination: "eip155:747:0xRecipient",
+ *   currency: "A.1654653399040a61.FlowToken.Vault",
+ *   amount: "10.0",
+ *   sourceChain: "eip155:1",
+ *   sourceCurrency: "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
  * })
  * ```
  */

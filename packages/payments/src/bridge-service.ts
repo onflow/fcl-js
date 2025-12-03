@@ -7,9 +7,9 @@ import type {createFlowClient} from "@onflow/fcl"
 import {getContracts} from "@onflow/config"
 import flowJSON from "../flow.json"
 
-import GET_EVM_ADDRESS_SCRIPT from "./cadence/get-evm-address-from-vault.cdc"
-import GET_VAULT_TYPE_SCRIPT from "./cadence/get-vault-type-from-evm.cdc"
-import GET_TOKEN_DECIMALS_SCRIPT from "./cadence/get-token-decimals.cdc"
+import GET_EVM_ADDRESS_SCRIPT from "../cadence/scripts/get-evm-address-from-vault.cdc"
+import GET_VAULT_TYPE_SCRIPT from "../cadence/scripts/get-vault-type-from-evm.cdc"
+import GET_TOKEN_DECIMALS_SCRIPT from "../cadence/scripts/get-token-decimals.cdc"
 
 type FlowNetwork = "emulator" | "testnet" | "mainnet"
 

@@ -9,5 +9,9 @@ module.exports = {
         },
       },
     ],
+    "^.+\\.cdc$": "<rootDir>/jest-cdc-transform.js",
+  },
+  moduleNameMapper: {
+    "^.+\\.json$": "<rootDir>/jest-json-transform.js",
   },
 }
