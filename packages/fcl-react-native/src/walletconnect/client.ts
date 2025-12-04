@@ -6,9 +6,7 @@ import {
   initializeSignClient,
 } from "@onflow/fcl-wc/react-native"
 
-/**
- * Configuration for the FCL WalletConnect plugin in React Native.
- */
+// Configuration for the FCL WalletConnect plugin in React Native
 export interface FclWalletConnectConfig {
   projectId: string
   metadata?: CoreTypes.Metadata
@@ -20,12 +18,8 @@ export interface FclWalletConnectConfig {
 // Store the client adapter promise for getClient()
 let clientAdapterPromise: Promise<any> | null = null
 
-/**
- * Initialize the FCL WalletConnect plugin lazily for React Native.
- * Uses fcl-wc's React Native adapters.
- */
+// Initialize the FCL WalletConnect plugin lazily for React Native
 export const initLazy = (config: FclWalletConnectConfig) => {
-  // Create the lazy client adapter
   clientAdapterPromise = initializeSignClient({
     projectId: config.projectId,
     metadata: config.metadata,
@@ -47,9 +41,7 @@ export const initLazy = (config: FclWalletConnectConfig) => {
   }
 }
 
-/**
- * Initialize the FCL WalletConnect plugin and wait for the client to be ready.
- */
+// Initialize the FCL WalletConnect plugin and wait for the client to be ready
 export const init = async (config: FclWalletConnectConfig) => {
   const {FclWcServicePlugin, clientPromise} = initLazy(config)
   const client = await clientPromise
@@ -60,9 +52,6 @@ export const init = async (config: FclWalletConnectConfig) => {
   }
 }
 
-/**
- * Returns the SignClient adapter if it has been initialized.
- */
 export async function getClient() {
   if (!clientAdapterPromise) {
     throw new Error("WalletConnect client not initialized")
