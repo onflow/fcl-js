@@ -1,6 +1,8 @@
 ---
 "@onflow/fcl-react-native": minor
+"@onflow/fcl-bundle": minor
 "@onflow/fcl-core": minor
+"@onflow/fcl-wc": minor
 "@onflow/fcl": minor
 "@onflow/sdk": minor
 ---
