@@ -30,14 +30,14 @@ export const FundContent: React.FC = () => {
         className="flow-text-lg flow-font-semibold flow-text-slate-900 dark:flow-text-slate-100
           flow-mb-4"
       >
-        Fund
+        Fund Your Account
       </h2>
       <TabGroup>
         <TabList>
           <Tab>
             {({selected}) => (
               <>
-                Use credit card
+                Use Credit Card
                 {selected && (
                   <div
                     className="flow-absolute flow-bottom-0 flow-left-0 flow-right-0 flow-h-0.5
@@ -50,7 +50,7 @@ export const FundContent: React.FC = () => {
           <Tab>
             {({selected}) => (
               <>
-                Transfer crypto
+                Transfer Crypto
                 {selected && (
                   <div
                     className="flow-absolute flow-bottom-0 flow-left-0 flow-right-0 flow-h-0.5
