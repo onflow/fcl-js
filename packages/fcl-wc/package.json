@@ -13,12 +13,36 @@
     "url": "https://github.com/onflow/fcl-js/issues"
   },
   "files": [
-    "dist"
+    "dist",
+    "types",
+    "react-native.js"
   ],
-  "source": "src/index.ts",
+  "source": {
+    "./src/index.ts": {
+      "cjs": "./dist/index.js",
+      "esm": "./dist/index.module.mjs"
+    },
+    "./src/react-native.ts": {
+      "cjs": "./dist/react-native.js",
+      "esm": "./dist/react-native.module.mjs"
+    }
+  },
   "main": "dist/index.js",
   "module": "dist/index.module.mjs",
   "types": "types/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./types/index.d.ts",
+      "import": "./dist/index.module.mjs",
+      "require": "./dist/index.js"
+    },
+    "./react-native": {
+      "types": "./types/react-native.d.ts",
+      "import": "./dist/react-native.module.mjs",
+      "require": "./dist/react-native.js",
+      "default": "./dist/react-native.js"
+    }
+  },
   "scripts": {
     "prepublishOnly": "npm test && npm run build",
     "test": "jest",
@@ -52,6 +76,20 @@
     "tailwindcss": "^3.4.14"
   },
   "peerDependencies": {
-    "@onflow/fcl-core": "1.22.3"
+    "@onflow/fcl-core": "1.22.3",
+    "@walletconnect/sign-client": "^2.20.2",
+    "expo-linking": "*",
+    "react-native": "*"
+  },
+  "peerDependenciesMeta": {
+    "@walletconnect/sign-client": {
+      "optional": true
+    },
+    "expo-linking": {
+      "optional": true
+    },
+    "react-native": {
+      "optional": true
+    }
   }
 }

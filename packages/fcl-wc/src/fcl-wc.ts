@@ -106,7 +106,12 @@ const initClient = async ({
  */
 export const initLazy = (config: FclWalletConnectConfig) => {
   const {FclWcServicePlugin, providerPromise: provPromise} = initHelper(config)
-  fclCore.discovery.authn.update()
+
+  // Only call authn.update() in browser environments
+  // React Native provides its own clientAdapter and doesn't have document
+  if (!config.clientAdapter && typeof document !== "undefined") {
+    fclCore.discovery.authn.update()
+  }
 
   return {
     FclWcServicePlugin,
@@ -120,7 +125,11 @@ export const initLazy = (config: FclWalletConnectConfig) => {
 export const init = async (config: FclWalletConnectConfig) => {
   const {FclWcServicePlugin, providerPromise: provPromise} = initLazy(config)
   const client = await provPromise
-  fclCore.discovery.authn.update()
+
+  // Only call authn.update() in browser environments
+  if (!config.clientAdapter && typeof document !== "undefined") {
+    fclCore.discovery.authn.update()
+  }
 
   return {
     FclWcServicePlugin,
@@ -130,15 +139,18 @@ export const init = async (config: FclWalletConnectConfig) => {
 
 const initHelper = (config: FclWalletConnectConfig) => {
   // If a custom client adapter is provided (e.g., React Native SignClient),
-  // use it directly instead of initializing UniversalProvider
+  // use it directly instead of initializing UniversalProvider.
+  // This allows React Native to provide a lazy-loaded client promise.
   if (config.clientAdapter) {
+    // Handle both Promise<WcClientAdapter> and WcClientAdapter
     const clientAdapterPromise = Promise.resolve(config.clientAdapter)
 
     const FclWcServicePlugin = makeServicePlugin(clientAdapterPromise, config)
 
     return {
       FclWcServicePlugin,
-      providerPromise: Promise.resolve(null),
+      // Return the clientAdapter promise so callers can await it
+      providerPromise: clientAdapterPromise,
     }
   }
 

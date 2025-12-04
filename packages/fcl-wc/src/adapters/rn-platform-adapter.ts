@@ -4,8 +4,7 @@ import {
   PlatformAdapter,
   WcClientAdapter,
   WcDisconnectReason,
-} from "@onflow/fcl-wc"
-import {FLOW_METHODS} from "../constants"
+} from "../types/adapters"
 
 /**
  * Creates a PlatformAdapter for React Native environments.

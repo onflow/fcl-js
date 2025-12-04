@@ -96,26 +96,23 @@ export const unauthenticate = async () => {
   // First unauthenticate from FCL
   currentUser().unauthenticate()
 
-  // Then disconnect WalletConnect (both sessions and pairings for complete cleanup)
+  // Then disconnect WalletConnect sessions
   try {
-    const client = await getClient()
-    if (!client) return
+    const clientAdapter = await getClient()
+    if (!clientAdapter) return
 
-    const sessions = client.session.getAll()
-    const pairings = client.core.pairing.pairings.getAll()
+    // Use adapter's getAllSessions and disconnect methods
+    const sessions = clientAdapter.getAllSessions?.() ?? []
 
-    // Disconnect all in parallel
-    await Promise.allSettled([
-      ...sessions.map((session: any) =>
-        client.disconnect({
-          topic: session.topic,
-          reason: {code: 6000, message: "User disconnected"},
+    // Disconnect all sessions in parallel
+    await Promise.allSettled(
+      sessions.map((session: any) =>
+        clientAdapter.disconnect?.(session.topic, {
+          code: 6000,
+          message: "User disconnected",
         })
-      ),
-      ...pairings.map((pairing: any) =>
-        client.core.pairing.disconnect({topic: pairing.topic})
-      ),
-    ])
+      )
+    )
   } catch {
     // WC client not initialized or disconnect failed (safe to ignore)
   }

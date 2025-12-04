@@ -5,8 +5,7 @@ import type {
   WcConnectOpts,
   WcRequestOpts,
   WcDisconnectReason,
-} from "@onflow/fcl-wc"
-import {FLOW_METHODS} from "../constants"
+} from "../types/adapters"
 
 type SignClientInstance = InstanceType<typeof SignClient>
 
@@ -91,12 +90,3 @@ export function createSignClientAdapter(
     },
   }
 }
-
-/**
- * Optional methods for Flow wallet connections
- * These are supported by some wallets for payer/proposer signing
- */
-export const OPTIONAL_FLOW_METHODS = [
-  FLOW_METHODS.FLOW_SIGN_PAYER,
-  FLOW_METHODS.FLOW_SIGN_PROPOSER,
-]
