@@ -9,6 +9,7 @@ import {
   ListboxOption,
   ListboxOptions,
 } from "./internal/Listbox"
+import {QRCode} from "./internal/QRCode"
 
 const tokens = [
   {id: 1, name: "USDC"},
@@ -137,16 +138,7 @@ export const FundContent: React.FC = () => {
                   </Listbox>
                 </div>
               </div>
-              <div style={{display: "flex", justifyContent: "center", padding: "24px 0"}}>
-                <div
-                  style={{
-                    width: "200px",
-                    height: "200px",
-                    backgroundColor: "#000",
-                    borderRadius: "8px",
-                  }}
-                />
-              </div>
+              <QRCode />
             </div>
           </TabPanel>
         </TabPanels>
