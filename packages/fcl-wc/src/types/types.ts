@@ -4,9 +4,6 @@ export type NotificationInfo = {
   icon?: string
   onClick?: () => void
   onDismiss?: () => void
-  /**
-   * Delay in milliseconds before showing the notification.
-   * Used to debounce rapid notification requests (e.g., pre-authz).
-   */
+  // Delay in milliseconds before showing the notification, it's used to debounce rapid notification requests (e.g., pre-authz)
   debounceDelay?: number
 }

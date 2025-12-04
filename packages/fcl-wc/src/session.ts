@@ -6,17 +6,11 @@ import {WcClientAdapter} from "./types/adapters"
 import {UniversalProvider} from "@walletconnect/universal-provider"
 import {createUniversalProviderAdapter} from "./adapters/universal-provider-adapter"
 
-/**
- * Configuration for optional methods that wallets may support
- */
 export interface OptionalNamespaceMethods {
   methods?: string[]
 }
 
-/**
- * Create a new session proposal with the WalletConnect client.
- * Works with both UniversalProvider (web) and SignClient (React Native) via adapter.
- */
+// Create a new session proposal with the WalletConnect client
 export async function createSessionProposal({
   client,
   provider,
@@ -79,9 +73,6 @@ export async function createSessionProposal({
   }
 }
 
-/**
- * Options for making a WalletConnect request
- */
 export interface RequestOptions {
   method: string
   body: any
@@ -89,28 +80,17 @@ export interface RequestOptions {
   client?: WcClientAdapter
   provider?: InstanceType<typeof UniversalProvider>
   abortSignal?: AbortSignal
-  /**
-   * Whether to disable notifications for services returned from the wallet
-   */
+  // Whether to disable notifications for services returned from the wallet
   disableNotifications?: boolean
-  /**
-   * Whether this is an external provider session (web-specific for provider store)
-   */
+  // Whether this is an external provider session (web-specific for provider store)
   isExternal?: boolean
-  /**
-   * Session topic to inject into services (React Native uses this instead of externalProvider)
-   */
+  // Session topic to inject into services (React Native uses this instead of externalProvider)
   sessionTopic?: string
-  /**
-   * Service UID to inject into services (React Native uses this for wallet deeplinks)
-   */
+  // Service UID to inject into services (React Native uses this for wallet deeplinks)
   serviceUid?: string
 }
 
-/**
- * Make a request to the connected wallet.
- * Works with both UniversalProvider (web) and SignClient (React Native) via adapter.
- */
+// Make a request to the connected wallet, it works with both UniversalProvider (web) and SignClient (React Native) via adapter
 export async function request({
   method,
   body,
@@ -179,9 +159,6 @@ export async function request({
   }
 }
 
-/**
- * Process the result from a WalletConnect request
- */
 function processRequestResult(
   result: any,
   options: {
@@ -260,9 +237,6 @@ function processRequestResult(
   }
 }
 
-/**
- * Extract session data (chainId, address) from a WalletConnect session
- */
 export function makeSessionData(
   session: SessionTypes.Struct
 ): [string, string, string] {

@@ -281,18 +281,12 @@ const makeExec = (
   }
 }
 
-/**
- * Get wallet name for notifications
- */
 function getWalletName(user: CurrentUser, service: Service): string {
   const authnService = user?.services?.find((s: any) => s.type === "authn")
   const walletProvider = authnService?.provider || service.provider
   return walletProvider?.name || "Mobile Wallet"
 }
 
-/**
- * Get wallet icon for notifications
- */
 function getWalletIcon(
   user: CurrentUser,
   service: Service
@@ -302,10 +296,7 @@ function getWalletIcon(
   return walletProvider?.icon
 }
 
-/**
- * Default logic for determining if we should deeplink to the wallet.
- * Used when platform adapter doesn't provide custom shouldDeepLink.
- */
+// Default logic for determining if we should deeplink to the wallet, it's used when platform adapter doesn't provide custom shouldDeepLink
 function shouldDeepLinkDefault({
   service,
   user,
@@ -333,9 +324,6 @@ function shouldDeepLinkDefault({
   return true
 }
 
-/**
- * Connect to WalletConnect directly from the browser via deep link or modal.
- */
 async function connectWc({
   service,
   onClose,
@@ -440,9 +428,6 @@ function validateAppLink({uid}: {uid: string}) {
   return uid
 }
 
-/**
- * Resolve the client adapter, handling external providers.
- */
 async function resolveClient({
   clientAdapterPromise,
   externalProviderOrTopic,
