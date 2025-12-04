@@ -12,14 +12,21 @@ npm i @onflow/payments
 
 ```ts
 import {createPaymentsClient} from "@onflow/payments"
-import * as fcl from "@onflow/fcl"
+import {createFlowClientCore} from "@onflow/fcl-core"
 
 // Import a provider (e.g., from a separate package or future built-in)
 import {relayProvider} from "@onflow/payments/providers"
 
+const flowClient = createFlowClientCore({
+  accessNodeUrl: "https://rest-mainnet.onflow.org",
+  computeLimit: 100,
+  storage: localStorage,
+  platform: "web",
+})
+
 const client = createPaymentsClient({
   providers: [relayProvider()],
-  flowClient: fcl,
+  flowClient,
 })
 
 const session = await client.createSession({

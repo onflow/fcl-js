@@ -1,5 +1,5 @@
 import type {FundingIntent, FundingSession, FundingProvider} from "./types"
-import type {createFlowClient} from "@onflow/fcl"
+import type {createFlowClientCore} from "@onflow/fcl-core"
 import {ADDRESS_PATTERN} from "./constants"
 import {getEvmAddressFromVaultType} from "./bridge-service"
 
@@ -21,8 +21,8 @@ export interface PaymentsClient {
 export interface PaymentsClientConfig {
   /** Array of funding providers to use (in priority order) */
   providers: FundingProvider[]
-  /** Flow client (FCL or SDK) for Cadence vault ID conversion */
-  flowClient: ReturnType<typeof createFlowClient>
+  /** Flow client (FCL Core or SDK) for Cadence vault ID conversion */
+  flowClient: ReturnType<typeof createFlowClientCore>
 }
 
 /**
@@ -37,7 +37,7 @@ function isCadenceVaultIdentifier(currency: string): boolean {
  */
 async function convertCadenceCurrencies(
   intent: FundingIntent,
-  flowClient: ReturnType<typeof createFlowClient>
+  flowClient: ReturnType<typeof createFlowClientCore>
 ): Promise<FundingIntent> {
   if (!isCadenceVaultIdentifier(intent.currency)) {
     return intent
@@ -65,11 +65,12 @@ async function convertCadenceCurrencies(
  * @example
  * ```typescript
  * import {createPaymentsClient, relayProvider} from "@onflow/payments"
- * import * as fcl from "@onflow/fcl"
+ * import {createFlowClientCore} from "@onflow/fcl-core"
  *
+ * const flowClient = createFlowClientCore({...})
  * const client = createPaymentsClient({
  *   providers: [relayProvider()],
- *   flowClient: fcl,
+ *   flowClient,
  * })
  *
  * // Using EVM addresses

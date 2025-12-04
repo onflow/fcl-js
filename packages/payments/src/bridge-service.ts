@@ -3,7 +3,7 @@
  * using the Flow EVM Bridge registry
  */
 
-import type {createFlowClient} from "@onflow/fcl"
+import type {createFlowClientCore} from "@onflow/fcl-core"
 import {getContracts} from "@onflow/config"
 import flowJSON from "../flow.json"
 
@@ -14,12 +14,12 @@ import GET_TOKEN_DECIMALS_SCRIPT from "../cadence/scripts/get-token-decimals.cdc
 type FlowNetwork = "emulator" | "testnet" | "mainnet"
 
 interface BridgeQueryOptions {
-  flowClient: ReturnType<typeof createFlowClient>
+  flowClient: ReturnType<typeof createFlowClientCore>
 }
 
 /** Resolve `import "ContractName"` syntax using our bundled flow.json */
 async function resolveCadence(
-  flowClient: ReturnType<typeof createFlowClient>,
+  flowClient: ReturnType<typeof createFlowClientCore>,
   cadence: string
 ): Promise<string> {
   const chainId = await flowClient.getChainId()
