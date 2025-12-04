@@ -2,9 +2,27 @@ import React, {useState} from "react"
 import {Tab, TabGroup, TabList, TabPanel, TabPanels} from "./internal/Tabs"
 import {Input} from "./internal/Input"
 import {Button} from "./internal/Button"
+import {
+  Listbox,
+  ListboxButton,
+  ListboxOption,
+  ListboxOptions,
+} from "./internal/Listbox"
+
+const tokens = [
+  {id: 1, name: "USDC"},
+  {id: 2, name: "FLOW"},
+]
+
+const chains = [
+  {id: 1, name: "Flow"},
+  {id: 2, name: "Ethereum"},
+]
 
 export const FundContent: React.FC = () => {
   const [amount, setAmount] = useState("")
+  const [selectedToken, setSelectedToken] = useState(tokens[0])
+  const [selectedChain, setSelectedChain] = useState(chains[0])
 
   return (
     <div>
@@ -72,7 +90,54 @@ export const FundContent: React.FC = () => {
               <Button className="flow-w-full">Continue</Button>
             </div>
           </TabPanel>
-          <TabPanel>Content 2</TabPanel>
+          <TabPanel>
+            <div className="flow-space-y-4">
+              <div className="flow-flex flow-gap-4">
+                <div className="flow-flex-1 flow-space-y-2">
+                  <label className="flow-text-sm flow-font-medium flow-text-slate-700 dark:flow-text-slate-300">
+                    Token
+                  </label>
+                  <Listbox value={selectedToken} onChange={setSelectedToken}>
+                    {({open}) => (
+                      <div className="flow-relative">
+                        <ListboxButton>{selectedToken.name}</ListboxButton>
+                        {open && (
+                          <ListboxOptions>
+                            {tokens.map(token => (
+                              <ListboxOption key={token.id} value={token}>
+                                {token.name}
+                              </ListboxOption>
+                            ))}
+                          </ListboxOptions>
+                        )}
+                      </div>
+                    )}
+                  </Listbox>
+                </div>
+                <div className="flow-flex-1 flow-space-y-2">
+                  <label className="flow-text-sm flow-font-medium flow-text-slate-700 dark:flow-text-slate-300">
+                    Chain
+                  </label>
+                  <Listbox value={selectedChain} onChange={setSelectedChain}>
+                    {({open}) => (
+                      <div className="flow-relative">
+                        <ListboxButton>{selectedChain.name}</ListboxButton>
+                        {open && (
+                          <ListboxOptions>
+                            {chains.map(chain => (
+                              <ListboxOption key={chain.id} value={chain}>
+                                {chain.name}
+                              </ListboxOption>
+                            ))}
+                          </ListboxOptions>
+                        )}
+                      </div>
+                    )}
+                  </Listbox>
+                </div>
+              </div>
+            </div>
+          </TabPanel>
         </TabPanels>
       </TabGroup>
     </div>
