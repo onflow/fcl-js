@@ -7,10 +7,8 @@ import {
   WcDisconnectReason,
 } from "../types/adapters"
 
-/**
- * Creates a WcClientAdapter that wraps the UniversalProvider for web usage.
- * This adapter normalizes the UniversalProvider API to match the WcClientAdapter interface.
- */
+// Creates a WcClientAdapter that wraps the UniversalProvider for web usage.
+// This adapter normalizes the UniversalProvider API to match the WcClientAdapter interface.
 export function createUniversalProviderAdapter(
   provider: InstanceType<typeof UniversalProvider>
 ): WcClientAdapter {

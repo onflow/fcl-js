@@ -1,34 +1,23 @@
+import {Service} from "@onflow/typedefs"
 import {SessionTypes} from "@walletconnect/types"
-import {
-  PlatformAdapter,
-  WcClientAdapter,
-  NotificationHandle,
-} from "../types/adapters"
+import {FLOW_METHODS, WC_SERVICE_METHOD} from "../constants"
+import {NotificationHandle, PlatformAdapter} from "../types/adapters"
 import {NotificationInfo} from "../types/types"
 import {showNotification} from "../ui/notifications"
-import {FLOW_METHODS, WC_SERVICE_METHOD} from "../constants"
-import {Service} from "@onflow/typedefs"
 
 const PRE_AUTHZ_SERVICE_TYPE = "pre-authz"
 
 type WalletConnectModalType = import("@walletconnect/modal").WalletConnectModal
 type Constructor<T> = new (...args: any[]) => T
 
-/**
- * Configuration options for the browser platform adapter
- */
+// Configuration options for the browser platform adapter
 export interface BrowserPlatformAdapterConfig {
-  /**
-   * Custom modal override function. If provided, will be called instead of
-   * using the default WalletConnectModal.
-   */
+  // Custom modal override function. If provided, will be called instead of using the default WalletConnectModal.
   pairingModalOverride?: (uri: string, onClose: () => void) => void
 }
 
-/**
- * Creates a PlatformAdapter for browser/web environments.
- * This adapter handles deeplinks, modals, and notifications using browser APIs.
- */
+// Creates a PlatformAdapter for browser/web environments.
+// This adapter handles deeplinks, modals, and notifications using browser APIs.
 export function createBrowserPlatformAdapter(
   config: BrowserPlatformAdapterConfig = {}
 ): PlatformAdapter {

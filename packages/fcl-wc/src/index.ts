@@ -1,4 +1,3 @@
-// Main exports
 export {init, initLazy, getProvider} from "./fcl-wc"
 export type {FclWalletConnectConfig} from "./fcl-wc"
 export {createSessionProposal, request, makeSessionData} from "./session"

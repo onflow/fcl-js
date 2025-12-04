@@ -22,10 +22,7 @@ let providerStore = createStore<{
 // Lazy-loaded browser-specific modules (only loaded when needed in browser)
 let browserPlatformAdapterPromise: Promise<any> | null = null
 
-/**
- * Lazily load the browser platform adapter.
- * This prevents React Native from trying to bundle browser-specific code.
- */
+// Lazily load the browser platform adapter, it prevents React Native from trying to bundle browser-specific code
 async function getBrowserPlatformAdapter(
   config: any
 ): Promise<PlatformAdapter> {
@@ -39,11 +36,6 @@ async function getBrowserPlatformAdapter(
     pairingModalOverride: config.pairingModalOverride,
   })
 }
-
-/**
- * Creates the FCL WalletConnect service plugin.
- * This is the main entry point for integrating WalletConnect with FCL.
- */
 export const makeServicePlugin = (
   clientOrProvider:
     | Promise<WcClientAdapter>
@@ -94,9 +86,6 @@ export const makeServicePlugin = (
   }
 }
 
-/**
- * Creates the exec function that handles WalletConnect requests.
- */
 const makeExec = (
   clientAdapterPromise: Promise<WcClientAdapter | null>,
   config: FclWalletConnectConfig

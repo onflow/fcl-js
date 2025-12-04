@@ -6,10 +6,8 @@ import {
   WcDisconnectReason,
 } from "../types/adapters"
 
-/**
- * Creates a PlatformAdapter for React Native environments.
- * This adapter handles deeplinks and session validation using React Native APIs.
- */
+// Creates a PlatformAdapter for React Native environments.
+// This adapter handles deeplinks and session validation using React Native APIs.
 export function createRNPlatformAdapter(): PlatformAdapter {
   return {
     async openDeeplink(url: string): Promise<void> {
@@ -21,9 +19,8 @@ export function createRNPlatformAdapter(): PlatformAdapter {
       return true
     },
 
-    // React Native doesn't use modals - it always uses deep linking
-    // showPairingModal is intentionally not implemented
-
+    // React Native doesn't use modals, it always uses deep linking
+    // showPairingModal is intentionally not implemented because React Native doesn't use modals
     async validateSession(
       client: WcClientAdapter,
       session: SessionTypes.Struct
@@ -32,7 +29,6 @@ export function createRNPlatformAdapter(): PlatformAdapter {
       if (session.expiry && session.expiry <= Date.now() / 1000) {
         return false
       }
-
       // Check if session is acknowledged
       if (!session.acknowledged) {
         return false
@@ -47,7 +43,6 @@ export function createRNPlatformAdapter(): PlatformAdapter {
       } catch {
         return false
       }
-
       return true
     },
 
@@ -144,10 +139,8 @@ export function createRNPlatformAdapter(): PlatformAdapter {
   }
 }
 
-/**
- * Validates that a session's network matches the current FCL network configuration.
- * Returns true if networks match, false if they differ (requiring reconnection).
- */
+// Validates that a session's network matches the current FCL network configuration.
+// Returns true if networks match, false if they differ (requiring reconnection).
 export async function validateSessionNetwork(
   session: SessionTypes.Struct,
   currentNetwork: string

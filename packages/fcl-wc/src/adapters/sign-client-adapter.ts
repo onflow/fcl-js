@@ -9,10 +9,8 @@ import type {
 
 type SignClientInstance = InstanceType<typeof SignClient>
 
-/**
- * Creates a WcClientAdapter that wraps the SignClient for React Native usage.
- * This adapter normalizes the SignClient API to match the WcClientAdapter interface.
- */
+// Creates a WcClientAdapter that wraps the SignClient for React Native usage.
+// This adapter normalizes the SignClient API to match the WcClientAdapter interface.
 export function createSignClientAdapter(
   client: SignClientInstance,
   projectId: string

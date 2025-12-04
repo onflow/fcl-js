@@ -1,67 +1,27 @@
 import * as fclCore from "@onflow/fcl-core"
 import {invariant} from "@onflow/util-invariant"
 import {LEVELS, log} from "@onflow/util-logger"
-export {getSdkError} from "@walletconnect/utils"
-import {makeServicePlugin} from "./service"
 import {CoreTypes} from "@walletconnect/types"
-import {
-  UniversalProvider,
-  UniversalProviderOpts,
-} from "@walletconnect/universal-provider"
+import {UniversalProvider} from "@walletconnect/universal-provider"
+import {makeServicePlugin} from "./service"
 import {PlatformAdapter, WcClientAdapter} from "./types/adapters"
+export {getSdkError} from "@walletconnect/utils"
 
-/**
- * Configuration for the FCL WalletConnect plugin.
- */
 export interface FclWalletConnectConfig {
-  /**
-   * WalletConnect project ID (required)
-   */
   projectId: string
-
-  /**
-   * App metadata for WalletConnect
-   */
   metadata?: CoreTypes.Metadata
-
-  /**
-   * Whether to include base WalletConnect wallets from the registry
-   */
   includeBaseWC?: boolean
-
-  /**
-   * Hook called for session and signing requests
-   */
   wcRequestHook?: any
-
-  /**
-   * Custom modal implementation to override the default WalletConnectModal
-   * Called with (uri, onClose) when pairing is needed
-   */
   pairingModalOverride?: any
-
-  /**
-   * Additional wallet services to include
-   */
   wallets?: any[]
-
-  /**
-   * Whether to disable in-app notifications
-   */
   disableNotifications?: boolean
 
-  /**
-   * Custom platform adapter for cross-platform support.
-   * If not provided, defaults to browser platform adapter.
-   * React Native should provide its own adapter with Linking.openURL, etc.
-   */
+  // Custom platform adapter for cross-platform support, if not provided, defaults to browser platform adapter
+  // React Native should provide its own adapter with Linking.openURL, etc
   platformAdapter?: PlatformAdapter
 
-  /**
-   * Custom client adapter for cross-platform support.
-   * If not provided, defaults to UniversalProvider adapter.
-   * React Native should provide its own adapter wrapping SignClient.
-   */
+  // Custom client adapter for cross-platform support, if not provided, defaults to UniversalProvider adapter
+  // React Native should provide its own adapter wrapping SignClient
   clientAdapter?: WcClientAdapter | Promise<WcClientAdapter>
 }
 
@@ -100,10 +60,6 @@ const initClient = async ({
   }
 }
 
-/**
- * Initialize the FCL WalletConnect plugin lazily.
- * The client is only initialized when first used.
- */
 export const initLazy = (config: FclWalletConnectConfig) => {
   const {FclWcServicePlugin, providerPromise: provPromise} = initHelper(config)
 
@@ -119,9 +75,6 @@ export const initLazy = (config: FclWalletConnectConfig) => {
   }
 }
 
-/**
- * Initialize the FCL WalletConnect plugin and wait for the client to be ready.
- */
 export const init = async (config: FclWalletConnectConfig) => {
   const {FclWcServicePlugin, providerPromise: provPromise} = initLazy(config)
   const client = await provPromise
@@ -194,10 +147,7 @@ const initHelper = (config: FclWalletConnectConfig) => {
   }
 }
 
-/**
- * Returns the UniversalProvider instance used by this plugin if it has been initialized.
- * Note: This will return null if a custom clientAdapter was provided.
- */
+// Returns the SignClient instance used by this plugin if it has been initialized
 export async function getProvider() {
   return providerPromise.then(provider => {
     if (!provider) {

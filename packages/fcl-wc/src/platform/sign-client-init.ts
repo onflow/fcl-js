@@ -4,14 +4,11 @@ import {SignClient} from "@walletconnect/sign-client"
 import * as Linking from "expo-linking"
 
 const DEFAULT_RELAY_URL = "wss://relay.walletconnect.com"
-const DEFAULT_LOGGER = "error" // Use "error" for production, "debug" for development
+const DEFAULT_LOGGER = "error"
 
 let walletConnectInitialized = false
 
-/**
- * Initialize WalletConnect React Native compatibility layer.
- * This must be called before creating the SignClient.
- */
+// Initialize WalletConnect React Native compatibility layer, it must be called before creating the SignClient
 async function initializeWalletConnect() {
   if (!walletConnectInitialized) {
     // Verify crypto polyfill is available
@@ -44,10 +41,7 @@ async function initializeWalletConnect() {
   }
 }
 
-/**
- * Initialize a SignClient instance for React Native.
- * Handles crypto polyfills, compat modules, and metadata with redirect URIs.
- */
+// Initialize a SignClient instance for React Native, it handles crypto polyfills, compat modules, and metadata with redirect URIs
 export async function initializeSignClient(opts: {
   projectId: string
   metadata?: CoreTypes.Metadata
