@@ -1,5 +1,6 @@
 import React, {useState} from "react"
-import {Tab, TabGroup, TabList, TabPanel, TabPanels} from "./internal/Tabs"
+import {Tab, TabGroup, TabList, TabPanels} from "./internal/Tabs"
+import {TabPanel} from "@headlessui/react"
 import {Input} from "./internal/Input"
 import {Button} from "./internal/Button"
 import {
@@ -62,7 +63,7 @@ export const FundContent: React.FC = () => {
           </Tab>
         </TabList>
         <TabPanels>
-          <TabPanel>
+          <TabPanel className="flow-pt-4 focus:flow-outline-none">
             <div className="flow-space-y-4">
               <div className="flow-space-y-2">
                 <label className="flow-text-sm flow-font-medium flow-text-slate-700 dark:flow-text-slate-300">
@@ -90,7 +91,7 @@ export const FundContent: React.FC = () => {
               <Button className="flow-w-full">Continue</Button>
             </div>
           </TabPanel>
-          <TabPanel>
+          <TabPanel className="flow-pt-4 focus:flow-outline-none">
             <div className="flow-space-y-4">
               <div className="flow-flex flow-gap-4">
                 <div className="flow-flex-1 flow-space-y-2">
@@ -135,6 +136,16 @@ export const FundContent: React.FC = () => {
                     )}
                   </Listbox>
                 </div>
+              </div>
+              <div style={{display: "flex", justifyContent: "center", padding: "24px 0"}}>
+                <div
+                  style={{
+                    width: "200px",
+                    height: "200px",
+                    backgroundColor: "#000",
+                    borderRadius: "8px",
+                  }}
+                />
               </div>
             </div>
           </TabPanel>
