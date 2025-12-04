@@ -1,8 +1,10 @@
 import {invariant} from "@onflow/util-invariant"
 import {CoreTypes} from "@walletconnect/types"
 import {SignClient} from "@walletconnect/sign-client"
-import {makeServicePlugin} from "./service"
+import {makeServicePlugin, FclWalletConnectConfig as BaseFclWalletConnectConfig} from "@onflow/fcl-wc"
 import * as Linking from "expo-linking"
+import {createSignClientAdapter} from "./adapters"
+import {createRNPlatformAdapter} from "./adapters"
 
 let walletConnectInitialized = false
 
@@ -38,6 +40,9 @@ async function initializeWalletConnect() {
   }
 }
 
+/**
+ * Configuration for the FCL WalletConnect plugin in React Native.
+ */
 export interface FclWalletConnectConfig {
   projectId: string
   metadata?: CoreTypes.Metadata
@@ -100,16 +105,14 @@ const initClient = async ({
   }
 }
 
+/**
+ * Initialize the FCL WalletConnect plugin lazily for React Native.
+ * Uses the shared fcl-wc logic with React Native-specific adapters.
+ */
 export const initLazy = (config: FclWalletConnectConfig) => {
   // Lazy load the client
-  //  - Initialize the client if it doesn't exist
-  //  - If it does exist, return existing client
-  //  - If existing client fails to initialize, reinitialize
-
   clientPromise = clientPromise
-    .catch(() => {
-      return null
-    })
+    .catch(() => null)
     .then(_client => {
       if (_client) {
         return _client
@@ -124,16 +127,37 @@ export const initLazy = (config: FclWalletConnectConfig) => {
       throw e
     })
 
-  const FclWcServicePlugin = makeServicePlugin(clientPromise, config)
+  // Create client adapter promise that wraps SignClient
+  const clientAdapterPromise = clientPromise.then(client => {
+    if (!client) return null
+    return createSignClientAdapter(client, config.projectId)
+  })
+
+  // Create React Native platform adapter
+  const platformAdapter = createRNPlatformAdapter()
+
+  // Use the shared fcl-wc makeServicePlugin with our adapters
+  const FclWcServicePlugin = makeServicePlugin(clientAdapterPromise as any, {
+    projectId: config.projectId,
+    metadata: config.metadata,
+    wcRequestHook: config.wcRequestHook,
+    disableNotifications: config.disableNotifications,
+    wallets: config.wallets,
+    platformAdapter,
+  })
+
   return {
     FclWcServicePlugin,
     clientPromise,
   }
 }
 
+/**
+ * Initialize the FCL WalletConnect plugin and wait for the client to be ready.
+ */
 export const init = async (config: FclWalletConnectConfig) => {
-  const {FclWcServicePlugin, clientPromise} = initLazy(config)
-  const client = await clientPromise
+  const {FclWcServicePlugin, clientPromise: clientProm} = initLazy(config)
+  const client = await clientProm
 
   return {
     FclWcServicePlugin,
@@ -141,7 +165,9 @@ export const init = async (config: FclWalletConnectConfig) => {
   }
 }
 
-// Returns the SignClient instance used by this plugin if it has been initialized
+/**
+ * Returns the SignClient instance used by this plugin if it has been initialized.
+ */
 export async function getClient() {
   return clientPromise.then(client => {
     if (!client) {

@@ -49,6 +49,7 @@
     "@babel/runtime": "^7.25.7",
     "@onflow/config": "1.6.3",
     "@onflow/fcl-core": "1.22.3",
+    "@onflow/fcl-wc": "1.4.0",
     "@onflow/interaction": "0.0.11",
     "@onflow/rlp": "1.2.4",
     "@onflow/sdk": "1.12.0",

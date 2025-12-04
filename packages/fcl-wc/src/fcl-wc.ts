@@ -8,15 +8,61 @@ import {
   UniversalProvider,
   UniversalProviderOpts,
 } from "@walletconnect/universal-provider"
+import {PlatformAdapter, WcClientAdapter} from "./types/adapters"
 
+/**
+ * Configuration for the FCL WalletConnect plugin.
+ */
 export interface FclWalletConnectConfig {
+  /**
+   * WalletConnect project ID (required)
+   */
   projectId: string
+
+  /**
+   * App metadata for WalletConnect
+   */
   metadata?: CoreTypes.Metadata
+
+  /**
+   * Whether to include base WalletConnect wallets from the registry
+   */
   includeBaseWC?: boolean
+
+  /**
+   * Hook called for session and signing requests
+   */
   wcRequestHook?: any
+
+  /**
+   * Custom modal implementation to override the default WalletConnectModal
+   * Called with (uri, onClose) when pairing is needed
+   */
   pairingModalOverride?: any
+
+  /**
+   * Additional wallet services to include
+   */
   wallets?: any[]
+
+  /**
+   * Whether to disable in-app notifications
+   */
   disableNotifications?: boolean
+
+  /**
+   * Custom platform adapter for cross-platform support.
+   * If not provided, defaults to browser platform adapter.
+   * React Native should provide its own adapter with Linking.openURL, etc.
+   */
+  platformAdapter?: PlatformAdapter
+
+  /**
+   * Custom client adapter for cross-platform support.
+   * If not provided, defaults to UniversalProvider adapter.
+   * React Native should provide its own adapter wrapping SignClient.
+   */
+  clientAdapter?: WcClientAdapter | Promise<WcClientAdapter>
 }
 
 const DEFAULT_RELAY_URL = "wss://relay.walletconnect.com"
@@ -54,23 +100,26 @@ const initClient = async ({
   }
 }
 
-const initUniversalProvider = async (opts: UniversalProviderOpts) => {
-  return UniversalProvider.init({})
-}
-
+/**
+ * Initialize the FCL WalletConnect plugin lazily.
+ * The client is only initialized when first used.
+ */
 export const initLazy = (config: FclWalletConnectConfig) => {
-  const {FclWcServicePlugin, providerPromise} = initHelper(config)
+  const {FclWcServicePlugin, providerPromise: provPromise} = initHelper(config)
   fclCore.discovery.authn.update()
 
   return {
     FclWcServicePlugin,
-    providerPromise,
+    providerPromise: provPromise,
   }
 }
 
+/**
+ * Initialize the FCL WalletConnect plugin and wait for the client to be ready.
+ */
 export const init = async (config: FclWalletConnectConfig) => {
-  const {FclWcServicePlugin, providerPromise} = initLazy(config)
-  const client = await providerPromise
+  const {FclWcServicePlugin, providerPromise: provPromise} = initLazy(config)
+  const client = await provPromise
   fclCore.discovery.authn.update()
 
   return {
@@ -80,6 +129,20 @@ export const init = async (config: FclWalletConnectConfig) => {
 }
 
 const initHelper = (config: FclWalletConnectConfig) => {
+  // If a custom client adapter is provided (e.g., React Native SignClient),
+  // use it directly instead of initializing UniversalProvider
+  if (config.clientAdapter) {
+    const clientAdapterPromise = Promise.resolve(config.clientAdapter)
+
+    const FclWcServicePlugin = makeServicePlugin(clientAdapterPromise, config)
+
+    return {
+      FclWcServicePlugin,
+      providerPromise: Promise.resolve(null),
+    }
+  }
+
+  // Standard web initialization with UniversalProvider
   if (typeof window === "undefined") {
     throw new Error(
       "FCL Wallet Connect Plugin can only be initialized in the browser"
@@ -119,7 +182,10 @@ const initHelper = (config: FclWalletConnectConfig) => {
   }
 }
 
-// Returns the SignClient instance used by this plugin if it has been initialized
+/**
+ * Returns the UniversalProvider instance used by this plugin if it has been initialized.
+ * Note: This will return null if a custom clientAdapter was provided.
+ */
 export async function getProvider() {
   return providerPromise.then(provider => {
     if (!provider) {
