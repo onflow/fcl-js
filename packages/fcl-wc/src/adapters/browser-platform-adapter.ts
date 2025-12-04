@@ -33,8 +33,9 @@ export function createBrowserPlatformAdapter(
   config: BrowserPlatformAdapterConfig = {}
 ): PlatformAdapter {
   // Lazy-loaded WalletConnectModal constructor
-  let WalletConnectModalPromise: Promise<Constructor<WalletConnectModalType>> | null =
-    null
+  let WalletConnectModalPromise: Promise<
+    Constructor<WalletConnectModalType>
+  > | null = null
   let walletConnectModal: WalletConnectModalType | null = null
 
   return {

@@ -26,9 +26,13 @@ let browserPlatformAdapterPromise: Promise<any> | null = null
  * Lazily load the browser platform adapter.
  * This prevents React Native from trying to bundle browser-specific code.
  */
-async function getBrowserPlatformAdapter(config: any): Promise<PlatformAdapter> {
+async function getBrowserPlatformAdapter(
+  config: any
+): Promise<PlatformAdapter> {
   if (!browserPlatformAdapterPromise) {
-    browserPlatformAdapterPromise = import("./adapters/browser-platform-adapter")
+    browserPlatformAdapterPromise = import(
+      "./adapters/browser-platform-adapter"
+    )
   }
   const module = await browserPlatformAdapterPromise
   return module.createBrowserPlatformAdapter({
@@ -119,7 +123,8 @@ const makeExec = (
     user: any
     config: any
   }) => {
-    const {wcRequestHook, disableNotifications: _appDisabledNotifications} = config
+    const {wcRequestHook, disableNotifications: _appDisabledNotifications} =
+      config
 
     const appDisabledNotifications =
       service.params?.disableNotifications ?? _appDisabledNotifications
@@ -146,7 +151,8 @@ const makeExec = (
 
     // Get session using platform-specific session finding if available
     let session: SessionTypes.Struct | null
-    const sessionTopic = service.params?.sessionTopic || service.params?.externalProvider
+    const sessionTopic =
+      service.params?.sessionTopic || service.params?.externalProvider
 
     if (platformAdapter.findValidSession) {
       // React Native uses explicit session finding with validation
@@ -249,7 +255,8 @@ const makeExec = (
 
     // Show notification to the user if not disabled by app developer or wallet
     const walletDisabledNotifications =
-      session?.sessionProperties?.["fclWc.disableNotificationsOnMobile"] === "true"
+      session?.sessionProperties?.["fclWc.disableNotificationsOnMobile"] ===
+      "true"
 
     const notification =
       !appDisabledNotifications &&
@@ -297,7 +304,10 @@ function getWalletName(user: CurrentUser, service: Service): string {
 /**
  * Get wallet icon for notifications
  */
-function getWalletIcon(user: CurrentUser, service: Service): string | undefined {
+function getWalletIcon(
+  user: CurrentUser,
+  service: Service
+): string | undefined {
   const authnService = user?.services?.find((s: any) => s.type === "authn")
   const walletProvider = authnService?.provider || service.provider
   return walletProvider?.icon

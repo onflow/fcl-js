@@ -3,6 +3,8 @@ import {FLOW_METHODS, WC_SERVICE_METHOD} from "./constants"
 import {SessionTypes} from "@walletconnect/types"
 import {Service} from "@onflow/typedefs"
 import {WcClientAdapter} from "./types/adapters"
+import {UniversalProvider} from "@walletconnect/universal-provider"
+import {createUniversalProviderAdapter} from "./adapters/universal-provider-adapter"
 
 /**
  * Configuration for optional methods that wallets may support
@@ -17,11 +19,13 @@ export interface OptionalNamespaceMethods {
  */
 export async function createSessionProposal({
   client,
+  provider,
   existingPairing,
   network,
   optionalMethods,
 }: {
-  client: WcClientAdapter
+  client?: WcClientAdapter
+  provider?: InstanceType<typeof UniversalProvider>
   existingPairing?: string
   network?: string
   optionalMethods?: OptionalNamespaceMethods
@@ -30,6 +34,13 @@ export async function createSessionProposal({
   approval: () => Promise<SessionTypes.Struct>
   cleanup?: () => void
 }> {
+  // Support legacy 'provider' parameter for backward compatibility
+  const _client =
+    client ?? (provider ? createUniversalProviderAdapter(provider) : null)
+  if (!_client) {
+    throw new Error("Either 'client' or 'provider' must be provided")
+  }
+
   const _network = network || (await fclCore.getChainId())
 
   const requiredNamespaces = {
@@ -56,7 +67,7 @@ export async function createSessionProposal({
       }
     : undefined
 
-  const result = await client.connect({
+  const result = await _client.connect({
     pairingTopic: existingPairing,
     requiredNamespaces,
     optionalNamespaces,
@@ -75,7 +86,8 @@ export interface RequestOptions {
   method: string
   body: any
   session: SessionTypes.Struct
-  client: WcClientAdapter
+  client?: WcClientAdapter
+  provider?: InstanceType<typeof UniversalProvider>
   abortSignal?: AbortSignal
   /**
    * Whether to disable notifications for services returned from the wallet
@@ -104,12 +116,20 @@ export async function request({
   body,
   session,
   client,
+  provider,
   abortSignal,
   disableNotifications,
   isExternal,
   sessionTopic,
   serviceUid,
 }: RequestOptions): Promise<any> {
+  // Support legacy 'provider' parameter for backward compatibility
+  const _client =
+    client ?? (provider ? createUniversalProviderAdapter(provider) : null)
+  if (!_client) {
+    throw new Error("Either 'client' or 'provider' must be provided")
+  }
+
   const [chainId, addr, address] = makeSessionData(session)
   const data = JSON.stringify({...body, addr, address})
 
@@ -128,7 +148,7 @@ export async function request({
 
   try {
     const result: any = await Promise.race([
-      client.request({
+      _client.request({
         topic: session.topic,
         chainId,
         request: {
@@ -173,8 +193,14 @@ function processRequestResult(
     serviceUid?: string
   }
 ): any {
-  const {method, session, disableNotifications, isExternal, sessionTopic, serviceUid} =
-    options
+  const {
+    method,
+    session,
+    disableNotifications,
+    isExternal,
+    sessionTopic,
+    serviceUid,
+  } = options
 
   switch (result.status) {
     case "APPROVED":
@@ -215,7 +241,9 @@ function processRequestResult(
             ? {proposer: addSessionInfo(result.data.proposer)}
             : {}),
           payer: [...(result.data?.payer?.map(addSessionInfo) ?? [])],
-          authorization: [...(result.data?.authorization?.map(addSessionInfo) ?? [])],
+          authorization: [
+            ...(result.data?.authorization?.map(addSessionInfo) ?? []),
+          ],
         }
       }
 

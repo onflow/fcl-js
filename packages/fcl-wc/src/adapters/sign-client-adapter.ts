@@ -54,7 +54,10 @@ export function createSignClientAdapter(
       // No-op for SignClient - URI comes from connect() return value
     },
 
-    removeListener(_event: "display_uri", _handler: (uri: string) => void): void {
+    removeListener(
+      _event: "display_uri",
+      _handler: (uri: string) => void
+    ): void {
       // No-op for SignClient
     },
 

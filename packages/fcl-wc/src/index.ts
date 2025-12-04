@@ -3,7 +3,12 @@ export {init, initLazy, getProvider} from "./fcl-wc"
 export type {FclWalletConnectConfig} from "./fcl-wc"
 export {createSessionProposal, request, makeSessionData} from "./session"
 export {makeServicePlugin} from "./service"
-export {FLOW_METHODS, SERVICE_PLUGIN_NAME, WC_SERVICE_METHOD, REQUEST_TYPES} from "./constants"
+export {
+  FLOW_METHODS,
+  SERVICE_PLUGIN_NAME,
+  WC_SERVICE_METHOD,
+  REQUEST_TYPES,
+} from "./constants"
 
 // Adapter types for cross-platform support
 export type {

@@ -113,7 +113,17 @@ module.exports = function getInputOptions(package, build) {
             "**/*.cjs",
             "**/*.mjs",
           ],
+          exclude: ["**/node_modules/**"],
           useTsconfigDeclarationDir: true,
+          tsconfigOverride: {
+            compilerOptions: {
+              // Only skip lib checks for fcl-react-native to avoid preact errors
+              // Other packages maintain full type checking
+              ...(package.name === "@onflow/fcl-react-native"
+                ? {skipLibCheck: true}
+                : {}),
+            },
+          },
         }),
       replace({
         preventAssignment: true,
