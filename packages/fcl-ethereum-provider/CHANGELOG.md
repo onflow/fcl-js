@@ -1,5 +1,13 @@
 # @onflow/fcl-ethereum-provider
 
+## 1.0.0
+
+### Patch Changes
+
+- Updated dependencies [[`afab3d34cf05b000a80eaed217ef8ec772ecc32d`](https://github.com/onflow/fcl-js/commit/afab3d34cf05b000a80eaed217ef8ec772ecc32d)]:
+  - @onflow/fcl@1.21.0
+  - @onflow/fcl-wc@7.0.0
+
 ## 0.0.13
 
 ### Patch Changes

@@ -1,5 +1,16 @@
 # @onflow/fcl
 
+## 1.23.0
+
+### Minor Changes
+
+- [#2704](https://github.com/onflow/fcl-js/pull/2704) [`afab3d34cf05b000a80eaed217ef8ec772ecc32d`](https://github.com/onflow/fcl-js/commit/afab3d34cf05b000a80eaed217ef8ec772ecc32d) Thanks [@mfbz](https://github.com/mfbz)! - Improved fcl-react-native WalletConnect implementation with full fcl specs support, automatic redirect URI detection, session validation and full feature parity with fcl.
+
+### Patch Changes
+
+- Updated dependencies [[`afab3d34cf05b000a80eaed217ef8ec772ecc32d`](https://github.com/onflow/fcl-js/commit/afab3d34cf05b000a80eaed217ef8ec772ecc32d)]:
+  - @onflow/sdk@1.13.0
+
 ## 1.22.3
 
 ### Patch Changes
