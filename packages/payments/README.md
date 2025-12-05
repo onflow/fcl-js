@@ -31,15 +31,16 @@ const client = createPaymentsClient({
 
 const session = await client.createSession({
   kind: "crypto",
-  destination: "eip155:747:0xRecipient", // CAIP-10 format
+  destination: "eip155:747:0xRecipient", // CAIP-10: Flow EVM address
   currency: "USDC", // Symbol, EVM address, or Cadence vault identifier
   amount: "100.0", // Human-readable decimal format
-  sourceChain: "eip155:1", // CAIP-2: source chain
+  sourceChain: "eip155:1", // CAIP-2: Ethereum mainnet
   sourceCurrency: "USDC",
 })
 
-// session.instructions contains provider-specific funding instructions
-console.log(session.instructions.address) // e.g., deposit address
+// session.instructions.address contains a unique deposit address
+// User sends USDC on Ethereum to this address, Relay bridges it to Flow EVM
+console.log(session.instructions.address)
 ```
 
 ## Core Concepts
