@@ -62,7 +62,6 @@ export type FlowNetwork = "local" | "testnet" | "mainnet"
 
 /**
  * Flow EVM chain IDs mapped from Flow network names
- * Note: getChainId() returns "mainnet", "testnet", "local" (not "flow-*")
  */
 export const FLOW_EVM_CHAIN_IDS: Record<FlowNetwork, number> = {
   mainnet: 747,
