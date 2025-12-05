@@ -139,6 +139,9 @@ export const FundContent: React.FC = () => {
                 </div>
               </div>
               <QRCode />
+              <div className="flow-text-center flow-text-slate-500 dark:flow-text-slate-400">
+                TBD
+              </div>
             </div>
           </TabPanel>
         </TabPanels>
