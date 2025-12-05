@@ -1,3 +1,5 @@
+import type {createFlowClientCore} from "@onflow/fcl-core"
+
 /**
  * Base intent for funding a Flow account
  */
@@ -143,3 +145,11 @@ export interface FundingProvider {
    */
   startSession(intent: FundingIntent): Promise<FundingSession>
 }
+
+/**
+ * Factory function that creates a FundingProvider
+ * Used for dependency injection of Flow client from PaymentsClient
+ */
+export type FundingProviderFactory = (params: {
+  flowClient: ReturnType<typeof createFlowClientCore>
+}) => FundingProvider

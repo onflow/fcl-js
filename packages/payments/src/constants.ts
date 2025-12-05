@@ -57,3 +57,14 @@ export const ADDRESS_PATTERN = {
   /** Cadence vault identifier format: A.{address}.{contract}.Vault */
   CADENCE_VAULT: /^A\.[a-fA-F0-9]+\.[A-Za-z0-9_]+\.Vault$/,
 } as const
+
+export type FlowNetwork = "local" | "testnet" | "mainnet"
+
+/**
+ * Flow EVM chain IDs mapped from Flow network names
+ */
+export const FLOW_EVM_CHAIN_IDS: Record<FlowNetwork, number> = {
+  mainnet: 747,
+  testnet: 545,
+  local: 646,
+}
