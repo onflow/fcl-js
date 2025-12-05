@@ -6,7 +6,6 @@
 import type {createFlowClientCore} from "@onflow/fcl-core"
 import {getContracts} from "@onflow/config"
 import flowJSON from "../flow.json"
-import {getFlowNetwork} from "./utils/network"
 import type {FlowNetwork} from "./constants"
 
 import GET_EVM_ADDRESS_SCRIPT from "../cadence/scripts/get-evm-address-from-vault.cdc"
@@ -22,8 +21,8 @@ async function resolveCadence(
   flowClient: ReturnType<typeof createFlowClientCore>,
   cadence: string
 ): Promise<string> {
-  const chainId = await flowClient.getChainId()
-  const network = getFlowNetwork(chainId)
+  const chainId = (await flowClient.getChainId()) as FlowNetwork
+  const network = chainId === "local" ? "emulator" : chainId
 
   const contracts = getContracts(flowJSON, network)
   return cadence.replace(/import\s+"(\w+)"/g, (match, name) =>

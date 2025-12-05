@@ -8,7 +8,7 @@ import {
 
 describe("createPaymentsClient", () => {
   const mockFlowClient = {
-    getChainId: jest.fn().mockResolvedValue("flow-mainnet"),
+    getChainId: jest.fn().mockResolvedValue("mainnet"),
     query: jest.fn().mockResolvedValue(null),
   } as any
 

@@ -58,13 +58,14 @@ export const ADDRESS_PATTERN = {
   CADENCE_VAULT: /^A\.[a-fA-F0-9]+\.[A-Za-z0-9_]+\.Vault$/,
 } as const
 
-export type FlowNetwork = "emulator" | "testnet" | "mainnet"
+export type FlowNetwork = "local" | "testnet" | "mainnet"
 
 /**
- * Flow EVM chain IDs mapped from normalized Flow network names
+ * Flow EVM chain IDs mapped from Flow network names
+ * Note: getChainId() returns "mainnet", "testnet", "local" (not "flow-*")
  */
 export const FLOW_EVM_CHAIN_IDS: Record<FlowNetwork, number> = {
   mainnet: 747,
   testnet: 545,
-  emulator: 646,
+  local: 646,
 }

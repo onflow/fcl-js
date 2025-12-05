@@ -5,7 +5,7 @@ describe("relayProvider", () => {
   let fetchSpy: jest.SpyInstance
 
   const mockFlowClient = {
-    getChainId: jest.fn().mockResolvedValue("flow-mainnet"),
+    getChainId: jest.fn().mockResolvedValue("mainnet"),
   } as any
 
   beforeEach(() => {
