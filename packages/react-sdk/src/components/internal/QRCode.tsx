@@ -21,14 +21,13 @@ export const QRCode: React.FC<QRCodeProps> = ({value, size = 200}) => {
 
     // Check if the module is part of the finder pattern
     const isFindingPattern = (x: number, y: number) =>
-      (x < 8 && (y < 8 || y >= length - 8)) ||
-      (x >= length - 8 && y < 8)
+      (x < 8 && (y < 8 || y >= length - 8)) || (x >= length - 8 && y < 8)
 
     for (let i = 0; i < length; i++) {
       modules.push(
         [...modules1D.slice(i * length, (i + 1) * length)].map((bit, j) => {
           return bit === 1 && !isFindingPattern(i, j)
-        }),
+        })
       )
     }
 
@@ -49,9 +48,8 @@ export const QRCode: React.FC<QRCodeProps> = ({value, size = 200}) => {
   return (
     <div className="flow-flex flow-flex-col flow-items-center flow-py-6">
       <div
-        className="flow-relative flow-bg-white dark:flow-bg-slate-900
-          flow-rounded-lg flow-p-3 flow-border flow-border-slate-200
-          dark:flow-border-slate-700"
+        className="flow-relative flow-bg-white dark:flow-bg-slate-900 flow-rounded-lg flow-p-3
+          flow-border flow-border-slate-200 dark:flow-border-slate-700"
         style={{width: size, height: size}}
       >
         <svg
@@ -71,8 +69,8 @@ export const QRCode: React.FC<QRCodeProps> = ({value, size = 200}) => {
                     height={1}
                     fill="currentColor"
                   />
-                ) : null,
-              ),
+                ) : null
+              )
             )}
 
             {findingPatternPositions.map(([x, y]) => {
