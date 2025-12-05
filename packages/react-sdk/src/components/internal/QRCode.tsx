@@ -5,7 +5,11 @@ export interface QRCodeProps {}
 export const QRCode: React.FC<QRCodeProps> = () => {
   return (
     <div className="flow-flex flow-flex-col flow-items-center flow-py-6">
-      <div className="flow-w-[200px] flow-h-[200px] flow-bg-white dark:flow-bg-slate-900 flow-rounded-lg flow-p-3 flow-border flow-border-slate-200 dark:flow-border-slate-700">
+      <div
+        className="flow-w-[200px] flow-h-[200px] flow-bg-white dark:flow-bg-slate-900
+          flow-rounded-lg flow-p-3 flow-border flow-border-slate-200
+          dark:flow-border-slate-700"
+      >
         <svg viewBox="0 0 100 100" className="flow-w-full flow-h-full">
           {/* Top-left corner marker */}
           <rect x="0" y="0" width="28" height="28" fill="#000" />
