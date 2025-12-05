@@ -105,27 +105,24 @@ export function createPaymentsClient(
         config.flowClient
       )
 
-      const providerErrors: {name?: string; error: any}[] = [];
+      const providerErrors: {id?: string; error: any}[] = []
       for (const provider of config.providers) {
         try {
           return await provider.startSession(processedIntent)
         } catch (err) {
           providerErrors.push({
-            name: provider.name,
+            id: provider.id,
             error: err instanceof Error ? err.message : String(err),
-          });
+          })
           continue
         }
       }
       const errorDetails = providerErrors
-        .map(
-          (e, idx) =>
-            `Provider ${e.name ?? idx}: ${e.error}`
-        )
-        .join("; ");
+        .map((e, idx) => `Provider ${e.id ?? idx}: ${e.error}`)
+        .join("; ")
       throw new Error(
         `Failed to create session: no provider could handle the request. Errors: ${errorDetails}`
-      );
+      )
     },
   }
 }
