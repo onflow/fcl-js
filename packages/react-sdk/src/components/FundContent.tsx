@@ -1,5 +1,6 @@
 import React, {useState} from "react"
-import {Tab, TabGroup, TabList, TabPanel, TabPanels} from "./internal/Tabs"
+import {Tab, TabGroup, TabList, TabPanels} from "./internal/Tabs"
+import {TabPanel} from "@headlessui/react"
 import {Input} from "./internal/Input"
 import {Button} from "./internal/Button"
 import {
@@ -8,6 +9,8 @@ import {
   ListboxOption,
   ListboxOptions,
 } from "./internal/Listbox"
+import {QRCode} from "./internal/QRCode"
+import {Address} from "./internal/Address"
 
 const tokens = [
   {id: 1, name: "USDC"},
@@ -18,6 +21,8 @@ const chains = [
   {id: 1, name: "Flow"},
   {id: 2, name: "Ethereum"},
 ]
+
+const PLACEHOLDER_ADDRESS = "0x1a2b3c4d5e6f7890abcdef1234567890"
 
 export const FundContent: React.FC = () => {
   const [amount, setAmount] = useState("")
@@ -30,14 +35,14 @@ export const FundContent: React.FC = () => {
         className="flow-text-lg flow-font-semibold flow-text-slate-900 dark:flow-text-slate-100
           flow-mb-4"
       >
-        Fund
+        Fund Your Account
       </h2>
       <TabGroup>
         <TabList>
           <Tab>
             {({selected}) => (
               <>
-                Tab 1
+                Use Credit Card
                 {selected && (
                   <div
                     className="flow-absolute flow-bottom-0 flow-left-0 flow-right-0 flow-h-0.5
@@ -50,7 +55,7 @@ export const FundContent: React.FC = () => {
           <Tab>
             {({selected}) => (
               <>
-                Tab 2
+                Transfer Crypto
                 {selected && (
                   <div
                     className="flow-absolute flow-bottom-0 flow-left-0 flow-right-0 flow-h-0.5
@@ -62,7 +67,7 @@ export const FundContent: React.FC = () => {
           </Tab>
         </TabList>
         <TabPanels>
-          <TabPanel>
+          <TabPanel className="flow-pt-4 focus:flow-outline-none">
             <div className="flow-space-y-4">
               <div className="flow-space-y-2">
                 <label className="flow-text-sm flow-font-medium flow-text-slate-700 dark:flow-text-slate-300">
@@ -90,7 +95,7 @@ export const FundContent: React.FC = () => {
               <Button className="flow-w-full">Continue</Button>
             </div>
           </TabPanel>
-          <TabPanel>
+          <TabPanel className="flow-pt-4 focus:flow-outline-none">
             <div className="flow-space-y-4">
               <div className="flow-flex flow-gap-4">
                 <div className="flow-flex-1 flow-space-y-2">
@@ -136,6 +141,8 @@ export const FundContent: React.FC = () => {
                   </Listbox>
                 </div>
               </div>
+              <QRCode />
+              <Address address={PLACEHOLDER_ADDRESS} label="Deposit Address" />
             </div>
           </TabPanel>
         </TabPanels>
