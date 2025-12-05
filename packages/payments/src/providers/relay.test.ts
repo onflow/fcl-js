@@ -4,6 +4,10 @@ import {CryptoFundingIntent} from "../types"
 describe("relayProvider", () => {
   let fetchSpy: jest.SpyInstance
 
+  const mockFlowClient = {
+    getChainId: jest.fn().mockResolvedValue("flow-mainnet"),
+  } as any
+
   beforeEach(() => {
     fetchSpy = jest.spyOn(global, "fetch")
   })
@@ -13,14 +17,16 @@ describe("relayProvider", () => {
   })
 
   it("should create a provider with default config", () => {
-    const provider = relayProvider()
+    const providerFactory = relayProvider()
+    const provider = providerFactory({flowClient: mockFlowClient})
     expect(provider.id).toBe("relay")
     expect(provider.getCapabilities).toBeInstanceOf(Function)
     expect(provider.startSession).toBeInstanceOf(Function)
   })
 
   it("should create a provider with custom apiUrl", () => {
-    const provider = relayProvider({apiUrl: "https://custom.api"})
+    const providerFactory = relayProvider({apiUrl: "https://custom.api"})
+    const provider = providerFactory({flowClient: mockFlowClient})
     expect(provider.id).toBe("relay")
   })
 
@@ -63,7 +69,8 @@ describe("relayProvider", () => {
         json: async () => mockChains,
       })
 
-      const provider = relayProvider()
+      const providerFactory = relayProvider()
+      const provider = providerFactory({flowClient: mockFlowClient})
       const capabilities = await provider.getCapabilities()
 
       expect(capabilities).toHaveLength(1)
@@ -102,7 +109,8 @@ describe("relayProvider", () => {
         json: async () => mockChains,
       })
 
-      const provider = relayProvider()
+      const providerFactory = relayProvider()
+      const provider = providerFactory({flowClient: mockFlowClient})
       const capabilities = await provider.getCapabilities()
 
       const cryptoCap = capabilities[0]
@@ -118,7 +126,8 @@ describe("relayProvider", () => {
         status: 500,
       })
 
-      const provider = relayProvider()
+      const providerFactory = relayProvider()
+      const provider = providerFactory({flowClient: mockFlowClient})
 
       await expect(provider.getCapabilities()).rejects.toThrow(
         "Failed to fetch Relay chains"
@@ -128,7 +137,8 @@ describe("relayProvider", () => {
 
   describe("startSession", () => {
     it("should reject fiat intents", async () => {
-      const provider = relayProvider()
+      const providerFactory = relayProvider()
+      const provider = providerFactory({flowClient: mockFlowClient})
 
       await expect(
         provider.startSession({
@@ -141,7 +151,8 @@ describe("relayProvider", () => {
     })
 
     it("should reject Cadence destinations", async () => {
-      const provider = relayProvider()
+      const providerFactory = relayProvider()
+      const provider = providerFactory({flowClient: mockFlowClient})
       const intent: CryptoFundingIntent = {
         kind: "crypto",
         destination: "eip155:747:0x8c5303eaa26202d6", // Cadence address (16 hex chars)
@@ -195,7 +206,8 @@ describe("relayProvider", () => {
           }),
         })
 
-      const provider = relayProvider()
+      const providerFactory = relayProvider()
+      const provider = providerFactory({flowClient: mockFlowClient})
       const intent: CryptoFundingIntent = {
         kind: "crypto",
         destination: "eip155:8453:0xF0AE622e463fa757Cf72243569E18Be7Df1996cd",
@@ -256,7 +268,8 @@ describe("relayProvider", () => {
           }),
         })
 
-      const provider = relayProvider()
+      const providerFactory = relayProvider()
+      const provider = providerFactory({flowClient: mockFlowClient})
       const intent: CryptoFundingIntent = {
         kind: "crypto",
         destination: "eip155:8453:0xF0AE622e463fa757Cf72243569E18Be7Df1996cd",
@@ -311,7 +324,8 @@ describe("relayProvider", () => {
           }),
         })
 
-      const provider = relayProvider()
+      const providerFactory = relayProvider()
+      const provider = providerFactory({flowClient: mockFlowClient})
       const intent: CryptoFundingIntent = {
         kind: "crypto",
         destination: "eip155:8453:0xF0AE622e463fa757Cf72243569E18Be7Df1996cd",
@@ -328,7 +342,8 @@ describe("relayProvider", () => {
 
   describe("Flow EVM decimals", () => {
     it("should fetch decimals from Relay API for all tokens", async () => {
-      const provider = relayProvider()
+      const providerFactory = relayProvider()
+      const provider = providerFactory({flowClient: mockFlowClient})
 
       // Mock Relay API responses
       fetchSpy.mockImplementation((url: string | Request | URL) => {

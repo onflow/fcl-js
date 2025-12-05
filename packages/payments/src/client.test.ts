@@ -1,9 +1,14 @@
 import {createPaymentsClient} from "./client"
-import {FundingProvider, FundingIntent, FundingSession} from "./types"
+import {
+  FundingProvider,
+  FundingProviderFactory,
+  FundingIntent,
+  FundingSession,
+} from "./types"
 
 describe("createPaymentsClient", () => {
   const mockFlowClient = {
-    getChainId: jest.fn().mockResolvedValue("mainnet"),
+    getChainId: jest.fn().mockResolvedValue("flow-mainnet"),
     query: jest.fn().mockResolvedValue(null),
   } as any
 
@@ -15,7 +20,7 @@ describe("createPaymentsClient", () => {
     }
 
     const client = createPaymentsClient({
-      providers: [mockProvider],
+      providers: [({flowClient}) => mockProvider],
       flowClient: mockFlowClient,
     })
     expect(client.createSession).toBeInstanceOf(Function)
@@ -36,7 +41,7 @@ describe("createPaymentsClient", () => {
     }
 
     const client = createPaymentsClient({
-      providers: [mockProvider],
+      providers: [({flowClient}) => mockProvider],
       flowClient: mockFlowClient,
     })
     const intent: FundingIntent = {
@@ -74,7 +79,10 @@ describe("createPaymentsClient", () => {
     }
 
     const client = createPaymentsClient({
-      providers: [failingProvider, workingProvider],
+      providers: [
+        ({flowClient}) => failingProvider,
+        ({flowClient}) => workingProvider,
+      ],
       flowClient: mockFlowClient,
     })
     const intent: FundingIntent = {
@@ -106,7 +114,7 @@ describe("createPaymentsClient", () => {
     }
 
     const client = createPaymentsClient({
-      providers: [provider1, provider2],
+      providers: [() => provider1, () => provider2],
       flowClient: mockFlowClient,
     })
     const intent: FundingIntent = {
@@ -169,7 +177,7 @@ describe("createPaymentsClient", () => {
       }
 
       const client = createPaymentsClient({
-        providers: [provider1, provider2],
+        providers: [({flowClient}) => provider1, ({flowClient}) => provider2],
         flowClient: mockFlowClient,
       })
       const intent: FundingIntent = {
@@ -202,7 +210,7 @@ describe("createPaymentsClient", () => {
       }
 
       const client = createPaymentsClient({
-        providers: [fiatProvider],
+        providers: [({flowClient}) => fiatProvider],
         flowClient: mockFlowClient,
       })
       const intent: FundingIntent = {
@@ -246,7 +254,7 @@ describe("createPaymentsClient", () => {
       }
 
       const client = createPaymentsClient({
-        providers: [mockProvider],
+        providers: [() => mockProvider],
         flowClient: mockFlowClient,
       })
       const intent: FundingIntent = {
@@ -280,7 +288,7 @@ describe("createPaymentsClient", () => {
       }
 
       const client = createPaymentsClient({
-        providers: [mockProvider],
+        providers: [() => mockProvider],
         flowClient: mockFlowClient,
       })
       const intent: FundingIntent = {

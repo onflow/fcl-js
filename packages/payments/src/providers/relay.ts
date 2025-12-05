@@ -1,13 +1,16 @@
 import type {
   FundingProvider,
+  FundingProviderFactory,
   FundingIntent,
   FundingSession,
   CryptoFundingIntent,
   CryptoFundingSession,
   ProviderCapability,
 } from "../types"
+import type {createFlowClientCore} from "@onflow/fcl-core"
 import {parseCAIP2, parseCAIP10} from "../utils/caip"
 import {isEvmAddress, isCadenceAddress} from "../utils/address"
+import {getFlowEvmChainId} from "../utils/network"
 
 /**
  * Configuration for the Relay funding provider
@@ -104,32 +107,46 @@ const DEFAULT_RELAY_API_URL = "https://api.relay.link"
 const DEPOSIT_ADDRESS_TRADE_TYPE = "EXACT_INPUT" as const
 
 /**
- * Create a Relay funding provider
+ * Create a Relay funding provider factory
  *
  * Relay is a cross-chain bridging protocol that enables crypto funding
  * via deposit addresses. Users send funds on one chain, and Relay automatically
  * bridges them to the destination chain.
  *
  * @param config - Optional configuration for the Relay provider
- * @returns A funding provider instance
+ * @returns A funding provider factory that will be initialized by the payments client
  *
  * @example
  * ```typescript
+ * import {createPaymentsClient} from "@onflow/payments"
  * import {relayProvider} from "@onflow/payments/providers"
+ * import {createFlowClientCore} from "@onflow/fcl-core"
  *
- * // Basic usage (custom API URL optional)
- * const provider = relayProvider()
- * const provider = relayProvider({ apiUrl: "https://custom-relay.api" })
+ * const flowClient = createFlowClientCore({ ... })
+ *
+ * const client = createPaymentsClient({
+ *   providers: [relayProvider()], // flowClient injected automatically
+ *   flowClient,
+ * })
  * ```
  */
-export function relayProvider(config: RelayConfig = {}): FundingProvider {
+export function relayProvider(
+  config: RelayConfig = {}
+): FundingProviderFactory {
   const apiUrl = config.apiUrl || DEFAULT_RELAY_API_URL
 
-  return {
+  return ({
+    flowClient,
+  }: {
+    flowClient: ReturnType<typeof createFlowClientCore>
+  }): FundingProvider => ({
     id: "relay",
 
     async getCapabilities(): Promise<ProviderCapability[]> {
       try {
+        // Derive Flow EVM chain ID from the flow client
+        const flowEvmChainId = await getFlowEvmChainId(flowClient)
+
         // Fetch supported chains from Relay
         const chains = await getRelayChains(apiUrl)
 
@@ -149,7 +166,7 @@ export function relayProvider(config: RelayConfig = {}): FundingProvider {
         const flowCurrencies = new Set<string>()
 
         chains.forEach(chain => {
-          const isFlowEVM = chain.id === 747
+          const isFlowEVM = chain.id === flowEvmChainId
 
           if (isFlowEVM) {
             // Add ERC20 currencies from Flow
@@ -281,7 +298,7 @@ export function relayProvider(config: RelayConfig = {}): FundingProvider {
 
       return session
     },
-  }
+  })
 }
 
 function toRelayChainId(namespace: string, chainId: string): string {
