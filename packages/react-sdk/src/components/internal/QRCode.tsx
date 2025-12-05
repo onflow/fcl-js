@@ -1,14 +1,10 @@
 import React from "react"
 
-export interface QRCodeProps {
-  label?: string
-}
+export interface QRCodeProps {}
 
-export const QRCode: React.FC<QRCodeProps> = ({
-  label = "Scan to send",
-}) => {
+export const QRCode: React.FC<QRCodeProps> = () => {
   return (
-    <div className="flow-flex flow-flex-col flow-items-center flow-py-6 flow-gap-3">
+    <div className="flow-flex flow-flex-col flow-items-center flow-py-6">
       <div className="flow-w-[200px] flow-h-[200px] flow-bg-white dark:flow-bg-slate-900 flow-rounded-lg flow-p-3 flow-border flow-border-slate-200 dark:flow-border-slate-700">
         <svg viewBox="0 0 100 100" className="flow-w-full flow-h-full">
           {/* Top-left corner marker */}
@@ -107,9 +103,6 @@ export const QRCode: React.FC<QRCodeProps> = ({
           <rect x="84" y="92" width="4" height="4" fill="#000" />
         </svg>
       </div>
-      <span className="flow-text-sm flow-font-medium flow-text-slate-500 dark:flow-text-slate-400">
-        {label}
-      </span>
     </div>
   )
 }

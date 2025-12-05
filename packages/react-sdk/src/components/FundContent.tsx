@@ -10,6 +10,7 @@ import {
   ListboxOptions,
 } from "./internal/Listbox"
 import {QRCode} from "./internal/QRCode"
+import {Address} from "./internal/Address"
 
 const tokens = [
   {id: 1, name: "USDC"},
@@ -20,6 +21,8 @@ const chains = [
   {id: 1, name: "Flow"},
   {id: 2, name: "Ethereum"},
 ]
+
+const PLACEHOLDER_ADDRESS = "0x1a2b3c4d5e6f7890abcdef1234567890"
 
 export const FundContent: React.FC = () => {
   const [amount, setAmount] = useState("")
@@ -139,9 +142,7 @@ export const FundContent: React.FC = () => {
                 </div>
               </div>
               <QRCode />
-              <div className="flow-text-center flow-text-slate-500 dark:flow-text-slate-400">
-                TBD
-              </div>
+              <Address address={PLACEHOLDER_ADDRESS} label="Deposit Address" />
             </div>
           </TabPanel>
         </TabPanels>
