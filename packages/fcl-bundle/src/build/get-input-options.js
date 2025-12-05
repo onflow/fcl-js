@@ -12,9 +12,11 @@ const terser = require("@rollup/plugin-terser")
 const typescript = require("rollup-plugin-typescript2")
 const postcss = require("rollup-plugin-postcss")
 const imagePlugin = require("@rollup/plugin-image")
+const json = require("@rollup/plugin-json")
 const {DEFAULT_EXTENSIONS} = require("@babel/core")
 const {getPackageRoot} = require("../util")
 const {preserveDirective} = require("rollup-preserve-directives")
+const cadence = require("../plugins/cadence")
 
 const SUPPRESSED_WARNING_CODES = [
   "MISSING_GLOBAL_NAME",
@@ -68,6 +70,7 @@ module.exports = function getInputOptions(package, build) {
     ".mts",
     ".cts",
     ".svg",
+    ".cdc",
   ])
 
   const postcssConfigPath = path.resolve(getPackageRoot(), "postcss.config.js")
@@ -81,6 +84,8 @@ module.exports = function getInputOptions(package, build) {
     },
     plugins: [
       preserveDirective(),
+      cadence(),
+      json(),
       imagePlugin(),
       nodeResolve({
         browser: true,

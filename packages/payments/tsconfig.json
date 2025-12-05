@@ -1,0 +1,9 @@
+{
+  "extends": "../../tsconfig",
+  "include": ["src/**/*", "src/**/*.d.ts", "cadence/**/*", "flow.json"],
+  "compilerOptions": {
+    "declarationDir": "types",
+    "rootDir": ".",
+    "resolveJsonModule": true
+  }
+}
