@@ -279,7 +279,6 @@ export function relayProvider(
         amount: amountInBaseUnits,
         tradeType: DEPOSIT_ADDRESS_TRADE_TYPE, // Deposit addresses only work with EXACT_INPUT
         useDepositAddress: true,
-        refundTo: destination.address, // Refund to destination address if something fails
         usePermit: false,
         useExternalLiquidity: false,
       })
