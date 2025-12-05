@@ -36,6 +36,15 @@ const TIMEOUT = "TIMEOUT"
  * @typedef {import("@onflow/typedefs").TransactionStatus} TransactionStatus
  */
 
+/**
+ * Check if a transaction ID is a scheduled transaction ID (UInt64 format)
+ * Scheduled transaction IDs are numeric strings that are NOT 64 characters
+ * (to avoid collision with all-digit transaction hashes)
+ */
+function isScheduledTransactionId(txId) {
+  return /^\d+$/.test(txId) && txId.length !== 64
+}
+
 const fetchTxStatus = async transactionId => {
   return fclSend([getTransactionStatus(transactionId)]).then(decode)
 }
@@ -118,9 +127,17 @@ export function transaction(
   transactionId,
   opts = {txNotFoundTimeout: 12500, pollRate: 1000}
 ) {
-  // Validate transactionId as 64 byte hash
-  if (!TXID_REGEXP.test(scoped(transactionId)))
+  // Validate transactionId format
+  // Must be either:
+  // 1. A 64-character hex hash (normal transaction), OR
+  // 2. A numeric string that's not 64 chars (scheduled transaction UInt64)
+  const scopedId = scoped(transactionId)
+  const isValidHash = TXID_REGEXP.test(scopedId)
+  const isScheduledTxId = isScheduledTransactionId(scopedId)
+
+  if (!isValidHash && !isScheduledTxId) {
     throw new Error("Invalid transactionId")
+  }
 
   function snapshot() {
     return snapshoter(transactionId, spawnTransaction(opts))
