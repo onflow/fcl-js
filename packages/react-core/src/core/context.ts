@@ -1,5 +1,6 @@
 import {createContext} from "react"
 import type {FlowClientCore} from "@onflow/fcl-core"
+import type {FlowNetwork} from "./types"
 
 // FlowConfig based on @onflow/fcl-core's FlowClientCoreConfig
 // This matches the config structure used by both @onflow/fcl and @onflow/fcl-react-native
@@ -7,7 +8,7 @@ import type {FlowClientCore} from "@onflow/fcl-core"
 export type FlowConfig = {
   // Core network configuration
   accessNodeUrl?: string
-  flowNetwork?: string
+  flowNetwork?: FlowNetwork
   flowJson?: Record<string, any>
 
   // Wallet/Discovery configuration

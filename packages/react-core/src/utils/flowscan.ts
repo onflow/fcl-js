@@ -1,5 +1,5 @@
-// FlowNetwork type - represents the Flow network environments
-export type FlowNetwork = "mainnet" | "testnet" | "emulator"
+import type {FlowNetwork} from "../core/types"
+
 type ExplorerNetwork = Extract<FlowNetwork, "mainnet" | "testnet">
 
 export const BLOCK_EXPLORER_URL: Record<ExplorerNetwork, string> = {
