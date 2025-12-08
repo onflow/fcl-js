@@ -21,14 +21,12 @@ export const useServiceDiscovery = ({fcl}) => {
     const endpoint = await fcl.config.get("discovery.authn.endpoint")
 
     try {
-      // Get supported strategies from service registry (should be WC/RPC for React Native)
       const serviceRegistry = getServiceRegistry()
-      const supportedStrategies = serviceRegistry.getStrategies()
 
       const requestBody = {
         fclVersion: VERSION,
         userAgent: "ReactNative",
-        supportedStrategies,
+        supportedStrategies: ["WC/RPC", "DEEPLINK/RPC"],
       }
 
       // Fetch wallets from Discovery API
@@ -44,23 +42,17 @@ export const useServiceDiscovery = ({fcl}) => {
         throw new Error(`HTTP ${response.status}: ${response.statusText}`)
       }
 
+      // Get discovery services from response
       const discoveryServices = await response.json()
-
-      // Filter to only mobile-compatible strategies (WC/RPC, DEEPLINK/RPC)
-      const mobileStrategies = ["WC/RPC", "DEEPLINK/RPC"]
-      const mobileServices = discoveryServices.filter(s =>
-        mobileStrategies.includes(s.method)
-      )
-
       // Get plugin services to merge with Discovery services
       const pluginServices = serviceRegistry.getServices()
 
-      // Merge mobile Discovery services + plugin services, deduplicate by UID
-      const mergedServices = [...mobileServices]
+      // Merge discovery services + plugin services, deduplicate by UID
+      const mergedServices = [...discoveryServices]
       const discoveryUids = new Set(
-        mobileServices.map(s => s.uid).filter(Boolean)
+        discoveryServices.map(s => s.uid).filter(Boolean)
       )
-      // Add plugin services that aren't already in Discovery
+      // Add plugin services that aren't already in discovery services
       for (const pluginService of pluginServices) {
         if (!discoveryUids.has(pluginService.uid)) {
           mergedServices.push(pluginService)
