@@ -3,6 +3,7 @@
 **Internal private package** - Platform-agnostic React hooks and utilities for Flow blockchain.
 
 This package provides shared functionality for:
+
 - `@onflow/react-sdk` (Web)
 - `@onflow/react-native-sdk` (React Native)
 

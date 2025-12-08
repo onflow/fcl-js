@@ -1,4 +1,3 @@
-// Export everything from all hooks (functions, types, interfaces, enums)
 export * from "./useFlowCurrentUser"
 export * from "./useFlowAuthz"
 export * from "./useFlowAccount"

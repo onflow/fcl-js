@@ -1,1 +1,0 @@
-export default "mocked-file"
