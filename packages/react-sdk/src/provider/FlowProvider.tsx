@@ -1,6 +1,5 @@
 import React, {useState, PropsWithChildren, useMemo, useEffect} from "react"
-import {FlowConfig, FlowConfigContext} from "../core/context"
-import {FlowClientContext} from "@onflow/react-core"
+import {FlowConfig, FlowConfigContext, FlowClientContext} from "@onflow/react-core"
 import {DefaultOptions, QueryClient} from "@tanstack/react-query"
 import {FlowQueryClientProvider} from "./FlowQueryClient"
 import {createFlowClient} from "@onflow/fcl"
