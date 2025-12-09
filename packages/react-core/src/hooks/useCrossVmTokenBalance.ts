@@ -156,7 +156,7 @@ export function useCrossVmTokenBalance(params: UseCrossVmTokenBalanceArgs) {
     cadence: chainIdResult.data
       ? getCrossVmTokenBalance(chainIdResult.data as "testnet" | "mainnet")
       : "",
-    args: (arg: any, t: any) => [
+    args: (arg, t) => [
       params.owner
         ? arg(params.owner, t.Address)
         : arg(null, t.Optional(t.Address)),

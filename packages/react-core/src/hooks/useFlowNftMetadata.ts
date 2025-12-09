@@ -171,7 +171,7 @@ export function useFlowNftMetadata(params: UseFlowNftMetadataArgs) {
     cadence: chainIdResult.data
       ? getNftCadence(chainIdResult.data as "testnet" | "mainnet" | "local")
       : "",
-    args: (arg: any, t: any) => [
+    args: (arg, t) => [
       arg(params.accountAddress || "", t.Address),
       arg(params.publicPathIdentifier || "", t.String),
       arg(String(params.tokenId || ""), t.UInt64),

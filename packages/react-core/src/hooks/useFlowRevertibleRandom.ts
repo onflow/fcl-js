@@ -92,7 +92,7 @@ export function useFlowRevertibleRandom({
           return results
       }
     `,
-    args: (arg: any, t: any) => [
+    args: (arg, t) => [
       arg(min, t.UInt256),
       arg(max, t.UInt256),
       arg(count, t.Int),

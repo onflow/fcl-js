@@ -100,7 +100,7 @@ export function useFlowScheduledTransactionCancel({
 
         const resultTxId = await fcl.mutate({
           cadence: cadenceTx,
-          args: (arg: any, t: any) => [arg(txId, t.UInt64)],
+          args: (arg, t) => [arg(txId, t.UInt64)],
         })
         return resultTxId
       },

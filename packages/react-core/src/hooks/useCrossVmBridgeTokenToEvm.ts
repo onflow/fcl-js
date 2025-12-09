@@ -239,7 +239,7 @@ export function useCrossVmBridgeTokenToEvm({
 
         const txId = await fcl.mutate({
           cadence: cadenceTx,
-          args: (arg: any, t: any) => [
+          args: (arg, t) => [
             arg(vaultIdentifier, t.String),
             arg(amount, t.UFix64),
             arg(

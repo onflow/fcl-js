@@ -248,7 +248,7 @@ export function useCrossVmBridgeNftToEvm({
 
         const txId = await fcl.mutate({
           cadence: cadenceTx,
-          args: (arg: any, t: any) => [
+          args: (arg, t) => [
             arg(nftIdentifier, t.String),
             arg(nftIds, t.Array(t.UInt64)),
             arg(
