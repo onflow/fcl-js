@@ -1,5 +1,11 @@
 # @onflow/fcl-react-native
 
+## 1.16.0
+
+### Minor Changes
+
+- [#2739](https://github.com/onflow/fcl-js/pull/2739) [`82b75ceada5664b4bc42a1f9664f6a60f439e8c4`](https://github.com/onflow/fcl-js/commit/82b75ceada5664b4bc42a1f9664f6a60f439e8c4) Thanks [@mfbz](https://github.com/mfbz)! - Fixed metro interop issues with peer deps
+
 ## 1.15.0
 
 ### Minor Changes
