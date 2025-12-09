@@ -1,13 +1,9 @@
 import type {TransactionStatus} from "@onflow/typedefs"
 import type {FlowClientCore} from "@onflow/fcl-core"
+import {sansPrefix} from "@onflow/fcl-core"
 import {CONTRACT_ADDRESSES} from "../constants"
 import {useFlowChainId} from "./useFlowChainId"
 import {useFlowTransactionStatus} from "./useFlowTransactionStatus"
-
-// Helper function to remove "0x" prefix
-function sansPrefix(address: string): string {
-  return address.replace(/^0x/, "")
-}
 
 export interface UseCrossVmTransactionStatusArgs {
   /** The Flow transaction ID to monitor */
