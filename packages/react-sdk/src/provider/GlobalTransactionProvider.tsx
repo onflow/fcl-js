@@ -37,13 +37,13 @@ export const GlobalTransactionProvider: React.FC<
 
     // Subscribe to transaction updates
     const unsub = fcl.tx(txId).subscribe(
-      (txStatus: any) => {
+      txStatus => {
         if (txStatus.status >= TransactionExecutionStatus.EXECUTED) {
           // Transaction has been executed, reset the global transaction ID
           setTxId(null)
         }
       },
-      (error: any) => {
+      error => {
         // Handle subscription errors
         console.error("Transaction status subscription error:", error)
         // Clear the transaction ID to prevent button from staying in processing state
