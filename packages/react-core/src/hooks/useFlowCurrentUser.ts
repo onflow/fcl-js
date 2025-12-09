@@ -1,9 +1,10 @@
 import {useState, useEffect} from "react"
 import type {CurrentUser} from "@onflow/typedefs"
+import type {FlowClientCore} from "@onflow/fcl-core"
 import {useFlowClient} from "./useFlowClient"
 
 interface UseFlowCurrentUserArgs {
-  flowClient?: ReturnType<typeof useFlowClient>
+  flowClient?: FlowClientCore
 }
 
 interface UseFlowCurrentUserResult {

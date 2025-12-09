@@ -1,3 +1,4 @@
+import type {FlowClientCore} from "@onflow/fcl-core"
 import {
   UseMutateAsyncFunction,
   UseMutateFunction,
@@ -12,7 +13,7 @@ import {useFlowQueryClient} from "../provider/FlowQueryClient"
 
 export interface UseFlowScheduledTransactionSetupArgs {
   mutation?: Omit<UseMutationOptions<string, Error, void>, "mutationFn">
-  flowClient?: ReturnType<typeof useFlowClient>
+  flowClient?: FlowClientCore
 }
 
 export interface UseFlowScheduledTransactionSetupResult

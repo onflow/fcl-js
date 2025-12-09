@@ -1,4 +1,5 @@
 import type {Block} from "@onflow/typedefs"
+import type {FlowClientCore} from "@onflow/fcl-core"
 import {useQuery, UseQueryResult, UseQueryOptions} from "@tanstack/react-query"
 import {useFlowQueryClient} from "../provider/FlowQueryClient"
 import {useCallback, useMemo} from "react"
@@ -39,7 +40,7 @@ export interface UseFlowBlockArgs {
   id?: string
   height?: number
   query?: Omit<UseQueryOptions<Block | null, Error>, "queryKey" | "queryFn">
-  flowClient?: ReturnType<typeof useFlowClient>
+  flowClient?: FlowClientCore
 }
 
 /**

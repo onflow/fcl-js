@@ -1,3 +1,4 @@
+import type {FlowClientCore} from "@onflow/fcl-core"
 import {
   UseMutateAsyncFunction,
   UseMutateFunction,
@@ -15,7 +16,7 @@ export interface UseCrossVmBridgeTokenFromEvmArgs {
     UseMutationOptions<string, Error, UseCrossVmBridgeTokenFromEvmMutateArgs>,
     "mutationFn"
   >
-  flowClient?: ReturnType<typeof useFlowClient>
+  flowClient?: FlowClientCore
 }
 
 export interface UseCrossVmBridgeTokenFromEvmMutateArgs {

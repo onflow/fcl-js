@@ -1,8 +1,8 @@
+import type {FlowClientCore} from "@onflow/fcl-core"
 import {UseQueryOptions, UseQueryResult} from "@tanstack/react-query"
 import {parseUnits} from "viem/utils"
 import {CADENCE_UFIX64_PRECISION, CONTRACT_ADDRESSES} from "../constants"
 import {useFlowChainId} from "./useFlowChainId"
-import {useFlowClient} from "./useFlowClient"
 import {useFlowQuery} from "./useFlowQuery"
 
 export enum ScheduledTransactionPriority {
@@ -42,7 +42,7 @@ export interface UseFlowScheduledTransactionListArgs {
     UseQueryOptions<ScheduledTransaction[], Error>,
     "queryKey" | "queryFn"
   >
-  flowClient?: ReturnType<typeof useFlowClient>
+  flowClient?: FlowClientCore
 }
 
 export type UseFlowScheduledTransactionListResult = UseQueryResult<

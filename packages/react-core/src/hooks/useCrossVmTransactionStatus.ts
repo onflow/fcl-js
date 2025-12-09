@@ -3,7 +3,6 @@ import type {FlowClientCore} from "@onflow/fcl-core"
 import {CONTRACT_ADDRESSES} from "../constants"
 import {useFlowChainId} from "./useFlowChainId"
 import {useFlowTransactionStatus} from "./useFlowTransactionStatus"
-import {useFlowClient} from "./useFlowClient"
 
 // Helper function to remove "0x" prefix
 function sansPrefix(address: string): string {

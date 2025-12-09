@@ -1,4 +1,5 @@
 import type {Event} from "@onflow/typedefs"
+import type {FlowClientCore} from "@onflow/fcl-core"
 import {useEffect} from "react"
 import {useFlowClient} from "./useFlowClient"
 
@@ -18,7 +19,7 @@ export interface UseFlowEventsArgs extends EventFilter {
   onEvent: (event: Event) => void
   /** Optional error callback */
   onError?: (error: Error) => void
-  flowClient?: ReturnType<typeof useFlowClient>
+  flowClient?: FlowClientCore
 }
 
 /**

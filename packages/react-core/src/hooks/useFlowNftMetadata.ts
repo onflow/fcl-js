@@ -1,8 +1,8 @@
+import type {FlowClientCore} from "@onflow/fcl-core"
 import {UseQueryOptions, UseQueryResult} from "@tanstack/react-query"
 import {useFlowQuery} from "./useFlowQuery"
 import {CONTRACT_ADDRESSES} from "../constants"
 import {useFlowChainId} from "./useFlowChainId"
-import {useFlowClient} from "./useFlowClient"
 
 export interface NftViewResult {
   name: string
@@ -22,7 +22,7 @@ interface UseFlowNftMetadataArgs {
   tokenId?: string | number
   publicPathIdentifier?: string
   query?: Omit<UseQueryOptions<unknown, Error>, "queryKey" | "queryFn">
-  flowClient?: ReturnType<typeof useFlowClient>
+  flowClient?: FlowClientCore
 }
 
 const getNftCadence = (network: "testnet" | "mainnet" | "local") => `

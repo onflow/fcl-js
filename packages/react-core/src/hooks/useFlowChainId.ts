@@ -1,3 +1,4 @@
+import type {FlowClientCore} from "@onflow/fcl-core"
 import {useQuery, UseQueryOptions, UseQueryResult} from "@tanstack/react-query"
 import {useFlowQueryClient} from "../provider/FlowQueryClient"
 import {useCallback} from "react"
@@ -6,7 +7,7 @@ import {useFlowConfig} from "./useFlowConfig"
 
 interface UseFlowChainIdArgs {
   query?: Omit<UseQueryOptions<string | null, Error>, "queryKey" | "queryFn">
-  flowClient?: ReturnType<typeof useFlowClient>
+  flowClient?: FlowClientCore
 }
 
 /**
