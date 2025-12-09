@@ -9,13 +9,9 @@ import {
 import {useFlowChainId} from "./useFlowChainId"
 import {useFlowQueryClient} from "../provider/FlowQueryClient"
 import {CONTRACT_ADDRESSES, DEFAULT_EVM_GAS_LIMIT} from "../constants"
+import {sansPrefix} from "@onflow/fcl-core"
 import type {FlowClientCore} from "@onflow/fcl-core"
 import {useFlowClient} from "./useFlowClient"
-
-// Helper function to remove "0x" prefix
-function sansPrefix(address: string): string {
-  return address.replace(/^0x/, "")
-}
 
 interface UseCrossVmBatchTransactionMutateArgs {
   calls: EvmBatchCall[]
@@ -164,7 +160,7 @@ export function useCrossVmBatchTransaction({
 
         const txId = await fcl.mutate({
           cadence: cadenceTx,
-          args: (arg: any, t: any) => [
+          args: (arg, t) => [
             arg(
               encodedCalls.map(call => [
                 {key: "to", value: call.to},
