@@ -8,7 +8,7 @@ import {useFlowClient} from "./useFlowClient"
 
 export interface UseFlowQueryRawArgs {
   cadence: string
-  args?: (_arg: typeof fclArg, t: typeof fclT) => unknown[]
+  args?: (arg: typeof fclArg, t: typeof fclT) => unknown[]
   query?: Omit<UseQueryOptions<unknown, Error>, "queryKey" | "queryFn">
   flowClient?: FlowClientCore
 }

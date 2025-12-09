@@ -6,7 +6,7 @@ import type {FlowClientCore} from "@onflow/fcl-core"
 import {useFlowClient} from "./useFlowClient"
 
 export function encodeQueryArgs(
-  args?: (a_arg: typeof arg, _t: typeof t) => unknown[]
+  args?: (_arg: typeof arg, _t: typeof t) => unknown[]
 ): any[] | undefined {
   // Encode the arguments to a JSON-CDC object so they can be deterministically
   // serialized and used as the query key.
