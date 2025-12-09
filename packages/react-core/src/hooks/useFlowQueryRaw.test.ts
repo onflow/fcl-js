@@ -6,6 +6,7 @@ import {
 } from "../__mocks__/TestProvider"
 import {useFlowQueryRaw} from "./useFlowQueryRaw"
 import {createMockFclInstance, MockFclInstance} from "../__mocks__/flow-client"
+import {arg, t} from "@onflow/fcl-core"
 
 describe("useFlowQueryRaw", () => {
   let mockFcl: MockFclInstance
@@ -163,7 +164,7 @@ describe("useFlowQueryRaw", () => {
     const queryMock = jest.mocked(mockFcl.mockFclInstance.queryRaw)
     queryMock.mockResolvedValueOnce(initialResult)
 
-    const argsFunction = (_arg: typeof arg, _t: typeof t) => [arg(7, t.Int)]
+    const argsFunction = (_arg: typeof arg, _t: typeof t) => [_arg(7, _t.Int)]
 
     let hookResult: any
     let hookRerender: any

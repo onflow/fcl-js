@@ -6,6 +6,7 @@ import {
 } from "../__mocks__/TestProvider"
 import {useFlowQuery, encodeQueryArgs} from "./useFlowQuery"
 import {createMockFclInstance, MockFclInstance} from "../__mocks__/flow-client"
+import {arg, t} from "@onflow/fcl-core"
 
 describe("useFlowQuery", () => {
   let mockFcl: MockFclInstance
@@ -134,9 +135,7 @@ describe("useFlowQuery", () => {
     const queryMock = jest.mocked(mockFcl.mockFclInstance.query)
     queryMock.mockResolvedValueOnce(expectedResult)
 
-    const argsFunction = (arg: typeof fcl.arg, t: typeof fcl.t) => [
-      arg(7, t.Int),
-    ]
+    const argsFunction = (_arg: typeof arg, _t: typeof t) => [_arg(7, _t.Int)]
 
     let hookResult: any
 
@@ -165,9 +164,7 @@ describe("useFlowQuery", () => {
     const queryMock = jest.mocked(mockFcl.mockFclInstance.query)
     queryMock.mockResolvedValueOnce(initialResult)
 
-    const argsFunction = (arg: typeof fcl.arg, t: typeof fcl.t) => [
-      arg(7, t.Int),
-    ]
+    const argsFunction = (_arg: typeof arg, _t: typeof t) => [_arg(7, _t.Int)]
 
     let hookResult: any
     let hookRerender: any
@@ -188,7 +185,7 @@ describe("useFlowQuery", () => {
     await act(() => {
       hookRerender({
         cadence: cadenceScript,
-        args: (arg: typeof fcl.arg, t: typeof fcl.t) => [arg(42, t.Int)],
+        args: (_arg: typeof arg, _t: typeof t) => [_arg(42, _t.Int)],
       })
     })
 
@@ -213,36 +210,37 @@ describe("useFlowQuery", () => {
     })
 
     test("encodes single argument correctly", () => {
-      const argsFunction = (arg: typeof fcl.arg, t: typeof fcl.t) => [
-        arg("42", t.Int),
+      const argsFunction = (_arg: typeof arg, _t: typeof t) => [
+        _arg("42", _t.Int),
       ]
 
       const result = encodeQueryArgs(argsFunction)
 
-      // Platform-agnostic implementation uses function.toString() for cache key
-      expect(result).toEqual([argsFunction.toString()])
+      expect(result).toEqual([{type: "Int", value: "42"}])
     })
 
     test("encodes multiple arguments correctly", () => {
-      const argsFunction = (arg: typeof fcl.arg, t: typeof fcl.t) => [
-        arg("42", t.Int),
-        arg("hello", t.String),
-        arg("0x1234567890abcdef", t.Address),
+      const argsFunction = (_arg: typeof arg, _t: typeof t) => [
+        _arg("42", _t.Int),
+        _arg("hello", _t.String),
+        _arg("0x1234567890abcdef", _t.Address),
       ]
 
       const result = encodeQueryArgs(argsFunction)
 
-      // Platform-agnostic implementation uses function.toString() for cache key
-      expect(result).toEqual([argsFunction.toString()])
+      expect(result).toEqual([
+        {type: "Int", value: "42"},
+        {type: "String", value: "hello"},
+        {type: "Address", value: "0x1234567890abcdef"},
+      ])
     })
 
     test("handles empty args array", () => {
-      const argsFunction = (arg: typeof fcl.arg, t: typeof fcl.t) => []
+      const argsFunction = (_arg: typeof arg, _t: typeof t) => []
 
       const result = encodeQueryArgs(argsFunction)
 
-      // Platform-agnostic implementation uses function.toString() for cache key
-      expect(result).toEqual([argsFunction.toString()])
+      expect(result).toEqual([])
     })
   })
 })
