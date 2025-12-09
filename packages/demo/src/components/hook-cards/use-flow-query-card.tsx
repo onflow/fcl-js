@@ -7,9 +7,9 @@ import {
 import {useState} from "react"
 import {getContractAddress} from "../../constants"
 import {useDarkMode} from "../flow-provider-wrapper"
-import {CodeEditor} from "../ui/code-editor"
 import {DemoCard} from "../ui/demo-card"
 import {ResultsSection} from "../ui/results-section"
+import {CodeEditor} from "../ui/code-editor"
 
 const IMPLEMENTATION_CODE = `import { useFlowQuery } from "@onflow/react-sdk"
 

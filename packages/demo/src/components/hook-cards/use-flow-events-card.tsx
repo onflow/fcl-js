@@ -1,9 +1,9 @@
-import {useFlowConfig, useFlowEvents} from "@onflow/react-sdk"
+import {useFlowEvents, useFlowConfig} from "@onflow/react-sdk"
+import {useState, useCallback} from "react"
 import type {Event} from "@onflow/typedefs"
-import {useCallback, useState} from "react"
 import {getEventType} from "../../constants"
-import {useDarkMode} from "../flow-provider-wrapper"
 import {DemoCard} from "../ui/demo-card"
+import {useDarkMode} from "../flow-provider-wrapper"
 import {PlusGridIcon} from "../ui/plus-grid"
 import {ResultsSection} from "../ui/results-section"
 
