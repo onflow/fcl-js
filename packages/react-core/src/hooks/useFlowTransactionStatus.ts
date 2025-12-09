@@ -2,6 +2,7 @@ import {useState, useEffect} from "react"
 import type {TransactionStatus} from "@onflow/typedefs"
 import type {FlowClientCore} from "@onflow/fcl-core"
 import {useFlowClient} from "./useFlowClient"
+import {TransactionError} from "@onflow/fcl-core"
 
 export interface UseFlowTransactionStatusArgs {
   /** The transaction ID (256-bit hash as hex string) or scheduled transaction ID (UInt64 as decimal string) to monitor */
@@ -45,7 +46,7 @@ export function useFlowTransactionStatus({
       setTransactionStatus(updatedStatus)
 
       if (updatedStatus.errorMessage) {
-        setError(new Error(updatedStatus.errorMessage))
+        setError(TransactionError.fromErrorMessage(updatedStatus.errorMessage))
       }
     })
 
