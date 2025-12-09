@@ -1,17 +1,16 @@
+import * as fcl from "@onflow/fcl"
 import {
   useFlowConfig,
   useFlowCurrentUser,
   useFlowQueryRaw,
-  type FlowNetwork,
 } from "@onflow/react-sdk"
 import {useState} from "react"
-import * as fcl from "@onflow/fcl"
 import {getContractAddress} from "../../constants"
-import {DemoCard} from "../ui/demo-card"
 import {useDarkMode} from "../flow-provider-wrapper"
+import {CodeEditor} from "../ui/code-editor"
+import {DemoCard} from "../ui/demo-card"
 import {PlusGridIcon} from "../ui/plus-grid"
 import {ResultsSection} from "../ui/results-section"
-import {CodeEditor} from "../ui/code-editor"
 
 const IMPLEMENTATION_CODE = `import { useFlowQueryRaw } from "@onflow/react-sdk"
 
@@ -33,7 +32,7 @@ export function UseFlowQueryRawCard() {
   const {darkMode} = useDarkMode()
   const config = useFlowConfig()
   const {user: currentUser} = useFlowCurrentUser()
-  const currentNetwork = (config.flowNetwork || "emulator") as FlowNetwork
+  const currentNetwork = config.flowNetwork || "emulator"
   const [cadenceScript, setCadenceScript] = useState(
     `access(all) fun main(): String {
     return "Hello from Raw Query!"

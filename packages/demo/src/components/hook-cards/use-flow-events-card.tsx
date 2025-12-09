@@ -1,9 +1,9 @@
-import {useFlowEvents, useFlowConfig, type FlowNetwork} from "@onflow/react-sdk"
-import {useState, useCallback} from "react"
+import {useFlowConfig, useFlowEvents} from "@onflow/react-sdk"
 import type {Event} from "@onflow/typedefs"
+import {useCallback, useState} from "react"
 import {getEventType} from "../../constants"
-import {DemoCard} from "../ui/demo-card"
 import {useDarkMode} from "../flow-provider-wrapper"
+import {DemoCard} from "../ui/demo-card"
 import {PlusGridIcon} from "../ui/plus-grid"
 import {ResultsSection} from "../ui/results-section"
 
@@ -23,7 +23,7 @@ useFlowEvents({
 export function UseFlowEventsCard() {
   const {darkMode} = useDarkMode()
   const config = useFlowConfig()
-  const currentNetwork = (config.flowNetwork || "emulator") as FlowNetwork
+  const currentNetwork = config.flowNetwork || "emulator"
 
   const [eventTypes, setEventTypes] = useState([
     getEventType("FlowToken", "TokensWithdrawn", currentNetwork),
