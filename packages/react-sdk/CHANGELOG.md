@@ -1,6 +1,6 @@
 # @onflow/react-sdk
 
-## 1.0.0
+## 0.12.2
 
 ### Patch Changes
 
