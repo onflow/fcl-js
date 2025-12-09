@@ -118,7 +118,7 @@ describe("createPaymentsClient", () => {
     }
 
     await expect(client.createSession(intent)).rejects.toThrow(
-      "No provider could create a session"
+      "Failed to create session: no provider could handle the request"
     )
   })
 
@@ -136,7 +136,7 @@ describe("createPaymentsClient", () => {
     }
 
     await expect(client.createSession(intent)).rejects.toThrow(
-      "No provider could create a session"
+      "Failed to create session: no provider could handle the request"
     )
   })
 
