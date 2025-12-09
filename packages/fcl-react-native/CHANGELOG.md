@@ -4,7 +4,7 @@
 
 ### Minor Changes
 
-- [#2734](https://github.com/onflow/fcl-js/pull/2734) [`dab4bd4786099b6aa035e127c0f6235b980ff8c9`](https://github.com/onflow/fcl-js/commit/dab4bd4786099b6aa035e127c0f6235b980ff8c9) Thanks [@mfbz](https://github.com/mfbz)! - Updated fcl-react-native dependencies
+- [#2734](https://github.com/onflow/fcl-js/pull/2734) [`dab4bd4786099b6aa035e127c0f6235b980ff8c9`](https://github.com/onflow/fcl-js/commit/dab4bd4786099b6aa035e127c0f6235b980ff8c9) Thanks [@mfbz](https://github.com/mfbz)! - Updated fcl-react-native dependencies.
 
 ## 1.14.0
 
