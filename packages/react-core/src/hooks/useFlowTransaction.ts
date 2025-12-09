@@ -39,7 +39,7 @@ export function useFlowTransaction({
     return fcl
       .send([getTransaction(txId)])
       .then(fcl.decode) as Promise<Transaction>
-  }, [txId, fcl])
+  }, [txId])
 
   return useQuery<Transaction | null, Error>(
     {
