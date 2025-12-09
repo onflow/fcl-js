@@ -141,7 +141,7 @@ export const FundContent: React.FC = () => {
                   </Listbox>
                 </div>
               </div>
-              <QRCode />
+              <QRCode value={PLACEHOLDER_ADDRESS} />
               <Address address={PLACEHOLDER_ADDRESS} label="Deposit Address" />
             </div>
           </TabPanel>
