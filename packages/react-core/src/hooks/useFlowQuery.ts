@@ -1,23 +1,21 @@
 import {useQuery, UseQueryResult, UseQueryOptions} from "@tanstack/react-query"
 import {useCallback} from "react"
 import {useFlowQueryClient} from "../provider/FlowQueryClient"
+import {arg, t} from "@onflow/fcl-core"
 import type {FlowClientCore} from "@onflow/fcl-core"
 import {useFlowClient} from "./useFlowClient"
 
 export function encodeQueryArgs(
-  args?: (arg: any, t: any) => unknown[]
+  args?: (a_arg: typeof arg, _t: typeof t) => unknown[]
 ): any[] | undefined {
-  // Note: arg and t are passed through from the FlowClient's query method
-  // This function is used only for creating deterministic query keys
-  if (!args) return undefined
-  // We can't encode args without the actual arg/t functions
-  // so we'll use the function string representation as a fallback
-  return [args.toString()]
+  // Encode the arguments to a JSON-CDC object so they can be deterministically
+  // serialized and used as the query key.
+  return args?.(arg, t)?.map((x: any) => x.xform.asArgument(x.value))
 }
 
 export interface UseFlowQueryArgs {
   cadence: string
-  args?: (arg: any, t: any) => unknown[]
+  args?: (_arg: typeof arg, _t: typeof t) => unknown[]
   query?: Omit<UseQueryOptions<unknown, Error>, "queryKey" | "queryFn">
   flowClient?: FlowClientCore
 }

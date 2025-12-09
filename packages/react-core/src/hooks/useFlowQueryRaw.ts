@@ -1,13 +1,14 @@
 import {useQuery, UseQueryResult, UseQueryOptions} from "@tanstack/react-query"
 import {useCallback} from "react"
 import {useFlowQueryClient} from "../provider/FlowQueryClient"
+import {arg as fclArg, t as fclT} from "@onflow/fcl-core"
 import {encodeQueryArgs} from "./useFlowQuery"
 import type {FlowClientCore} from "@onflow/fcl-core"
 import {useFlowClient} from "./useFlowClient"
 
 export interface UseFlowQueryRawArgs {
   cadence: string
-  args?: (arg: any, t: any) => unknown[]
+  args?: (_arg: typeof fclArg, t: typeof fclT) => unknown[]
   query?: Omit<UseQueryOptions<unknown, Error>, "queryKey" | "queryFn">
   flowClient?: FlowClientCore
 }
