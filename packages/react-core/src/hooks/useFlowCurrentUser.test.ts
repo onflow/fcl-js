@@ -1,0 +1,109 @@
+import {renderHook, act} from "@testing-library/react"
+import {useFlowCurrentUser} from "./useFlowCurrentUser"
+// Import directly from the new hook, not from the deprecated one
+import {
+  TestProvider,
+  setMockFlowClient,
+  queryClient,
+} from "../__mocks__/TestProvider"
+import {CurrentUser} from "@onflow/typedefs"
+import {defaultUser, authenticatedUser} from "../__mocks__/user"
+import {createMockFclInstance, MockFclInstance} from "../__mocks__/flow-client"
+
+describe("useFlowCurrentUser", () => {
+  let mockFcl: MockFclInstance
+
+  beforeEach(() => {
+    queryClient.clear()
+    mockFcl = createMockFclInstance()
+    setMockFlowClient(mockFcl.mockFclInstance)
+  })
+
+  afterEach(() => {
+    setMockFlowClient(null)
+    jest.clearAllMocks()
+  })
+
+  test("initializes with the correct default user state", () => {
+    const {result} = renderHook(() => useFlowCurrentUser(), {
+      wrapper: TestProvider,
+    })
+
+    expect(result.current.user).toEqual(defaultUser)
+  })
+
+  test("updates user state when subscription emits a new user", () => {
+    let subscribeCallback: (user: CurrentUser) => void = () => {}
+
+    const subscribeMock = jest.mocked(
+      mockFcl.mockFclInstance.currentUser.subscribe
+    )
+
+    subscribeMock.mockImplementation((callback: any) => {
+      subscribeCallback = callback
+      callback(defaultUser)
+      return () => {}
+    })
+
+    const {result} = renderHook(() => useFlowCurrentUser(), {
+      wrapper: TestProvider,
+    })
+
+    act(() => {
+      subscribeCallback(authenticatedUser)
+    })
+
+    expect(result.current.user).toEqual(authenticatedUser)
+  })
+
+  test("authenticate calls fcl.authenticate and returns the authenticated user", async () => {
+    const authenticateMock = jest.mocked(mockFcl.mockFclInstance.authenticate)
+    authenticateMock.mockResolvedValueOnce(authenticatedUser)
+
+    const {result} = renderHook(() => useFlowCurrentUser(), {
+      wrapper: TestProvider,
+    })
+
+    let returnedUser: CurrentUser | undefined
+    await act(async () => {
+      returnedUser = await result.current.authenticate()
+    })
+
+    expect(mockFcl.mockFclInstance.authenticate).toHaveBeenCalledTimes(1)
+
+    expect(returnedUser).toEqual(authenticatedUser)
+  })
+
+  test("unauthenticate calls fcl.unauthenticate and updates user state", async () => {
+    const {result} = renderHook(() => useFlowCurrentUser(), {
+      wrapper: TestProvider,
+    })
+
+    await act(async () => {
+      result.current.unauthenticate()
+    })
+
+    expect(mockFcl.mockFclInstance.unauthenticate).toHaveBeenCalledTimes(1)
+
+    expect(result.current.user).toEqual(defaultUser)
+  })
+
+  test("unsubscribes from user changes on unmount", () => {
+    const unsubscribeMock = jest.fn()
+
+    const subscribeMock = jest.mocked(
+      mockFcl.mockFclInstance.currentUser.subscribe
+    )
+    subscribeMock.mockImplementation((callback: any) => {
+      return unsubscribeMock
+    })
+
+    const {unmount} = renderHook(() => useFlowCurrentUser(), {
+      wrapper: TestProvider,
+    })
+
+    unmount()
+
+    expect(unsubscribeMock).toHaveBeenCalledTimes(1)
+  })
+})

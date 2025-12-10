@@ -1,8 +1,5 @@
 import React, {useEffect} from "react"
-import {
-  useFlowNftMetadata,
-  type NftViewResult,
-} from "../hooks/useFlowNftMetadata"
+import {useFlowNftMetadata, type NftViewResult} from "@onflow/react-core"
 import {StyleWrapper} from "./internal/StyleWrapper"
 import {ImageIcon} from "../icons/ImageIcon"
 import {ExternalLinkIcon} from "../icons/ExternalLink"

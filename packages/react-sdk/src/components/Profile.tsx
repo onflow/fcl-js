@@ -10,12 +10,12 @@ import {
   TabPanel,
   TabPanels,
 } from "@headlessui/react"
-import {useFlowCurrentUser} from "../hooks"
+import {useFlowCurrentUser} from "@onflow/react-core"
 import {
   useCrossVmTokenBalance,
   UseCrossVmTokenBalanceData,
-} from "../hooks/useCrossVmTokenBalance"
-import {useFlowChainId} from "../hooks/useFlowChainId"
+} from "@onflow/react-core"
+import {useFlowChainId} from "@onflow/react-core"
 import {Button} from "./internal/Button"
 import {StyleWrapper} from "./internal/StyleWrapper"
 import {UserIcon} from "../icons/UserIcon"
@@ -23,8 +23,7 @@ import {CopyIcon} from "../icons/CopyIcon"
 import {LogOutIcon} from "../icons/LogOutIcon"
 import {ExternalLinkIcon} from "../icons/ExternalLink"
 import {ScheduledTransactionList} from "./ScheduledTransactionList"
-import {CONTRACT_ADDRESSES} from "../constants"
-import {getFlowscanAccountUrl} from "../utils/flowscan"
+import {CONTRACT_ADDRESSES, getFlowscanAccountUrl} from "@onflow/react-core"
 import {twMerge} from "tailwind-merge"
 import type {TokenConfig, ConnectModalConfig} from "./Connect"
 
