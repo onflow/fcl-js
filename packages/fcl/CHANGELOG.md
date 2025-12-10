@@ -1,5 +1,14 @@
 # @onflow/fcl
 
+## 1.21.1
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @onflow/fcl-core@1.23.1
+  - @onflow/sdk@1.13.1
+  - @onflow/fcl-wc@6.0.13
+
 ## 1.21.0
 
 ### Minor Changes

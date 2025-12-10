@@ -1,5 +1,13 @@
 # @onflow/fcl-react-native
 
+## 1.16.1
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @onflow/fcl-core@1.23.1
+  - @onflow/sdk@1.13.1
+
 ## 1.16.0
 
 ### Minor Changes
