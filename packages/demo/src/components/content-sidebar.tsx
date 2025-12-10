@@ -31,6 +31,12 @@ const sidebarItems: SidebarItem[] = [
     description: "Standalone profile display",
   },
   {
+    id: "fund",
+    label: "Fund",
+    category: "components",
+    description: "Account funding component",
+  },
+  {
     id: "transactionbutton",
     label: "Transaction Button",
     category: "components",
