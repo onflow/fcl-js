@@ -170,6 +170,145 @@ describe("getContracts", () => {
 
     expect(getContracts(flowJSON, "emulator")).toEqual(emulatorMappings)
   })
+
+  test("it should handle fork networks that inherit from parent network", () => {
+    const flowJSON: FlowJson = {
+      networks: {
+        emulator: "127.0.0.1:3569",
+        mainnet: "access.mainnet.nodes.onflow.org:9000",
+        "mainnet-fork": {
+          host: "127.0.0.1:3569",
+          fork: "mainnet",
+        },
+      },
+      contracts: {
+        FlowToken: {
+          source: "./contracts/FlowToken.cdc",
+          aliases: {
+            emulator: "0x0ae53cb6e3f42a79",
+            mainnet: "0x1654653399040a61",
+          },
+        },
+        FungibleToken: {
+          source: "./contracts/FungibleToken.cdc",
+          aliases: {
+            emulator: "0xee82856bf20e2aa6",
+            mainnet: "0xf233dcee88fe0abe",
+          },
+        },
+      },
+    }
+
+    // Fork network should inherit mainnet aliases
+    const mainnetForkMappings = {
+      FlowToken: "0x1654653399040a61",
+      FungibleToken: "0xf233dcee88fe0abe",
+    }
+
+    expect(getContracts(flowJSON, "mainnet-fork")).toEqual(mainnetForkMappings)
+
+    // Regular mainnet should still work
+    expect(getContracts(flowJSON, "mainnet")).toEqual(mainnetForkMappings)
+  })
+
+  test("it should handle testnet fork networks", () => {
+    const flowJSON: FlowJson = {
+      networks: {
+        testnet: "access.devnet.nodes.onflow.org:9000",
+        "testnet-fork": {
+          host: "127.0.0.1:3569",
+          fork: "testnet",
+        },
+      },
+      dependencies: {
+        USDC: {
+          source: "testnet://a983fecbed621163.USDC",
+          hash: "abc123",
+          aliases: {
+            testnet: "0xa983fecbed621163",
+          },
+        },
+      },
+    }
+
+    const testnetForkMappings = {
+      USDC: "0xa983fecbed621163",
+    }
+
+    expect(getContracts(flowJSON, "testnet-fork")).toEqual(testnetForkMappings)
+  })
+
+  test("it should handle fork networks with explicit deployments", () => {
+    const flowJSON: FlowJson = {
+      networks: {
+        mainnet: "access.mainnet.nodes.onflow.org:9000",
+        "mainnet-fork": {
+          host: "127.0.0.1:3569",
+          fork: "mainnet",
+        },
+      },
+      contracts: {
+        FlowToken: {
+          source: "./contracts/FlowToken.cdc",
+          aliases: {
+            mainnet: "0x1654653399040a61",
+          },
+        },
+      },
+      accounts: {
+        "flow-token-mainnet": {
+          address: "0x1654653399040a61",
+        },
+      },
+      deployments: {
+        "mainnet-fork": {
+          "flow-token-mainnet": ["FlowToken"],
+        },
+      },
+    }
+
+    // Deployments are explicit - uses mainnet-fork deployment (not inherited)
+    const mainnetForkMappings = {
+      FlowToken: "0x1654653399040a61",
+    }
+
+    expect(getContracts(flowJSON, "mainnet-fork")).toEqual(mainnetForkMappings)
+  })
+
+  test("it should use fork-specific aliases over inherited aliases (fallback behavior)", () => {
+    const flowJSON: FlowJson = {
+      networks: {
+        mainnet: "access.mainnet.nodes.onflow.org:9000",
+        "mainnet-fork": {
+          host: "127.0.0.1:3569",
+          fork: "mainnet",
+        },
+      },
+      contracts: {
+        FlowToken: {
+          source: "./contracts/FlowToken.cdc",
+          aliases: {
+            mainnet: "0x1654653399040a61",
+            "mainnet-fork": "0x0000000000000001", // Override for fork!
+          },
+        },
+        FungibleToken: {
+          source: "./contracts/FungibleToken.cdc",
+          aliases: {
+            mainnet: "0xf233dcee88fe0abe",
+            // No mainnet-fork alias - should inherit from mainnet
+          },
+        },
+      },
+    }
+
+    const mainnetForkMappings = {
+      FlowToken: "0x0000000000000001", // Uses fork-specific alias
+      FungibleToken: "0xf233dcee88fe0abe", // Falls back to mainnet alias
+    }
+
+    expect(getContracts(flowJSON, "mainnet-fork")).toEqual(mainnetForkMappings)
+  })
 })
 
 describe("anyHasPrivateKeys", () => {

@@ -1,6 +1,9 @@
-import {Connect, useFlowChainId, type FlowNetwork} from "@onflow/react-sdk"
+import {Connect, useFlowChainId} from "@onflow/react-sdk"
 import {useDarkMode, useNetworkSwitch} from "./flow-provider-wrapper"
 import {useState, useRef, useEffect} from "react"
+
+// Standard networks supported by the demo
+type DemoFlowNetwork = "emulator" | "testnet" | "mainnet"
 
 interface HeaderProps {
   onMobileSidebarToggle?: () => void
@@ -17,7 +20,7 @@ export function Header({
   const networkMenuRef = useRef<HTMLDivElement>(null)
   const {data: chainId, isLoading: isChainIdLoading} = useFlowChainId()
 
-  const getNetworkInfo = (network?: FlowNetwork) => {
+  const getNetworkInfo = (network?: DemoFlowNetwork) => {
     const targetNetwork = network || currentNetwork
     if (isChainIdLoading && !network) return {name: "...", color: "gray"}
 
@@ -36,12 +39,12 @@ export function Header({
   const networkInfo = getNetworkInfo()
   // Only allow switching to emulator if app was started with emulator configuration
   const startedWithEmulator =
-    (import.meta.env.VITE_FLOW_NETWORK as FlowNetwork) === "emulator"
-  const networks: FlowNetwork[] = startedWithEmulator
+    (import.meta.env.VITE_FLOW_NETWORK as DemoFlowNetwork) === "emulator"
+  const networks: DemoFlowNetwork[] = startedWithEmulator
     ? ["mainnet", "testnet", "emulator"]
     : ["mainnet", "testnet"]
 
-  const handleNetworkSwitch = async (network: FlowNetwork) => {
+  const handleNetworkSwitch = async (network: DemoFlowNetwork) => {
     if (network !== currentNetwork && !isNetworkSwitching) {
       setNetworkMenuOpen(false)
       await switchNetwork(network)
