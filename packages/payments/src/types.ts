@@ -1,3 +1,5 @@
+import type {createFlowClientCore} from "@onflow/fcl-core"
+
 /**
  * Base intent for funding a Flow account
  */
@@ -28,8 +30,8 @@ export interface CryptoFundingIntent extends BaseFundingIntent {
  */
 export interface FiatFundingIntent extends BaseFundingIntent {
   kind: "fiat"
-  /** Payment method type (e.g., `"card"`, `"bank_transfer"`) */
-  paymentType: string
+  /** Payment method type (e.g., `"card"`, `"bank_transfer"`) - Optional, provider may allow user to choose */
+  paymentType?: string
 }
 
 /**
@@ -143,3 +145,11 @@ export interface FundingProvider {
    */
   startSession(intent: FundingIntent): Promise<FundingSession>
 }
+
+/**
+ * Factory function that creates a FundingProvider
+ * Used for dependency injection of Flow client from PaymentsClient
+ */
+export type FundingProviderFactory = (params: {
+  flowClient: ReturnType<typeof createFlowClientCore>
+}) => FundingProvider

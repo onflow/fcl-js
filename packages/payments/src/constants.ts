@@ -39,9 +39,9 @@ export type FundingKind = (typeof FUNDING_KIND)[keyof typeof FUNDING_KIND]
  */
 export const CAIP = {
   /** CAIP-2: Blockchain ID Specification (namespace:chainId) */
-  CHAIN_ID_REGEX: /^[a-z]+:\d+$/,
+  CHAIN_ID_REGEX: /^[a-z0-9]+:\d+$/,
   /** CAIP-10: Account ID Specification (namespace:chainId:address) */
-  ACCOUNT_ID_REGEX: /^[a-z]+:\d+:0x[a-fA-F0-9]+$/,
+  ACCOUNT_ID_REGEX: /^[a-z0-9]+:\d+:0x[a-fA-F0-9]+$/,
   /** EIP-155 namespace for Ethereum-compatible chains */
   EIP155_NAMESPACE: "eip155",
 } as const
