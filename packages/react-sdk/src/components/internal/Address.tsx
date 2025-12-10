@@ -1,4 +1,5 @@
 import React, {useState} from "react"
+import {Button} from "./Button"
 
 export interface AddressProps {
   address: string
@@ -45,19 +46,12 @@ export const Address: React.FC<AddressProps> = ({
         >
           {address}
         </span>
-        <button
-          type="button"
+        <Button
           onClick={handleCopy}
-          className={`flow-flex flow-items-center flow-justify-center flow-px-3 flow-py-1.5
-            flow-text-white flow-rounded-md flow-border-none flow-text-xs flow-font-medium
-            flow-cursor-pointer flow-transition-colors flow-whitespace-nowrap ${
-            copied
-                ? "flow-bg-green-600"
-                : "flow-bg-slate-900 hover:flow-bg-slate-800 dark:flow-bg-slate-100 dark:flow-text-slate-900 dark:hover:flow-bg-slate-200"
-            }`}
+          className="flow-px-3 flow-py-1.5 flow-text-xs"
         >
           {copied ? "Copied!" : "Copy"}
-        </button>
+        </Button>
       </div>
     </div>
   )
