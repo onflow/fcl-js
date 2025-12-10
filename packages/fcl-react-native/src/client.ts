@@ -31,9 +31,9 @@ export interface FlowClientConfig
  * Creates a Flow client instance with authentication, transaction, and query capabilities for React Native.
  *
  * @param params Configuration object for the Flow client
- * @returns A promise that resolves to a Flow client object with many methods for interacting with the Flow blockchain
+ * @returns A Flow client object with many methods for interacting with the Flow blockchain
  */
-export async function createFlowClient(params: FlowClientConfig) {
+export function createFlowClient(params: FlowClientConfig) {
   // TODO: Load into the global plugin registry for now. This should be
   // refactored to use a plugin registry bound to the client instance in the future.
   // Auto-load WalletConnect plugin when projectId is provided
