@@ -1,12 +1,10 @@
-type FlowNetwork = "emulator" | "testnet" | "mainnet" | "previewnet"
-
 /**
  * Fork network configuration
  * Allows a custom network to inherit contract aliases from a parent network
  */
 export interface ForkNetworkConfig {
   host: string
-  fork: FlowNetwork
+  fork: string
 }
 
 /**
