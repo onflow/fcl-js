@@ -27,7 +27,7 @@ type EventsDataDto = {
   block_id: string
   block_height: string
   block_timestamp: string
-  events: {
+  events?: {
     type: string
     transaction_id: string
     transaction_index: string
@@ -59,24 +59,28 @@ export const eventsHandler = createSubscriptionHandler<{
 
     return {
       onData(rawData: EventsDataDto) {
-        for (const event of rawData.events) {
-          // Parse the raw data
-          const result: EventsData = {
-            event: {
-              blockId: rawData.block_id,
-              blockHeight: Number(rawData.block_height),
-              blockTimestamp: rawData.block_timestamp,
-              type: event.type,
-              transactionId: event.transaction_id,
-              transactionIndex: Number(event.transaction_index),
-              eventIndex: Number(event.event_index),
-              payload: JSON.parse(
-                Buffer.from(event.payload, "base64").toString()
-              ),
-            },
-          }
+        // The API may send messages without an events field when there are no events in a block
+        // Handle this gracefully by checking if events exists and is an array
+        if (rawData.events && Array.isArray(rawData.events)) {
+          for (const event of rawData.events) {
+            // Parse the raw data
+            const result: EventsData = {
+              event: {
+                blockId: rawData.block_id,
+                blockHeight: Number(rawData.block_height),
+                blockTimestamp: rawData.block_timestamp,
+                type: event.type,
+                transactionId: event.transaction_id,
+                transactionIndex: Number(event.transaction_index),
+                eventIndex: Number(event.event_index),
+                payload: JSON.parse(
+                  Buffer.from(event.payload, "base64").toString()
+                ),
+              },
+            }
 
-          onData(result)
+            onData(result)
+          }
         }
 
         // Update the resume args
@@ -96,7 +100,7 @@ export const eventsHandler = createSubscriptionHandler<{
           contracts: resumeArgs.contracts,
         }
 
-        if ("startHeight" in resumeArgs && resumeArgs.startBlockHeight) {
+        if ("startBlockHeight" in resumeArgs && resumeArgs.startBlockHeight) {
           return {
             ...encodedArgs,
             start_block_height: String(resumeArgs.startBlockHeight),
