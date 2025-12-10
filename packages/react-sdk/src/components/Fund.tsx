@@ -23,7 +23,7 @@ export const Fund: React.FC<FundProps> = ({variant = "primary"}) => {
           variant={variant}
           className="flow-px-2 flow-text-sm"
         >
-          Fund
+          Fund Account
         </Button>
       </StyleWrapper>
       <Dialog
