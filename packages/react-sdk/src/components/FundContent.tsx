@@ -30,19 +30,21 @@ export const FundContent: React.FC = () => {
   const [selectedChain, setSelectedChain] = useState(chains[0])
 
   return (
-    <div>
-      <h2
-        className="flow-text-lg flow-font-semibold flow-text-slate-900 dark:flow-text-slate-100
-          flow-mb-4"
-      >
-        Fund Your Account
-      </h2>
+    <div className="flow-space-y-6">
+      <div className="flow-text-center">
+        <h2
+          className="flow-text-xl flow-font-semibold flow-text-slate-900 dark:flow-text-slate-100"
+        >
+          Fund Your Account
+        </h2>
+      </div>
+
       <TabGroup>
         <TabList>
           <Tab>
             {({selected}) => (
               <>
-                Use Credit Card
+                Credit Card
                 {selected && (
                   <div
                     className="flow-absolute flow-bottom-0 flow-left-0 flow-right-0 flow-h-0.5
@@ -55,7 +57,7 @@ export const FundContent: React.FC = () => {
           <Tab>
             {({selected}) => (
               <>
-                Transfer Crypto
+                Crypto Transfer
                 {selected && (
                   <div
                     className="flow-absolute flow-bottom-0 flow-left-0 flow-right-0 flow-h-0.5
@@ -67,39 +69,58 @@ export const FundContent: React.FC = () => {
           </Tab>
         </TabList>
         <TabPanels>
-          <TabPanel className="flow-pt-4 focus:flow-outline-none">
-            <div className="flow-space-y-4">
-              <div className="flow-space-y-2">
-                <label className="flow-text-sm flow-font-medium flow-text-slate-700 dark:flow-text-slate-300">
+          <TabPanel className="flow-pt-6 focus:flow-outline-none">
+            <div className="flow-space-y-5">
+              <div
+                className="flow-rounded-lg flow-bg-slate-50 dark:flow-bg-slate-800/50
+                  flow-border flow-border-slate-200 dark:flow-border-slate-700 flow-p-4"
+              >
+                <label
+                  className="flow-text-xs flow-font-medium flow-text-slate-500 dark:flow-text-slate-400
+                    flow-uppercase flow-tracking-wide"
+                >
                   Amount
                 </label>
-                <div className="flow-flex flow-items-center flow-gap-2">
+                <div className="flow-flex flow-items-baseline flow-gap-2 flow-mt-2">
                   <Input
                     type="number"
                     placeholder="0.00"
                     value={amount}
                     onChange={e => setAmount(e.target.value)}
-                    className="flow-flex-1"
+                    className="flow-flex-1 flow-text-2xl flow-font-semibold flow-bg-transparent
+                      flow-border-0 flow-p-0 focus:flow-ring-0 flow-text-slate-900
+                      dark:flow-text-slate-100 placeholder:flow-text-slate-300
+                      dark:placeholder:flow-text-slate-600"
                   />
                   <span
-                    className="flow-text-sm flow-font-medium flow-text-slate-600 dark:flow-text-slate-400
-                      flow-whitespace-nowrap"
+                    className="flow-text-lg flow-font-semibold flow-text-slate-400 dark:flow-text-slate-500"
                   >
                     USD
                   </span>
                 </div>
-                <p className="flow-text-sm flow-text-slate-500 dark:flow-text-slate-400">
-                  ≈ 0 FLOW
-                </p>
+                <div
+                  className="flow-mt-3 flow-pt-3 flow-border-t flow-border-slate-200
+                    dark:flow-border-slate-700"
+                >
+                  <p className="flow-text-sm flow-text-slate-500 dark:flow-text-slate-400">
+                    ≈{" "}
+                    <span className="flow-font-medium flow-text-slate-700 dark:flow-text-slate-300">
+                      0 FLOW
+                    </span>
+                  </p>
+                </div>
               </div>
               <Button className="flow-w-full">Continue</Button>
             </div>
           </TabPanel>
-          <TabPanel className="flow-pt-4 focus:flow-outline-none">
-            <div className="flow-space-y-4">
-              <div className="flow-flex flow-gap-4">
-                <div className="flow-flex-1 flow-space-y-2">
-                  <label className="flow-text-sm flow-font-medium flow-text-slate-700 dark:flow-text-slate-300">
+          <TabPanel className="flow-pt-6 focus:flow-outline-none">
+            <div className="flow-space-y-5">
+              <div className="flow-grid flow-grid-cols-2 flow-gap-3">
+                <div className="flow-space-y-1.5">
+                  <label
+                    className="flow-text-xs flow-font-medium flow-text-slate-500 dark:flow-text-slate-400
+                      flow-uppercase flow-tracking-wide"
+                  >
                     Token
                   </label>
                   <Listbox value={selectedToken} onChange={setSelectedToken}>
@@ -119,8 +140,11 @@ export const FundContent: React.FC = () => {
                     )}
                   </Listbox>
                 </div>
-                <div className="flow-flex-1 flow-space-y-2">
-                  <label className="flow-text-sm flow-font-medium flow-text-slate-700 dark:flow-text-slate-300">
+                <div className="flow-space-y-1.5">
+                  <label
+                    className="flow-text-xs flow-font-medium flow-text-slate-500 dark:flow-text-slate-400
+                      flow-uppercase flow-tracking-wide"
+                  >
                     Chain
                   </label>
                   <Listbox value={selectedChain} onChange={setSelectedChain}>
@@ -141,7 +165,14 @@ export const FundContent: React.FC = () => {
                   </Listbox>
                 </div>
               </div>
-              <QRCode value={PLACEHOLDER_ADDRESS} />
+
+              <div
+                className="flow-rounded-lg flow-bg-slate-50 dark:flow-bg-slate-800/50
+                  flow-border flow-border-slate-200 dark:flow-border-slate-700 flow-p-4"
+              >
+                <QRCode value={PLACEHOLDER_ADDRESS} />
+              </div>
+
               <Address address={PLACEHOLDER_ADDRESS} label="Deposit Address" />
             </div>
           </TabPanel>
