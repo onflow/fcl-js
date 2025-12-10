@@ -1,5 +1,11 @@
 # @onflow/transport-http
 
+## 1.15.1
+
+### Patch Changes
+
+- [#2741](https://github.com/onflow/fcl-js/pull/2741) [`d6e0a02145cd599fa22823ca83087ca096fb251d`](https://github.com/onflow/fcl-js/commit/d6e0a02145cd599fa22823ca83087ca096fb251d) Thanks [@jribbink](https://github.com/jribbink)! - Gracefully handle empty heartbeat data when streaming events
+
 ## 1.15.0
 
 ### Minor Changes
