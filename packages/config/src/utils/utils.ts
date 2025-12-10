@@ -1,7 +1,20 @@
-type FlowNetwork = "emulator" | "testnet" | "mainnet" | "previewnet"
+/**
+ * Fork network configuration
+ * Allows a custom network to inherit contract aliases from a parent network
+ */
+export interface ForkNetworkConfig {
+  host: string
+  fork: string
+}
+
+/**
+ * Network configuration - either a string (host) or fork configuration
+ */
+export type NetworkConfig = string | ForkNetworkConfig
+
 export interface FlowJson {
   networks?: {
-    [key in FlowNetwork]?: string
+    [key: string]: NetworkConfig
   }
   accounts?: {
     [key: string]: {
@@ -13,7 +26,7 @@ export interface FlowJson {
     [key: string]: {
       source: string
       aliases: {
-        [key in FlowNetwork]?: string
+        [key: string]: string
       }
       // Optional canonical field for import aliases
       // When set, indicates this contract is an alias of another contract
@@ -27,7 +40,7 @@ export interface FlowJson {
       source: string
       hash: string
       aliases: {
-        [key in FlowNetwork]?: string
+        [key: string]: string
       }
       // Optional canonical field for import aliases
       // When set, indicates this dependency is an alias of another contract
@@ -37,7 +50,7 @@ export interface FlowJson {
     }
   }
   deployments?: {
-    [key in FlowNetwork]?: {
+    [key: string]: {
       [contract: string]: string[]
     }
   }
@@ -134,17 +147,20 @@ const filterDependencies = (obj: FlowJson) =>
 /**
  * @description Gathers contract addresses by network
  * @param network - Network to gather addresses for
+ * @param fallbackNetwork - Optional fallback network for fork networks
  * @returns Contract names by addresses mapping e.g { "HelloWorld": "0x123" }
  */
 const mapContractAliasesToNetworkAddress =
-  (network: string) => (contracts: Record<string, any>) => {
+  (network: string, fallbackNetwork?: string) =>
+  (contracts: Record<string, any>) => {
     return Object.entries(contracts).reduce(
       (c, [key, value]) => {
-        const networkContractAlias = value?.aliases?.[network]
-        if (networkContractAlias) {
-          c[key] = networkContractAlias
+        const alias =
+          value?.aliases?.[network] ||
+          (fallbackNetwork && value?.aliases?.[fallbackNetwork])
+        if (alias) {
+          c[key] = alias
         }
-
         return c
       },
       {} as Record<string, string>
@@ -154,17 +170,20 @@ const mapContractAliasesToNetworkAddress =
 /**
  * @description Gathers dependency addresses by network
  * @param network - Network to gather addresses for
+ * @param fallbackNetwork - Optional fallback network for fork networks
  * @returns Dependency names by addresses mapping e.g { "HelloWorld": "0x123" }
  */
 const mapDependencyAliasesToNetworkAddress =
-  (network: string) => (dependencies: Record<string, any>) => {
+  (network: string, fallbackNetwork?: string) =>
+  (dependencies: Record<string, any>) => {
     return Object.entries(dependencies).reduce(
       (c, [key, value]) => {
-        const networkDependencyAlias = value?.aliases?.[network]
-        if (networkDependencyAlias) {
-          c[key] = networkDependencyAlias
+        const alias =
+          value?.aliases?.[network] ||
+          (fallbackNetwork && value?.aliases?.[fallbackNetwork])
+        if (alias) {
+          c[key] = alias
         }
-
         return c
       },
       {} as Record<string, string>
@@ -224,7 +243,7 @@ const mapDependencyCanonicals = (dependencies: Record<string, any>) => {
 }
 
 const mapDeploymentsToNetworkAddress =
-  (network: FlowNetwork) =>
+  (network: string) =>
   ({
     deployments = {},
     accounts = {},
@@ -247,7 +266,7 @@ const mapDeploymentsToNetworkAddress =
 /**
  * @description Take in flow.json files and return contract to address mapping by network
  * @param jsons - Flow JSON or array of Flow JSONs
- * @param network - Network to gather addresses for
+ * @param network - Network to gather addresses for (can be a fork network)
  * @returns Contract names by addresses mapping including canonical references
  *
  * Returns both contract addresses and canonical references for import aliases:
@@ -260,21 +279,37 @@ const mapDeploymentsToNetworkAddress =
  *
  * The canonical reference enables import alias resolution:
  * - import "FUSD1" → import FUSD as FUSD1 from 0xe223...
+ *
+ * Fork networks use fallback resolution:
+ * - First collects all aliases from the parent network (e.g., "mainnet")
+ * - Then overlays aliases from the fork network (e.g., "mainnet-fork")
+ * - This allows fork-specific overrides while inheriting the rest
  */
-export const getContracts = (
-  jsons: FlowJson | FlowJson[],
-  network: FlowNetwork
-) => {
-  return pipe(
-    mergeFlowJSONs,
-    mergePipe(
-      mapDeploymentsToNetworkAddress(network),
-      pipe(filterContracts, mapContractAliasesToNetworkAddress(network)),
-      pipe(filterDependencies, mapDependencyAliasesToNetworkAddress(network)),
-      pipe(filterContracts, mapContractCanonicals),
-      pipe(filterDependencies, mapDependencyCanonicals)
-    )
-  )(jsons)
+export const getContracts = (jsons: FlowJson | FlowJson[], network: string) => {
+  const mergedJson = mergeFlowJSONs(jsons)
+
+  // Determine fallback network for fork networks
+  const networkConfig = mergedJson.networks?.[network]
+  const fallbackNetwork =
+    networkConfig &&
+    typeof networkConfig === "object" &&
+    "fork" in networkConfig
+      ? networkConfig.fork
+      : undefined
+
+  return mergePipe(
+    mapDeploymentsToNetworkAddress(network),
+    pipe(
+      filterContracts,
+      mapContractAliasesToNetworkAddress(network, fallbackNetwork)
+    ),
+    pipe(
+      filterDependencies,
+      mapDependencyAliasesToNetworkAddress(network, fallbackNetwork)
+    ),
+    pipe(filterContracts, mapContractCanonicals),
+    pipe(filterDependencies, mapDependencyCanonicals)
+  )(mergedJson)
 }
 
 /**
@@ -318,22 +353,15 @@ export const anyHasPrivateKeys = (value: FlowJson | FlowJson[]) => {
 }
 
 /**
- * @description Format network to always be 'emulator', 'testnet', 'previewnet' or 'mainnet'
+ * @description Format network name, converting 'local' to 'emulator'
  * @param network - Network to format
- * @returns Formatted network name (either 'emulator', 'testnet', 'previewnet' or 'mainnet')
+ * @returns Formatted network name
+ *
+ * This function now accepts any network name (including custom fork networks).
+ * It only transforms "local" to "emulator" for backward compatibility.
  */
-export const cleanNetwork = (network: string): FlowNetwork => {
-  const cleanedNetwork =
-    network?.toLowerCase() === "local" ? "emulator" : network?.toLowerCase()
-  if (
-    cleanedNetwork === "emulator" ||
-    cleanedNetwork === "testnet" ||
-    cleanedNetwork === "mainnet" ||
-    cleanedNetwork === "previewnet"
-  )
-    return cleanedNetwork
-
-  throw new Error(
-    `Invalid network "${network}". Must be one of "emulator", "local", "testnet", or "mainnet"`
-  )
+export const cleanNetwork = (network: string): string => {
+  return network?.toLowerCase() === "local"
+    ? "emulator"
+    : network?.toLowerCase()
 }
