@@ -1,6 +1,6 @@
 {
   "name": "@onflow/fcl-core",
-  "version": "1.23.1",
+  "version": "1.24.0",
   "description": "Core JavaScript/TypeScript library providing shared functionality for Flow blockchain interactions.",
   "license": "Apache-2.0",
   "author": "Flow Foundation",
