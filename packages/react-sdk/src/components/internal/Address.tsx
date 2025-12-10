@@ -52,8 +52,8 @@ export const Address: React.FC<AddressProps> = ({
             flow-text-white flow-rounded-md flow-border-none flow-text-xs flow-font-medium
             flow-cursor-pointer flow-transition-colors flow-whitespace-nowrap ${
             copied
-                ? "flow-bg-green-500"
-                : "flow-bg-blue-500 hover:flow-bg-blue-600"
+                ? "flow-bg-green-600"
+                : "flow-bg-slate-900 hover:flow-bg-slate-800 dark:flow-bg-slate-100 dark:flow-text-slate-900 dark:hover:flow-bg-slate-200"
             }`}
         >
           {copied ? "Copied!" : "Copy"}

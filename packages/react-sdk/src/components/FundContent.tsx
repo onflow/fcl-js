@@ -30,14 +30,12 @@ export const FundContent: React.FC = () => {
   const [selectedChain, setSelectedChain] = useState(chains[0])
 
   return (
-    <div className="flow-space-y-6">
-      <div className="flow-text-center">
-        <h2
-          className="flow-text-xl flow-font-semibold flow-text-slate-900 dark:flow-text-slate-100"
-        >
-          Fund Your Account
-        </h2>
-      </div>
+    <div className="flow-space-y-5">
+      <h2
+        className="flow-text-xl flow-font-semibold flow-text-slate-900 dark:flow-text-slate-100"
+      >
+        Fund Your Account
+      </h2>
 
       <TabGroup>
         <TabList>
@@ -81,19 +79,16 @@ export const FundContent: React.FC = () => {
                 >
                   Amount
                 </label>
-                <div className="flow-flex flow-items-baseline flow-gap-2 flow-mt-2">
+                <div className="flow-flex flow-items-center flow-gap-3 flow-mt-2">
                   <Input
                     type="number"
                     placeholder="0.00"
                     value={amount}
                     onChange={e => setAmount(e.target.value)}
-                    className="flow-flex-1 flow-text-2xl flow-font-semibold flow-bg-transparent
-                      flow-border-0 flow-p-0 focus:flow-ring-0 flow-text-slate-900
-                      dark:flow-text-slate-100 placeholder:flow-text-slate-300
-                      dark:placeholder:flow-text-slate-600"
+                    className="flow-flex-1 flow-text-xl flow-font-medium"
                   />
                   <span
-                    className="flow-text-lg flow-font-semibold flow-text-slate-400 dark:flow-text-slate-500"
+                    className="flow-text-base flow-font-semibold flow-text-slate-500 dark:flow-text-slate-400"
                   >
                     USD
                   </span>
