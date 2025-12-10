@@ -1,5 +1,13 @@
 # @onflow/fcl-ethereum-provider
 
+## 0.0.17
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @onflow/fcl@1.21.3
+  - @onflow/fcl-wc@7.0.0
+
 ## 0.0.16
 
 ### Patch Changes
