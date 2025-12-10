@@ -31,9 +31,7 @@ export const FundContent: React.FC = () => {
 
   return (
     <div className="flow-space-y-5">
-      <h2
-        className="flow-text-xl flow-font-semibold flow-text-slate-900 dark:flow-text-slate-100"
-      >
+      <h2 className="flow-text-xl flow-font-semibold flow-text-slate-900 dark:flow-text-slate-100">
         Fund Your Account
       </h2>
 
@@ -70,8 +68,8 @@ export const FundContent: React.FC = () => {
           <TabPanel className="flow-pt-6 focus:flow-outline-none">
             <div className="flow-space-y-5">
               <div
-                className="flow-rounded-lg flow-bg-slate-50 dark:flow-bg-slate-800/50
-                  flow-border flow-border-slate-200 dark:flow-border-slate-700 flow-p-4"
+                className="flow-rounded-lg flow-bg-slate-50 dark:flow-bg-slate-800/50 flow-border
+                  flow-border-slate-200 dark:flow-border-slate-700 flow-p-4"
               >
                 <label
                   className="flow-text-xs flow-font-medium flow-text-slate-500 dark:flow-text-slate-400
@@ -87,9 +85,7 @@ export const FundContent: React.FC = () => {
                     onChange={e => setAmount(e.target.value)}
                     className="flow-flex-1 flow-text-xl flow-font-medium"
                   />
-                  <span
-                    className="flow-text-base flow-font-semibold flow-text-slate-500 dark:flow-text-slate-400"
-                  >
+                  <span className="flow-text-base flow-font-semibold flow-text-slate-500 dark:flow-text-slate-400">
                     USD
                   </span>
                 </div>
@@ -162,8 +158,8 @@ export const FundContent: React.FC = () => {
               </div>
 
               <div
-                className="flow-rounded-lg flow-bg-slate-50 dark:flow-bg-slate-800/50
-                  flow-border flow-border-slate-200 dark:flow-border-slate-700 flow-p-4"
+                className="flow-rounded-lg flow-bg-slate-50 dark:flow-bg-slate-800/50 flow-border
+                  flow-border-slate-200 dark:flow-border-slate-700 flow-p-4"
               >
                 <QRCode value={PLACEHOLDER_ADDRESS} />
               </div>
