@@ -46,10 +46,9 @@ export const QRCode: React.FC<QRCodeProps> = ({value, size = 200}) => {
   }
 
   return (
-    <div className="flow-flex flow-flex-col flow-items-center flow-py-6">
+    <div className="flow-flex flow-flex-col flow-items-center flow-py-2">
       <div
-        className="flow-relative flow-bg-white dark:flow-bg-slate-900 flow-rounded-lg flow-p-3
-          flow-border flow-border-slate-200 dark:flow-border-slate-700"
+        className="flow-relative flow-bg-white dark:flow-bg-slate-900 flow-rounded-md flow-p-2"
         style={{width: size, height: size}}
       >
         <svg
