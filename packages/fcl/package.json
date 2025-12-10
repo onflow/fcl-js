@@ -1,6 +1,6 @@
 {
   "name": "@onflow/fcl",
-  "version": "1.21.1",
+  "version": "1.21.2",
   "description": "High-level JavaScript/TypeScript library for building web applications on the Flow blockchain.",
   "license": "Apache-2.0",
   "author": "Flow Foundation",
@@ -50,8 +50,8 @@
   "dependencies": {
     "@babel/runtime": "^7.25.7",
     "@onflow/config": "1.6.3",
-    "@onflow/fcl-core": "1.23.1",
-    "@onflow/fcl-wc": "6.0.13",
+    "@onflow/fcl-core": "1.24.0",
+    "@onflow/fcl-wc": "7.0.0",
     "@onflow/interaction": "0.0.11",
     "@onflow/rlp": "1.2.4",
     "@onflow/sdk": "1.13.1",
