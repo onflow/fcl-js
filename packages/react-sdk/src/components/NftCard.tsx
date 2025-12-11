@@ -7,6 +7,7 @@ import {AlertCircleIcon} from "../icons/AlertCircleIcon"
 import {LoaderCircleIcon} from "../icons/LoaderCircleIcon"
 import {MoreVerticalIcon} from "../icons/MoreVerticalIcon"
 import {Dialog} from "./internal/Dialog"
+import {Button} from "./internal/Button"
 import {twMerge} from "tailwind-merge"
 
 export interface NftCardAction {
@@ -364,17 +365,13 @@ export const NftCard: React.FC<NftCardProps> = ({
                     </div>
                   ))}
                 {totalTraits > 4 && (
-                  <button
+                  <Button
+                    variant="secondary"
                     onClick={() => setShowTraitsModal(true)}
-                    className="flow-col-span-2 flow-flex flow-items-center flow-justify-center flow-gap-1.5
-                      flow-px-3 flow-py-2 flow-rounded-lg flow-text-xs flow-font-semibold
-                      flow-bg-slate-100 dark:flow-bg-slate-800 flow-text-slate-700
-                      dark:flow-text-slate-300 hover:flow-bg-slate-200 dark:hover:flow-bg-slate-700
-                      flow-transition-colors flow-border flow-border-slate-200
-                      dark:flow-border-slate-700"
+                    className="flow-col-span-2 flow-text-xs"
                   >
                     Show all ({totalTraits}) traits
-                  </button>
+                  </Button>
                 )}
               </div>
             </div>
