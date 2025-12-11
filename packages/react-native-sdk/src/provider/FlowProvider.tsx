@@ -1,4 +1,4 @@
-import React, {useState, PropsWithChildren, useMemo} from "react"
+import React, {useState, PropsWithChildren, useMemo, useEffect} from "react"
 import {
   FlowConfig,
   FlowConfigContext,
@@ -6,7 +6,11 @@ import {
 } from "@onflow/react-core"
 import {DefaultOptions, QueryClient} from "@tanstack/react-query"
 import {FlowQueryClientProvider} from "./FlowQueryClientProvider"
-import {createFlowClient, ConnectModalProvider} from "@onflow/fcl-react-native"
+import {
+  createFlowClient,
+  ConnectModalProvider,
+  config,
+} from "@onflow/fcl-react-native"
 import {GlobalTransactionProvider} from "./GlobalTransactionProvider"
 
 export interface FlowProviderProps {
@@ -59,6 +63,17 @@ export function FlowProvider({
       serviceOpenIdScopes: initialConfig.serviceOpenIdScopes,
     })
   }, [_flowClient, initialConfig, flowJson])
+
+  // Set discovery.authn.endpoint in global FCL config for ServiceDiscovery
+  // This is needed for the ConnectModal to work correctly and retrieve the endpoint to load wallets
+  useEffect(() => {
+    if (initialConfig.discoveryAuthnEndpoint) {
+      config().put(
+        "discovery.authn.endpoint",
+        initialConfig.discoveryAuthnEndpoint
+      )
+    }
+  }, [initialConfig.discoveryAuthnEndpoint])
 
   return (
     <FlowQueryClientProvider queryClient={queryClient}>
