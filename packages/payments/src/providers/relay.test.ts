@@ -94,13 +94,17 @@ describe("relayProvider", () => {
             id: 1,
             depositEnabled: true,
             disabled: false,
-            erc20Currencies: [{symbol: "USDC", address: "0x...", supportsBridging: true}],
+            erc20Currencies: [
+              {symbol: "USDC", address: "0x...", supportsBridging: true},
+            ],
           },
           {
             id: 999,
             depositEnabled: false, // Not enabled
             disabled: false,
-            erc20Currencies: [{symbol: "USDC", address: "0x...", supportsBridging: true}],
+            erc20Currencies: [
+              {symbol: "USDC", address: "0x...", supportsBridging: true},
+            ],
           },
         ],
       }
@@ -343,7 +347,7 @@ describe("relayProvider", () => {
         if (urlString.includes("/currencies")) {
           // currencies/v2 is called twice - once for origin, once for destination
           currenciesCallCount++
-          
+
           if (currenciesCallCount === 1) {
             // First call: origin chain (Ethereum, chain 1)
             return Promise.resolve({
