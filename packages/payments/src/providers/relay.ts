@@ -11,6 +11,7 @@ import type {createFlowClientCore} from "@onflow/fcl-core"
 import {parseCAIP2, parseCAIP10} from "../utils/caip"
 import {isEvmAddress, isCadenceAddress} from "../utils/address"
 import {getFlowEvmChainId} from "../utils/network"
+import {getCoaAddress} from "../bridge-service"
 
 /**
  * Configuration for the Relay funding provider
@@ -224,22 +225,25 @@ export function relayProvider(
         destination.chainId
       )
 
-      // Detect if destination is Cadence (needs bridging after EVM funding)
+      // Detect if destination is Cadence and convert to COA EVM address
       const isCadenceDestination = isCadenceAddress(destination.address)
       let actualDestination = destination.address
 
-      // TODO: For Cadence destinations, we need to:
-      // 1. Determine the user's COA (Cadence Owned Account) EVM address
-      // 2. Fund the COA instead
-      // 3. Return instructions for the user to bridge COA -> Cadence
-      // For now, we reject Cadence destinations until this is implemented
       if (isCadenceDestination) {
-        throw new Error(
-          `Cadence destination detected: ${destination.address}. ` +
-            `Automatic Cadence routing is not yet implemented. ` +
-            `Please provide the COA (Cadence Owned Account) EVM address instead. ` +
-            `Future versions will automatically route funds through the COA and provide bridging instructions.`
-        )
+        // Fetch the user's COA (Cadence Owned Account) EVM address
+        const coaAddress = await getCoaAddress({
+          flowClient,
+          cadenceAddress: destination.address,
+        })
+
+        if (!coaAddress) {
+          throw new Error(
+            `No COA (Cadence Owned Account) found for ${destination.address}. ` +
+              `Please ensure the account has a COA set up at /public/evm.`
+          )
+        }
+
+        actualDestination = coaAddress
       }
 
       if (!isEvmAddress(actualDestination)) {
