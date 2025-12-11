@@ -1,5 +1,11 @@
 # @onflow/demo
 
+## 1.4.0
+
+### Minor Changes
+
+- [#2756](https://github.com/onflow/fcl-js/pull/2756) [`60f568702df22f874cea5a756962f701e79783d6`](https://github.com/onflow/fcl-js/commit/60f568702df22f874cea5a756962f701e79783d6) Thanks [@mfbz](https://github.com/mfbz)! - Packages re-released after lerna update.
+
 ## 1.3.0
 
 ### Minor Changes
