@@ -24,7 +24,7 @@ async function resolveCadence(
   const chainId = (await flowClient.getChainId()) as FlowNetwork
   const network = chainId === "local" ? "emulator" : chainId
 
-  const contracts = getContracts(flowJSON, network)
+  const contracts = getContracts(flowJSON, network) as Record<string, string>
   return cadence.replace(/import\s+"(\w+)"/g, (match, name) =>
     contracts[name] ? `import ${name} from 0x${contracts[name]}` : match
   )

@@ -8,7 +8,7 @@ export interface BaseFundingIntent {
   kind: string
   /** Destination address in CAIP-10 format: `namespace:chainId:address` (e.g., `"eip155:747:0x..."`) */
   destination: string
-  /** Token identifier - EVM address (`"0xa0b8..."`) or Cadence vault identifier (`"A.xxx.Token.Vault"`) */
+  /** Token identifier - must be either an EVM address (`"0xa0b8..."`) or Cadence vault identifier (`"A.xxx.Token.Vault"`). Token symbols (e.g., "USDC") are NOT supported. */
   currency: string
   /** Amount in human-readable decimal format (e.g., `"1.5"` for 1.5 tokens). Provider converts to appropriate format (base units for EVM, UFix64 for Cadence). */
   amount?: string
@@ -21,7 +21,7 @@ export interface CryptoFundingIntent extends BaseFundingIntent {
   kind: "crypto"
   /** Source blockchain in CAIP-2 format: `namespace:chainId` (e.g., `"eip155:1"` for Ethereum mainnet) */
   sourceChain: string
-  /** Source token identifier - EVM address on the source chain */
+  /** Source token identifier - must be an EVM address on the source chain (e.g., "0xa0b8..."). Token symbols are NOT supported. */
   sourceCurrency: string
 }
 
@@ -30,8 +30,8 @@ export interface CryptoFundingIntent extends BaseFundingIntent {
  */
 export interface FiatFundingIntent extends BaseFundingIntent {
   kind: "fiat"
-  /** Payment method type (e.g., `"card"`, `"bank_transfer"`) */
-  paymentType: string
+  /** Payment method type (e.g., `"card"`, `"bank_transfer"`) - Optional, provider may allow user to choose */
+  paymentType?: string
 }
 
 /**
@@ -90,7 +90,7 @@ import type {VM} from "./constants"
  * Base capabilities supported by a funding provider
  */
 export interface BaseProviderCapability {
-  /** List of supported token identifiers (EVM addresses or Cadence vault IDs) */
+  /** List of supported token identifiers - must be EVM addresses or Cadence vault IDs (symbols NOT supported) */
   currencies?: string[]
   /** Minimum funding amount in human-readable format */
   minAmount?: string

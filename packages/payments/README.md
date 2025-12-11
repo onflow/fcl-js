@@ -32,10 +32,10 @@ const client = createPaymentsClient({
 const session = await client.createSession({
   kind: "crypto",
   destination: "eip155:747:0xRecipient", // CAIP-10: Flow EVM address
-  currency: "USDC", // Symbol, EVM address, or Cadence vault identifier
+  currency: "0x833589fcd6edb6e08f4c7c32d4f71b54bda02913", // USDC - EVM address or Cadence vault identifier
   amount: "100.0", // Human-readable decimal format
   sourceChain: "eip155:1", // CAIP-2: Ethereum mainnet
-  sourceCurrency: "USDC",
+  sourceCurrency: "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48", // USDC on Ethereum
 })
 
 // session.instructions.address contains a unique deposit address
@@ -53,10 +53,10 @@ Describes what the user wants to fund:
 interface CryptoFundingIntent {
   kind: "crypto"
   destination: string // CAIP-10 account identifier
-  currency: string // Token symbol, EVM address, or Cadence vault ID
+  currency: string // EVM address (0x...) or Cadence vault ID (A.xxx.Token.Vault)
   amount?: string // Human-readable amount (e.g., "100.50")
   sourceChain: string // CAIP-2 chain identifier
-  sourceCurrency: string // Source token identifier
+  sourceCurrency: string // Source token EVM address
 }
 ```
 
@@ -90,24 +90,21 @@ interface FundingProvider {
 
 ## Token Formats
 
-The client accepts multiple token identifier formats:
+The client accepts two token identifier formats:
 
-**1. Symbols:**
+**1. EVM Addresses (0x + 40 hex):**
 ```ts
-currency: "USDC"
+currency: "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48" // USDC on Ethereum
 ```
 
-**2. EVM Addresses (0x + 40 hex):**
+**2. Cadence Vault Identifiers:**
 ```ts
-currency: "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48"
-```
-
-**3. Cadence Vault Identifiers:**
-```ts
-currency: "A.1654653399040a61.FlowToken.Vault"
+currency: "A.1654653399040a61.FlowToken.Vault" // FlowToken
 ```
 
 When you provide a **Cadence vault identifier**, the client queries the **Flow EVM Bridge** to automatically convert the vault ID to the corresponding EVM address before passing to providers.
+
+**Note:** Token symbols (e.g., "USDC", "USDF") are NOT supported. You must provide the full EVM address or Cadence vault identifier.
 
 ## Development
 
