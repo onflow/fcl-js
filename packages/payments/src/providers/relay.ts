@@ -436,8 +436,16 @@ async function getRelayCurrencies(
   apiUrl: string,
   chainId: number | string
 ): Promise<RelayCurrency[]> {
-  const response = await fetch(`${apiUrl}/currencies?chainId=${chainId}`, {
-    method: "GET",
+  const response = await fetch(`${apiUrl}/currencies/v2`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      chainIds: [typeof chainId === "string" ? parseInt(chainId) : chainId],
+      verified: true,
+      depositAddressOnly: true,
+    }),
   })
 
   if (!response.ok) {
@@ -447,6 +455,6 @@ async function getRelayCurrencies(
   }
 
   const data = await response.json()
-  // Response might be array or object with currencies property
-  return Array.isArray(data) ? data : data.currencies || data.data || []
+  // Response is an array of currency objects
+  return Array.isArray(data) ? data : []
 }

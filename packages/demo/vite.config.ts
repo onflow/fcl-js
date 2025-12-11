@@ -7,6 +7,22 @@ export default defineConfig({
   server: {
     allowedHosts: true,
   },
+  define: {
+    // Polyfill Buffer for browser
+    global: "globalThis",
+  },
+  resolve: {
+    alias: {
+      buffer: "buffer",
+    },
+  },
+  optimizeDeps: {
+    esbuildOptions: {
+      define: {
+        global: "globalThis",
+      },
+    },
+  },
   build: {
     chunkSizeWarningLimit: 1000,
     rollupOptions: {
