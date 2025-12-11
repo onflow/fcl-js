@@ -39,4 +39,5 @@ jobs:
           publish: npm run release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # Workaround for trusted publishers https://github.com/changesets/changesets/issues/1152#issuecomment-3190884868
           NPM_TOKEN: ""
