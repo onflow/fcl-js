@@ -55,8 +55,8 @@ export const FundContent: React.FC = () => {
     c => c.type === "crypto"
   ) as CryptoProviderCapability
 
-  // Build tokens list from capabilities
-  const tokens = (cryptoCapability?.currencies || []).map(
+  // Build SOURCE tokens list (what user can send FROM)
+  const sourceTokens = (cryptoCapability?.sourceCurrencies || []).map(
     (currency, index) => ({
       id: index + 1,
       name: currency,
@@ -64,8 +64,8 @@ export const FundContent: React.FC = () => {
     })
   )
 
-  // Build chains list from capabilities
-  const chains = (cryptoCapability?.sourceChains || []).map(
+  // Build SOURCE chains list (where user can send FROM)
+  const sourceChains = (cryptoCapability?.sourceChains || []).map(
     (caipId, index) => ({
       id: index + 1,
       name: getChainName(caipId),
@@ -73,18 +73,22 @@ export const FundContent: React.FC = () => {
     })
   )
 
-  const [selectedToken, setSelectedToken] = useState(tokens[0])
-  const [selectedChain, setSelectedChain] = useState(chains[0])
+  const [selectedSourceToken, setSelectedSourceToken] = useState(
+    sourceTokens[0]
+  )
+  const [selectedSourceChain, setSelectedSourceChain] = useState(
+    sourceChains[0]
+  )
 
   // Update selections when capabilities load
   useEffect(() => {
-    if (tokens.length > 0 && !selectedToken) {
-      setSelectedToken(tokens[0])
+    if (sourceTokens.length > 0 && !selectedSourceToken) {
+      setSelectedSourceToken(sourceTokens[0])
     }
-    if (chains.length > 0 && !selectedChain) {
-      setSelectedChain(chains[0])
+    if (sourceChains.length > 0 && !selectedSourceChain) {
+      setSelectedSourceChain(sourceChains[0])
     }
-  }, [tokens, chains])
+  }, [sourceTokens, sourceChains])
 
   // Initialize useFund hook with relay provider
   const {
@@ -102,8 +106,8 @@ export const FundContent: React.FC = () => {
       selectedTabIndex === 1 &&
       user?.addr &&
       chainId &&
-      selectedToken &&
-      selectedChain
+      selectedSourceToken &&
+      selectedSourceChain
     ) {
       // User's Flow address as destination (in CAIP-10 format)
       const destination = `eip155:${chainId}:${user.addr}`
@@ -111,16 +115,16 @@ export const FundContent: React.FC = () => {
       createSession({
         kind: "crypto",
         destination,
-        currency: selectedToken.address,
-        sourceChain: selectedChain.caipId,
-        sourceCurrency: selectedToken.address,
+        currency: selectedSourceToken.address, // Destination currency (will be same token on Flow)
+        sourceChain: selectedSourceChain.caipId,
+        sourceCurrency: selectedSourceToken.address,
         amount: amount || undefined,
       })
     }
   }, [
     selectedTabIndex,
-    selectedToken,
-    selectedChain,
+    selectedSourceToken,
+    selectedSourceChain,
     amount,
     user?.addr,
     chainId,
@@ -255,29 +259,29 @@ export const FundContent: React.FC = () => {
               )}
 
               {!isLoadingCapabilities &&
-                tokens.length > 0 &&
-                chains.length > 0 && (
+                sourceTokens.length > 0 &&
+                sourceChains.length > 0 && (
                   <div className="flow-grid flow-grid-cols-2 flow-gap-3">
                     <div className="flow-space-y-1.5">
                       <label
                         className="flow-text-xs flow-font-medium flow-text-slate-500 dark:flow-text-slate-400
                           flow-uppercase flow-tracking-wide"
                       >
-                        Token
+                        Send Token
                       </label>
                       <Listbox
-                        value={selectedToken}
-                        onChange={setSelectedToken}
+                        value={selectedSourceToken}
+                        onChange={setSelectedSourceToken}
                         disabled={!user?.addr || isPending}
                       >
                         {({open}) => (
                           <div className="flow-relative">
                             <ListboxButton>
-                              {selectedToken?.name || "Select token"}
+                              {selectedSourceToken?.name || "Select token"}
                             </ListboxButton>
                             {open && (
                               <ListboxOptions>
-                                {tokens.map(token => (
+                                {sourceTokens.map(token => (
                                   <ListboxOption key={token.id} value={token}>
                                     {token.name}
                                   </ListboxOption>
@@ -293,21 +297,21 @@ export const FundContent: React.FC = () => {
                         className="flow-text-xs flow-font-medium flow-text-slate-500 dark:flow-text-slate-400
                           flow-uppercase flow-tracking-wide"
                       >
-                        Source Chain
+                        From Chain
                       </label>
                       <Listbox
-                        value={selectedChain}
-                        onChange={setSelectedChain}
+                        value={selectedSourceChain}
+                        onChange={setSelectedSourceChain}
                         disabled={!user?.addr || isPending}
                       >
                         {({open}) => (
                           <div className="flow-relative">
                             <ListboxButton>
-                              {selectedChain?.name || "Select chain"}
+                              {selectedSourceChain?.name || "Select chain"}
                             </ListboxButton>
                             {open && (
                               <ListboxOptions>
-                                {chains.map(chain => (
+                                {sourceChains.map(chain => (
                                   <ListboxOption key={chain.id} value={chain}>
                                     {chain.name}
                                   </ListboxOption>
@@ -352,9 +356,10 @@ export const FundContent: React.FC = () => {
                       flow-border-blue-200 dark:flow-border-blue-800 flow-p-4"
                   >
                     <p className="flow-text-xs flow-text-blue-800 dark:flow-text-blue-200">
-                      Send {selectedToken?.name || "tokens"} from{" "}
-                      {selectedChain?.name || "source chain"} to this address.
-                      Funds will be automatically bridged to your Flow account.
+                      Send {selectedSourceToken?.name || "tokens"} from{" "}
+                      {selectedSourceChain?.name || "any chain"} to this
+                      address. Funds will be automatically bridged to your Flow
+                      account.
                     </p>
                   </div>
                 </>
