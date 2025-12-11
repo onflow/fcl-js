@@ -6,7 +6,7 @@
 
 - Updated dependencies [[`60f568702df22f874cea5a756962f701e79783d6`](https://github.com/onflow/fcl-js/commit/60f568702df22f874cea5a756962f701e79783d6)]:
   - @onflow/fcl-core@1.26.0
-  - @onflow/fcl-wc@7.0.0
+  - @onflow/fcl-wc@6.0.16
 
 ## 1.21.3
 
