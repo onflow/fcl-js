@@ -253,19 +253,29 @@ export function relayProvider(
 
       if (isCadenceDestination) {
         // Fetch the user's COA (Cadence Owned Account) EVM address
-        const coaAddress = await getCoaAddress({
-          flowClient,
-          cadenceAddress: destination.address,
-        })
+        try {
+          const coaAddress = await getCoaAddress({
+            flowClient,
+            cadenceAddress: destination.address,
+          })
 
-        if (!coaAddress) {
+          if (!coaAddress) {
+            throw new Error(
+              `No COA (Cadence Owned Account) found for Cadence address ${destination.address}. ` +
+                `Please ensure your Flow account has a COA set up. ` +
+                `Alternatively, connect using your Flow EVM address directly.`
+            )
+          }
+
+          actualDestination = coaAddress
+        } catch (error) {
           throw new Error(
-            `No COA (Cadence Owned Account) found for ${destination.address}. ` +
-              `Please ensure the account has a COA set up at /public/evm.`
+            `Failed to get COA for Cadence address ${destination.address}: ${
+              error instanceof Error ? error.message : String(error)
+            }. ` +
+              `Try connecting with your Flow EVM address instead, or ensure your account has a COA set up.`
           )
         }
-
-        actualDestination = coaAddress
       }
 
       if (!isEvmAddress(actualDestination)) {
@@ -289,19 +299,24 @@ export function relayProvider(
         cryptoIntent.currency
       )
 
-      // Convert human-readable amount to base units if provided
-      const amountInBaseUnits = cryptoIntent.amount
-        ? toBaseUnits(cryptoIntent.amount, originCurrency.decimals)
-        : undefined
+      // Convert human-readable amount to base units
+      // For deposit address mode, if no amount is specified, use a default that covers fees
+      // The actual amount sent by the user can be different for deposit addresses
+      // Use 1.0 (~$1 for stablecoins) which is enough to cover fees but not hit liquidity limits
+      const amountForQuote = cryptoIntent.amount || "1.0"
+      const amountInBaseUnits = toBaseUnits(
+        amountForQuote,
+        originCurrency.decimals
+      )
 
       // Call Relay API with deposit address mode
       const quote = await callRelayQuote(apiUrl, {
-        user: destination.address,
+        user: actualDestination,
         originChainId: parseInt(originChainId),
         destinationChainId: parseInt(destinationChainId),
         originCurrency: originCurrency.address,
         destinationCurrency: destinationCurrency.address,
-        recipient: destination.address,
+        recipient: actualDestination,
         amount: amountInBaseUnits,
         tradeType: DEPOSIT_ADDRESS_TRADE_TYPE, // Deposit addresses only work with EXACT_INPUT
         useDepositAddress: true,

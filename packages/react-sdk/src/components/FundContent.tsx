@@ -34,6 +34,18 @@ const getChainName = (caipId: string): string => {
   return chain?.name || caipId
 }
 
+// Helper to convert Flow network name to Flow EVM chain ID
+const getFlowEvmChainId = (network: string): number => {
+  switch (network) {
+    case "mainnet":
+      return 747 // Flow EVM Mainnet
+    case "testnet":
+      return 545 // Flow EVM Testnet
+    default:
+      return 747 // Default to mainnet
+  }
+}
+
 export const FundContent: React.FC = () => {
   const [amount, setAmount] = useState("")
   const [selectedTabIndex, setSelectedTabIndex] = useState(0)
@@ -52,10 +64,6 @@ export const FundContent: React.FC = () => {
   const cryptoCapability = capabilities?.find(
     c => c.type === "crypto"
   ) as CryptoProviderCapability
-
-  // Get destination currencies (what can be received on Flow)
-  // These are typically FLOW, USDF, WFLOW, etc.
-  const destinationCurrencies = cryptoCapability?.currencies || []
 
   // Build SOURCE chains list (where user can send FROM)
   const sourceChains = (cryptoCapability?.sourceChains || []).map(
@@ -88,8 +96,25 @@ export const FundContent: React.FC = () => {
         if (!selectedSourceChain || !cryptoCapability?.getCurrenciesForChain) {
           return []
         }
-        return await cryptoCapability.getCurrenciesForChain(
+        const currencies = await cryptoCapability.getCurrenciesForChain(
           selectedSourceChain.caipId
+        )
+
+        // Whitelist of tokens that reliably support Relay deposit addresses
+        // These have been tested and confirmed to work with Flow EVM as destination
+        const SUPPORTED_TOKENS = new Set([
+          // USDC (works on all chains)
+          "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48", // Ethereum
+          "0x833589fcd6edb6e08f4c7c32d4f71b54bda02913", // Base
+          "0xaf88d065e77c8cc2239327c5edb3a432268e5831", // Arbitrum
+          "0x3c499c542cef5e3811e1192ce70d8cc03d5c3359", // Polygon
+          // USDT (works on Base, Polygon)
+          "0xfde4c96c8593536e31f229ea8f37b2ada2699bb2", // Base
+          "0xc2132d05d31c914a87c6611c10748aeb04b58e8f", // Polygon
+        ])
+
+        return currencies.filter(c =>
+          SUPPORTED_TOKENS.has(c.address.toLowerCase())
         )
       },
       enabled: !!selectedSourceChain && !!cryptoCapability,
@@ -100,6 +125,30 @@ export const FundContent: React.FC = () => {
 
   // Use currency metadata directly
   const sourceTokens = chainCurrencies || []
+
+  // Fetch destination currencies for Flow EVM
+  const {data: destinationCurrencies} = useQuery(
+    {
+      queryKey: ["destinationCurrencies", chainId],
+      queryFn: async () => {
+        if (!chainId || !cryptoCapability?.getCurrenciesForChain) {
+          return []
+        }
+        // Fetch currencies available on Flow EVM (destination chain)
+        const flowEvmChainId = getFlowEvmChainId(chainId)
+        const currencies = await cryptoCapability.getCurrenciesForChain(
+          `eip155:${flowEvmChainId}`
+        )
+        // Filter out native tokens (zero address) - Relay only supports ERC20 for deposit addresses
+        return currencies.filter(
+          c => c.address !== "0x0000000000000000000000000000000000000000"
+        )
+      },
+      enabled: !!chainId && !!cryptoCapability,
+      staleTime: 5 * 60 * 1000,
+    },
+    queryClient
+  )
 
   // Update token selection when currencies load or chain changes
   useEffect(() => {
@@ -120,17 +169,20 @@ export const FundContent: React.FC = () => {
       user?.addr &&
       chainId &&
       selectedSourceToken &&
-      selectedSourceChain
+      selectedSourceChain &&
+      destinationCurrencies &&
+      destinationCurrencies.length > 0
     ) {
       // User's Flow address as destination (in CAIP-10 format)
-      const destination = `eip155:${chainId}:${user.addr}`
+      const flowEvmChainId = getFlowEvmChainId(chainId)
+      const destination = `eip155:${flowEvmChainId}:${user.addr}`
 
       createSession({
         kind: "crypto",
         destination,
-        // Use first available destination currency (e.g., FLOW, USDF)
+        // Use first available destination currency (e.g., USDC on Flow EVM)
         // Relay will automatically bridge source token to this
-        currency: destinationCurrencies[0] || selectedSourceToken.address,
+        currency: destinationCurrencies[0].address,
         sourceChain: selectedSourceChain.caipId,
         sourceCurrency: selectedSourceToken.address,
         amount: amount || undefined,
@@ -140,6 +192,7 @@ export const FundContent: React.FC = () => {
     selectedTabIndex,
     selectedSourceToken,
     selectedSourceChain,
+    destinationCurrencies,
     amount,
     user?.addr,
     chainId,
