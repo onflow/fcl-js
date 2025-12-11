@@ -33,3 +33,4 @@ export {useFlowScheduledTransactionSetup} from "./useFlowScheduledTransactionSet
 export {useFlowScheduledTransactionCancel} from "./useFlowScheduledTransactionCancel"
 export {useFund} from "./useFund"
 export {useFundingCapabilities} from "./useFundingCapabilities"
+export {usePaymentsClient} from "./usePaymentsClient"

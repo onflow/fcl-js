@@ -1,8 +1,17 @@
 import React, {useState, PropsWithChildren, useMemo, useEffect} from "react"
-import {FlowClientContext, FlowConfig, FlowConfigContext} from "../core/context"
+import {
+  FlowClientContext,
+  FlowConfig,
+  FlowConfigContext,
+  PaymentsClientContext,
+} from "../core/context"
 import {DefaultOptions, QueryClient} from "@tanstack/react-query"
 import {FlowQueryClientProvider} from "./FlowQueryClient"
 import {createFlowClient} from "@onflow/fcl"
+import {
+  createPaymentsClient,
+  FundingProviderFactory,
+} from "@onflow/payments"
 import {ThemeProvider, Theme} from "../core/theme"
 import {GlobalTransactionProvider} from "./GlobalTransactionProvider"
 import tailwindStyles from "../styles/tailwind.css"
@@ -17,6 +26,7 @@ interface FlowProviderProps {
   flowJson?: Record<string, any>
   theme?: Partial<Theme>
   colorMode?: ColorMode
+  fundingProviders?: FundingProviderFactory[]
 }
 
 const defaultQueryOptions: DefaultOptions = {
@@ -37,6 +47,7 @@ export function FlowProvider({
   theme: customTheme,
   children,
   colorMode = "system",
+  fundingProviders = [],
 }: PropsWithChildren<FlowProviderProps>) {
   const [queryClient] = useState<QueryClient>(
     () => _queryClient ?? new QueryClient({defaultOptions: defaultQueryOptions})
@@ -64,6 +75,14 @@ export function FlowProvider({
         serviceOpenIdScopes: initialConfig.serviceOpenIdScopes,
       })
   }, [_flowClient, initialConfig, flowJson])
+
+  const paymentsClient = useMemo(() => {
+    if (fundingProviders.length === 0) return undefined
+    return createPaymentsClient({
+      providers: fundingProviders,
+      flowClient,
+    })
+  }, [fundingProviders, flowClient])
 
   // Helper function to get initial dark mode value
   const getInitialDarkMode = (colorMode: ColorMode): boolean => {
@@ -106,14 +125,16 @@ export function FlowProvider({
     <FlowQueryClientProvider queryClient={queryClient}>
       <FlowConfigContext.Provider value={initialConfig}>
         <FlowClientContext.Provider value={flowClient}>
-          <GlobalTransactionProvider>
-            <style>{tailwindStyles}</style>
-            <ThemeProvider theme={customTheme}>
-              <DarkModeProvider darkMode={darkMode}>
-                {children}
-              </DarkModeProvider>
-            </ThemeProvider>
-          </GlobalTransactionProvider>
+          <PaymentsClientContext.Provider value={paymentsClient}>
+            <GlobalTransactionProvider>
+              <style>{tailwindStyles}</style>
+              <ThemeProvider theme={customTheme}>
+                <DarkModeProvider darkMode={darkMode}>
+                  {children}
+                </DarkModeProvider>
+              </ThemeProvider>
+            </GlobalTransactionProvider>
+          </PaymentsClientContext.Provider>
         </FlowClientContext.Provider>
       </FlowConfigContext.Provider>
     </FlowQueryClientProvider>

@@ -1,19 +1,17 @@
 import {useQuery, UseQueryOptions, UseQueryResult} from "@tanstack/react-query"
-import {useCallback, useMemo} from "react"
+import {useCallback} from "react"
 import {useFlowQueryClient} from "../provider/FlowQueryClient"
 import {useFlowClient} from "./useFlowClient"
-import {
-  createPaymentsClient,
-  FundingProviderFactory,
-  ProviderCapability,
-} from "@onflow/payments"
+import {usePaymentsClient} from "./usePaymentsClient"
+import {useFlowChainId} from "./useFlowChainId"
+import {ProviderCapability, PaymentsClient} from "@onflow/payments"
 
 /**
  * Arguments for the useFundingCapabilities hook.
  */
 export interface UseFundingCapabilitiesArgs {
-  /** Array of funding provider factories to query */
-  providers: FundingProviderFactory[]
+  /** Optional payments client (uses context if not provided) */
+  paymentsClient?: PaymentsClient
   /** Optional React Query options */
   query?: Omit<
     UseQueryOptions<ProviderCapability[], Error>,
@@ -29,19 +27,16 @@ export interface UseFundingCapabilitiesArgs {
  * Fetches the capabilities (supported chains, currencies, etc.) from funding providers.
  * Use this to dynamically populate UI with available funding options.
  *
- * @param args.providers - Array of funding provider factories
+ * @param args.paymentsClient - Optional payments client (uses context if not provided)
  * @param args.query - Optional React Query options
  * @param args.flowClient - Optional Flow client override
  *
  * @example
  * ```tsx
  * import { useFundingCapabilities } from "@onflow/react-sdk"
- * import { relayProvider } from "@onflow/payments"
  *
  * function FundingOptions() {
- *   const { data: capabilities, isLoading } = useFundingCapabilities({
- *     providers: [relayProvider()],
- *   })
+ *   const { data: capabilities, isLoading } = useFundingCapabilities()
  *
  *   if (isLoading) return <div>Loading...</div>
  *
@@ -61,44 +56,52 @@ export interface UseFundingCapabilitiesArgs {
  * ```
  */
 export function useFundingCapabilities({
-  providers,
+  paymentsClient: _paymentsClient,
   query: queryOptions = {},
   flowClient,
-}: UseFundingCapabilitiesArgs): UseQueryResult<ProviderCapability[], Error> {
+}: UseFundingCapabilitiesArgs = {}): UseQueryResult<
+  ProviderCapability[],
+  Error
+> {
   const queryClient = useFlowQueryClient()
-  const fcl = useFlowClient({flowClient})
+  const contextPaymentsClient = usePaymentsClient()
+  const paymentsClient = _paymentsClient || contextPaymentsClient
+  const {data: chainId} = useFlowChainId()
 
-  const paymentsClient = useMemo(
-    () =>
-      createPaymentsClient({
-        providers,
-        flowClient: fcl,
-      }),
-    [providers, fcl]
-  )
+  // Use chainId in query key for proper cache invalidation when network switches
+  const chainIdForKey = chainId || "unknown"
 
   const fetchCapabilities = useCallback(async () => {
-    // Get all provider instances from the client
-    // We need to access the internal providers array
-    // Since it's not exposed, we'll need to call getCapabilities on the first provider
-    // This is a limitation - we should enhance the payments client to expose providers or aggregated capabilities
+    if (!paymentsClient) {
+      throw new Error(
+        "No payments client available. Configure fundingProviders in FlowProvider or pass paymentsClient to useFundingCapabilities."
+      )
+    }
 
+    // Access providers from the payments client and get their capabilities
     const allCapabilities: ProviderCapability[] = []
 
-    // Create provider instances manually to call getCapabilities
-    for (const factory of providers) {
-      const provider = factory({flowClient: fcl})
+    // TODO: Expose providers array from PaymentsClient in the spec
+    // For now, we access them via type assertion
+    const providers = (paymentsClient as any).providers || []
+
+    for (const provider of providers) {
       const capabilities = await provider.getCapabilities()
       allCapabilities.push(...capabilities)
     }
 
     return allCapabilities
-  }, [providers, fcl])
+  }, [paymentsClient])
 
   return useQuery<ProviderCapability[], Error>(
     {
-      queryKey: ["fundingCapabilities", providers.length],
+      queryKey: [
+        "fundingCapabilities",
+        paymentsClient ? "configured" : "none",
+        chainIdForKey,
+      ],
       queryFn: fetchCapabilities,
+      enabled: !!paymentsClient,
       staleTime: 5 * 60 * 1000, // 5 minutes - capabilities don't change often
       ...queryOptions,
     },
