@@ -78,19 +78,8 @@ export function useFundingCapabilities({
       )
     }
 
-    // Access providers from the payments client and get their capabilities
-    const allCapabilities: ProviderCapability[] = []
-
-    // TODO: Expose providers array from PaymentsClient in the spec
-    // For now, we access them via type assertion
-    const providers = (paymentsClient as any).providers || []
-
-    for (const provider of providers) {
-      const capabilities = await provider.getCapabilities()
-      allCapabilities.push(...capabilities)
-    }
-
-    return allCapabilities
+    // Use the getCapabilities method from the payments client
+    return await paymentsClient.getCapabilities()
   }, [paymentsClient])
 
   return useQuery<ProviderCapability[], Error>(

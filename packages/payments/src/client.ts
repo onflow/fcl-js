@@ -3,6 +3,7 @@ import type {
   FundingSession,
   FundingProvider,
   FundingProviderFactory,
+  ProviderCapability,
 } from "./types"
 import type {createFlowClientCore} from "@onflow/fcl-core"
 import {ADDRESS_PATTERN} from "./constants"
@@ -18,6 +19,11 @@ export interface PaymentsClient {
    * @returns Promise resolving to a funding session with instructions
    */
   createSession(intent: FundingIntent): Promise<FundingSession>
+  /**
+   * Get capabilities from all configured providers
+   * @returns Promise resolving to an array of provider capabilities
+   */
+  getCapabilities(): Promise<ProviderCapability[]>
 }
 
 /**
@@ -133,6 +139,14 @@ export function createPaymentsClient(
       throw new Error(
         `Failed to create session: no provider could handle the request. Errors: ${errorDetails}`
       )
+    },
+    async getCapabilities() {
+      const allCapabilities: ProviderCapability[] = []
+      for (const provider of providers) {
+        const capabilities = await provider.getCapabilities()
+        allCapabilities.push(...capabilities)
+      }
+      return allCapabilities
     },
   }
 }

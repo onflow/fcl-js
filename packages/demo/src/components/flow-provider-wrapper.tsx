@@ -1,5 +1,6 @@
 import * as fcl from "@onflow/fcl"
 import {FlowProvider, type FlowNetwork} from "@onflow/react-sdk"
+import {relayProvider} from "@onflow/payments"
 import React, {createContext, useCallback, useContext, useState} from "react"
 
 // Dark mode context
@@ -151,6 +152,7 @@ function FlowProviderInner({
         flowNetwork: currentNetwork,
       }}
       colorMode={darkMode ? "dark" : "light"}
+      fundingProviders={[relayProvider()]}
     >
       {children}
     </FlowProvider>

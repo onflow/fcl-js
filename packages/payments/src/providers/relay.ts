@@ -170,31 +170,12 @@ export function relayProvider(
           const isFlowEVM = chain.id === flowEvmChainId
 
           if (isFlowEVM) {
-            console.log("[Relay Provider] Flow EVM chain found:", chain)
             // Add ERC20 currencies from Flow
             if (chain.erc20Currencies) {
               chain.erc20Currencies.forEach(currency => {
-                console.log(
-                  "[Relay Provider] Checking currency:",
-                  currency.symbol,
-                  "address:",
-                  currency.address,
-                  "supportsBridging:",
-                  currency.supportsBridging
-                )
                 // Only add currencies that support bridging AND have an address
                 if (currency.supportsBridging && currency.address) {
-                  console.log(
-                    "[Relay Provider] ✓ Adding currency:",
-                    currency.symbol,
-                    currency.address
-                  )
                   flowCurrencies.add(currency.address)
-                } else if (!currency.address) {
-                  console.warn(
-                    "[Relay Provider] Currency missing address:",
-                    currency
-                  )
                 }
               })
             }
@@ -202,17 +183,7 @@ export function relayProvider(
             if (chain.featuredTokens) {
               chain.featuredTokens.forEach(token => {
                 if (token.address) {
-                  console.log(
-                    "[Relay Provider] Adding featured token:",
-                    token.symbol,
-                    token.address
-                  )
                   flowCurrencies.add(token.address)
-                } else {
-                  console.warn(
-                    "[Relay Provider] Featured token missing address:",
-                    token
-                  )
                 }
               })
             }
@@ -222,13 +193,6 @@ export function relayProvider(
         // sourceCurrencies should match destination currencies
         // You can only bridge tokens that exist on Flow
         const flowCurrenciesArray = Array.from(flowCurrencies)
-        console.log(
-          "[Relay Provider] Final currencies array:",
-          flowCurrenciesArray
-        )
-
-        console.log("[Relay Provider] Supported chains:", supportedChains)
-        console.log("[Relay Provider] Flow EVM chain ID:", flowEvmChainId)
 
         return [
           {
