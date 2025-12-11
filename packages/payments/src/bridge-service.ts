@@ -6,12 +6,11 @@
 import type {createFlowClientCore} from "@onflow/fcl-core"
 import {getContracts} from "@onflow/config"
 import flowJSON from "../flow.json"
+import type {FlowNetwork} from "./constants"
 
 import GET_EVM_ADDRESS_SCRIPT from "../cadence/scripts/get-evm-address-from-vault.cdc"
 import GET_VAULT_TYPE_SCRIPT from "../cadence/scripts/get-vault-type-from-evm.cdc"
 import GET_TOKEN_DECIMALS_SCRIPT from "../cadence/scripts/get-token-decimals.cdc"
-
-type FlowNetwork = "emulator" | "testnet" | "mainnet"
 
 interface BridgeQueryOptions {
   flowClient: ReturnType<typeof createFlowClientCore>
@@ -22,11 +21,10 @@ async function resolveCadence(
   flowClient: ReturnType<typeof createFlowClientCore>,
   cadence: string
 ): Promise<string> {
-  const chainId = await flowClient.getChainId()
-  const n = chainId.replace(/^flow-/, "").toLowerCase()
-  const network: FlowNetwork = n === "local" ? "emulator" : (n as FlowNetwork)
+  const chainId = (await flowClient.getChainId()) as FlowNetwork
+  const network = chainId === "local" ? "emulator" : chainId
 
-  const contracts = getContracts(flowJSON, network)
+  const contracts = getContracts(flowJSON, network) as Record<string, string>
   return cadence.replace(/import\s+"(\w+)"/g, (match, name) =>
     contracts[name] ? `import ${name} from 0x${contracts[name]}` : match
   )
