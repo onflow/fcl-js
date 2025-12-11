@@ -11,6 +11,10 @@ jobs:
   release:
     name: Release
     runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: write
+      pull-requests: write
     steps:
       - name: Checkout Repo
         uses: actions/checkout@v4
@@ -18,11 +22,11 @@ jobs:
           # This makes Actions fetch all Git history so that Changesets can generate changelogs with the correct commits
           fetch-depth: 0
 
-      # v18 node
-      - name: Setup Node.js lts/hydrogen
-        uses: actions/setup-node@v2
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
-          node-version: lts/hydrogen
+          node-version: 22
+          registry-url: "https://registry.npmjs.org"
 
       - name: Install Dependencies
         run: npm i
@@ -35,4 +39,5 @@ jobs:
           publish: npm run release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+          # Workaround for trusted publishers https://github.com/changesets/changesets/issues/1152#issuecomment-3190884868
+          NPM_TOKEN: ""

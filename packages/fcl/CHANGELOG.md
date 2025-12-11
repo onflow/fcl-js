@@ -1,5 +1,31 @@
 # @onflow/fcl
 
+## 1.21.4
+
+### Patch Changes
+
+- Updated dependencies [[`60f568702df22f874cea5a756962f701e79783d6`](https://github.com/onflow/fcl-js/commit/60f568702df22f874cea5a756962f701e79783d6)]:
+  - @onflow/fcl-core@1.26.0
+  - @onflow/fcl-wc@6.0.16
+
+## 1.21.3
+
+### Patch Changes
+
+- Updated dependencies [[`197938abdc11798c0299aab3394daa5cf1959f65`](https://github.com/onflow/fcl-js/commit/197938abdc11798c0299aab3394daa5cf1959f65)]:
+  - @onflow/config@1.7.0
+  - @onflow/fcl-core@1.25.0
+  - @onflow/fcl-wc@6.0.15
+  - @onflow/sdk@1.13.2
+
+## 1.21.2
+
+### Patch Changes
+
+- Updated dependencies [[`b5da56b93755f2871135573bfa806a8e12a50ddd`](https://github.com/onflow/fcl-js/commit/b5da56b93755f2871135573bfa806a8e12a50ddd)]:
+  - @onflow/fcl-core@1.24.0
+  - @onflow/fcl-wc@6.0.14
+
 ## 1.21.1
 
 ### Patch Changes

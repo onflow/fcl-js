@@ -1,5 +1,37 @@
 # @onflow/react-sdk
 
+## 0.14.0
+
+### Minor Changes
+
+- [#2756](https://github.com/onflow/fcl-js/pull/2756) [`60f568702df22f874cea5a756962f701e79783d6`](https://github.com/onflow/fcl-js/commit/60f568702df22f874cea5a756962f701e79783d6) Thanks [@mfbz](https://github.com/mfbz)! - Packages re-released after lerna update.
+
+### Patch Changes
+
+- Updated dependencies [[`60f568702df22f874cea5a756962f701e79783d6`](https://github.com/onflow/fcl-js/commit/60f568702df22f874cea5a756962f701e79783d6)]:
+  - @onflow/react-core@0.4.0
+  - @onflow/fcl@1.21.4
+
+## 0.13.1
+
+### Patch Changes
+
+- Updated dependencies [[`197938abdc11798c0299aab3394daa5cf1959f65`](https://github.com/onflow/fcl-js/commit/197938abdc11798c0299aab3394daa5cf1959f65)]:
+  - @onflow/react-core@0.3.0
+  - @onflow/fcl@1.21.3
+
+## 0.13.0
+
+### Minor Changes
+
+- [#2733](https://github.com/onflow/fcl-js/pull/2733) [`b5da56b93755f2871135573bfa806a8e12a50ddd`](https://github.com/onflow/fcl-js/commit/b5da56b93755f2871135573bfa806a8e12a50ddd) Thanks [@mfbz](https://github.com/mfbz)! - Add react-core package with platform-agnostic hooks with common utils and types extracted from react-sdk. Refactored react-sdk to use react-core package.
+
+### Patch Changes
+
+- Updated dependencies [[`b5da56b93755f2871135573bfa806a8e12a50ddd`](https://github.com/onflow/fcl-js/commit/b5da56b93755f2871135573bfa806a8e12a50ddd)]:
+  - @onflow/react-core@0.2.0
+  - @onflow/fcl@1.21.2
+
 ## 0.12.2
 
 ### Patch Changes

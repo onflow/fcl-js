@@ -72,17 +72,13 @@ export function createFCLContext(config: FCLConfig): FCLContext {
       "If flowJson is provided, flowNetwork must also be specified."
     )
 
+    // Clean the network name (converts "local" to "emulator")
     const cleanedNetwork = config.flowNetwork
       .toLowerCase()
       .replace(/^local$/, "emulator")
 
-    invariant(
-      cleanedNetwork === "mainnet" ||
-        cleanedNetwork === "testnet" ||
-        cleanedNetwork === "emulator",
-      `Invalid flowNetwork: ${config.flowNetwork}. Must be one of: mainnet, testnet, emulator.`
-    )
-
+    // getContracts now handles fork network resolution internally
+    // It will automatically inherit aliases from the parent network if this is a fork
     contracts = getContracts(config.flowJson, cleanedNetwork)
   }
 
