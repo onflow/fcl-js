@@ -1,5 +1,13 @@
 # @onflow/react-sdk
 
+## 0.13.1
+
+### Patch Changes
+
+- Updated dependencies [[`197938abdc11798c0299aab3394daa5cf1959f65`](https://github.com/onflow/fcl-js/commit/197938abdc11798c0299aab3394daa5cf1959f65)]:
+  - @onflow/react-core@0.3.0
+  - @onflow/fcl@1.21.3
+
 ## 0.13.0
 
 ### Minor Changes
