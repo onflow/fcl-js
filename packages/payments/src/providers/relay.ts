@@ -250,7 +250,7 @@ export function relayProvider(
       }
 
       // Resolve currency references to addresses and get decimals
-      // Supports both symbols ("USDC") and addresses ("0x...")
+      // Only supports EVM addresses ("0x...")
       // Note: Cadence vault identifiers are already converted by the client layer
       const originCurrency = await resolveCurrency(
         apiUrl,
@@ -321,32 +321,25 @@ async function resolveCurrency(
   // Fetch currency metadata from Relay API
   const currencies = await getRelayCurrencies(apiUrl, chainId)
 
-  // If it's an EVM address, find it in the currency list
-  if (isEvmAddress(currency)) {
-    const match = currencies.find(
-      c => c.address.toLowerCase() === currency.toLowerCase()
+  // Must be an EVM address (0x + 40 hex chars)
+  if (!isEvmAddress(currency)) {
+    throw new Error(
+      `Invalid currency format: "${currency}". ` +
+        `Relay requires EVM token addresses (0x + 40 hex chars). ` +
+        `Token symbols (e.g., "USDC", "USDF") are not supported. ` +
+        `Please provide the full EVM address or Cadence vault identifier.`
     )
-    if (!match) {
-      throw new Error(
-        `Token address "${currency}" not found on chain ${chainId}. ` +
-          `Make sure it's supported by Relay.`
-      )
-    }
-    return {address: match.address, decimals: match.decimals}
   }
 
-  // It's a symbol - find by symbol
+  // Find the address in the currency list to get decimals
   const match = currencies.find(
-    c => c.symbol.toUpperCase() === currency.toUpperCase()
+    c => c.address.toLowerCase() === currency.toLowerCase()
   )
 
   if (!match) {
     throw new Error(
-      `Token "${currency}" not found on chain ${chainId}. ` +
-        `Supported tokens: ${currencies
-          .map(c => c.symbol)
-          .slice(0, 10)
-          .join(", ")}...`
+      `Token address "${currency}" not found on chain ${chainId}. ` +
+        `Make sure it's supported by Relay.`
     )
   }
 

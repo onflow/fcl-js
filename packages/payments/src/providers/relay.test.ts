@@ -166,66 +166,35 @@ describe("relayProvider", () => {
       )
     })
 
-    it("should create session with symbol resolution", async () => {
-      // Mock currencies API for symbol lookup
-      fetchSpy
-        .mockResolvedValueOnce({
-          ok: true,
-          json: async () => ({
-            currencies: [
-              {
-                symbol: "USDC",
-                address: "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
-                decimals: 6,
-              },
-            ],
-          }),
-        })
-        .mockResolvedValueOnce({
-          ok: true,
-          json: async () => ({
-            currencies: [
-              {
-                symbol: "USDC",
-                address: "0x833589fcd6edb6e08f4c7c32d4f71b54bda02913",
-                decimals: 6,
-              },
-            ],
-          }),
-        })
-        // Mock quote API
-        .mockResolvedValueOnce({
-          ok: true,
-          json: async () => ({
-            steps: [
-              {
-                id: "deposit",
-                depositAddress: "0xDEPOSITADDRESS1234567890123456789012",
-              },
-            ],
-          }),
-        })
+    it("should reject symbol-based currency identifiers", async () => {
+      // Mock currencies API (required even though we reject symbols)
+      fetchSpy.mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({
+          currencies: [
+            {
+              symbol: "USDC",
+              address: "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
+              decimals: 6,
+            },
+          ],
+        }),
+      })
 
       const providerFactory = relayProvider()
       const provider = providerFactory({flowClient: mockFlowClient})
       const intent: CryptoFundingIntent = {
         kind: "crypto",
         destination: "eip155:8453:0xF0AE622e463fa757Cf72243569E18Be7Df1996cd",
-        currency: "USDC",
-        amount: "1000.0", // Human-readable: 1000 USDC
+        currency: "USDC", // Symbol not supported
+        amount: "1000.0",
         sourceChain: "eip155:1",
-        sourceCurrency: "USDC",
+        sourceCurrency: "USDC", // Symbol not supported
       }
 
-      const session = await provider.startSession(intent)
-
-      expect(session.kind).toBe("crypto")
-      expect(session.providerId).toBe("relay")
-      if (session.kind === "crypto") {
-        expect(session.instructions.address).toBe(
-          "0xDEPOSITADDRESS1234567890123456789012"
-        )
-      }
+      await expect(provider.startSession(intent)).rejects.toThrow(
+        /Invalid currency format/
+      )
     })
 
     it("should create session with explicit addresses", async () => {
@@ -439,7 +408,7 @@ describe("relayProvider", () => {
         currency: "0xd3bF53DAC106A0290B0483EcBC89d40FcC961f3e", // Flow token on Flow EVM
         amount: "1.5", // 1.5 FLOW
         sourceChain: "eip155:1",
-        sourceCurrency: "USDC",
+        sourceCurrency: "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48", // USDC on Ethereum
       }
 
       const session = await provider.startSession(intent)
