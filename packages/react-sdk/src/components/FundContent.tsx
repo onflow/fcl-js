@@ -16,6 +16,8 @@ import {useFundingCapabilities} from "../hooks/useFundingCapabilities"
 import {relayProvider, CryptoProviderCapability} from "@onflow/payments"
 import {useFlowCurrentUser} from "../hooks/useFlowCurrentUser"
 import {useFlowChainId} from "../hooks/useFlowChainId"
+import {useQuery} from "@tanstack/react-query"
+import {useFlowQueryClient} from "../provider/FlowQueryClient"
 import * as viemChains from "viem/chains"
 
 // Helper to get chain name from CAIP-2 ID
@@ -55,15 +57,6 @@ export const FundContent: React.FC = () => {
     c => c.type === "crypto"
   ) as CryptoProviderCapability
 
-  // Build SOURCE tokens list (what user can send FROM)
-  const sourceTokens = (cryptoCapability?.sourceCurrencies || []).map(
-    (currency, index) => ({
-      id: index + 1,
-      name: currency,
-      address: currency,
-    })
-  )
-
   // Build SOURCE chains list (where user can send FROM)
   const sourceChains = (cryptoCapability?.sourceChains || []).map(
     (caipId, index) => ({
@@ -73,22 +66,56 @@ export const FundContent: React.FC = () => {
     })
   )
 
-  const [selectedSourceToken, setSelectedSourceToken] = useState(
-    sourceTokens[0]
-  )
   const [selectedSourceChain, setSelectedSourceChain] = useState(
     sourceChains[0]
   )
+  const [selectedSourceToken, setSelectedSourceToken] = useState<{
+    id: number
+    name: string
+    address: string
+  } | null>(null)
 
-  // Update selections when capabilities load
+  // Update chain selection when capabilities load
   useEffect(() => {
-    if (sourceTokens.length > 0 && !selectedSourceToken) {
-      setSelectedSourceToken(sourceTokens[0])
-    }
     if (sourceChains.length > 0 && !selectedSourceChain) {
       setSelectedSourceChain(sourceChains[0])
     }
-  }, [sourceTokens, sourceChains])
+  }, [sourceChains])
+
+  // Fetch currencies for the selected source chain
+  const queryClient = useFlowQueryClient()
+  const {data: chainCurrencies, isLoading: isLoadingCurrencies} = useQuery(
+    {
+      queryKey: ["chainCurrencies", selectedSourceChain?.caipId],
+      queryFn: async () => {
+        if (!selectedSourceChain || !cryptoCapability?.getCurrenciesForChain) {
+          return []
+        }
+        return await cryptoCapability.getCurrenciesForChain(
+          selectedSourceChain.caipId
+        )
+      },
+      enabled: !!selectedSourceChain && !!cryptoCapability,
+      staleTime: 5 * 60 * 1000,
+    },
+    queryClient
+  )
+
+  // Build token list from chain-specific currencies
+  const sourceTokens = (chainCurrencies || []).map((address, index) => ({
+    id: index + 1,
+    name: address,
+    address: address,
+  }))
+
+  // Update token selection when currencies load or chain changes
+  useEffect(() => {
+    if (sourceTokens.length > 0) {
+      setSelectedSourceToken(sourceTokens[0])
+    } else {
+      setSelectedSourceToken(null)
+    }
+  }, [selectedSourceChain, chainCurrencies])
 
   // Initialize useFund hook with relay provider
   const {
@@ -225,13 +252,15 @@ export const FundContent: React.FC = () => {
                 </div>
               )}
 
-              {isLoadingCapabilities && (
+              {(isLoadingCapabilities || isLoadingCurrencies) && (
                 <div
                   className="flow-rounded-lg flow-bg-slate-50 dark:flow-bg-slate-800/50 flow-border
                     flow-border-slate-200 dark:flow-border-slate-700 flow-p-4"
                 >
                   <p className="flow-text-sm flow-text-slate-600 dark:flow-text-slate-400">
-                    Loading available funding options...
+                    {isLoadingCapabilities
+                      ? "Loading available funding options..."
+                      : "Loading available tokens..."}
                   </p>
                 </div>
               )}
@@ -259,6 +288,7 @@ export const FundContent: React.FC = () => {
               )}
 
               {!isLoadingCapabilities &&
+                !isLoadingCurrencies &&
                 sourceTokens.length > 0 &&
                 sourceChains.length > 0 && (
                   <div className="flow-grid flow-grid-cols-2 flow-gap-3">

@@ -106,8 +106,12 @@ export interface CryptoProviderCapability extends BaseProviderCapability {
   type: "crypto"
   /** List of supported source chains in CAIP-2 format (e.g., `["eip155:1", "eip155:137"]`) */
   sourceChains?: string[]
-  /** List of supported source currencies */
-  sourceCurrencies?: string[]
+  /**
+   * Function to get currencies available on a specific source chain
+   * @param sourceChain - Source chain in CAIP-2 format (e.g., "eip155:1")
+   * @returns Promise resolving to array of currency addresses available on that chain
+   */
+  getCurrenciesForChain: (sourceChain: string) => Promise<string[]>
 }
 
 /**

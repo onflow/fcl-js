@@ -195,8 +195,21 @@ export function relayProvider(
           {
             type: "crypto",
             sourceChains: supportedChains,
-            sourceCurrencies: flowCurrenciesArray,
             currencies: flowCurrenciesArray,
+            // Query chain-specific source currencies dynamically
+            getCurrenciesForChain: async (sourceChain: string) => {
+              try {
+                const {chainId} = parseCAIP2(sourceChain)
+                const currencies = await getRelayCurrencies(apiUrl, chainId)
+                return currencies.map(c => c.address)
+              } catch (error) {
+                console.error(
+                  `Failed to fetch currencies for chain ${sourceChain}:`,
+                  error
+                )
+                return []
+              }
+            },
           },
         ]
       } catch (error) {
