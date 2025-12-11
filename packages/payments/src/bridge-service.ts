@@ -11,6 +11,7 @@ import type {FlowNetwork} from "./constants"
 import GET_EVM_ADDRESS_SCRIPT from "../cadence/scripts/get-evm-address-from-vault.cdc"
 import GET_VAULT_TYPE_SCRIPT from "../cadence/scripts/get-vault-type-from-evm.cdc"
 import GET_TOKEN_DECIMALS_SCRIPT from "../cadence/scripts/get-token-decimals.cdc"
+import GET_COA_ADDRESS_SCRIPT from "../cadence/scripts/get-coa-address.cdc"
 
 interface BridgeQueryOptions {
   flowClient: ReturnType<typeof createFlowClientCore>
@@ -70,4 +71,18 @@ export async function getTokenDecimals({
     args: (arg: any, t: any) => [arg(evmAddress, t.String)],
   })
   return Number(result)
+}
+
+/**
+ * Get the COA (Cadence Owned Account) EVM address for a Cadence account
+ */
+export async function getCoaAddress({
+  flowClient,
+  cadenceAddress,
+}: BridgeQueryOptions & {cadenceAddress: string}): Promise<string | null> {
+  const result = await flowClient.query({
+    cadence: await resolveCadence(flowClient, GET_COA_ADDRESS_SCRIPT),
+    args: (arg: any, t: any) => [arg(cadenceAddress, t.Address)],
+  })
+  return result || null
 }

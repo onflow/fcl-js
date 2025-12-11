@@ -99,6 +99,22 @@ export interface BaseProviderCapability {
 }
 
 /**
+ * Currency metadata returned by providers
+ */
+export interface CurrencyMetadata {
+  /** Token contract address */
+  address: string
+  /** Token symbol (e.g., "USDC", "WETH") */
+  symbol: string
+  /** Token name (e.g., "USD Coin") */
+  name: string
+  /** Number of decimals */
+  decimals: number
+  /** Optional logo URI */
+  logoURI?: string
+}
+
+/**
  * Capabilities for a crypto funding provider
  */
 export interface CryptoProviderCapability extends BaseProviderCapability {
@@ -106,8 +122,12 @@ export interface CryptoProviderCapability extends BaseProviderCapability {
   type: "crypto"
   /** List of supported source chains in CAIP-2 format (e.g., `["eip155:1", "eip155:137"]`) */
   sourceChains?: string[]
-  /** List of supported source currencies */
-  sourceCurrencies?: string[]
+  /**
+   * Function to get currencies available on a specific source chain
+   * @param sourceChain - Source chain in CAIP-2 format (e.g., "eip155:1")
+   * @returns Promise resolving to array of currency metadata
+   */
+  getCurrenciesForChain: (sourceChain: string) => Promise<CurrencyMetadata[]>
 }
 
 /**

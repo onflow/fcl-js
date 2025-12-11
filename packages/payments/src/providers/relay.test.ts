@@ -6,6 +6,8 @@ describe("relayProvider", () => {
 
   const mockFlowClient = {
     getChainId: jest.fn().mockResolvedValue("mainnet"),
+    query: jest.fn(),
+    config: jest.fn(),
   } as any
 
   beforeEach(() => {
@@ -81,8 +83,7 @@ describe("relayProvider", () => {
         expect(cryptoCap.sourceChains).toContain("eip155:1")
         expect(cryptoCap.sourceChains).toContain("eip155:8453")
         expect(cryptoCap.sourceChains).toContain("eip155:747")
-        expect(cryptoCap.sourceCurrencies).toContain("USDC")
-        expect(cryptoCap.currencies).toContain("USDC")
+        expect(cryptoCap.currencies).toContain("0x...")
       }
     })
 
@@ -93,13 +94,17 @@ describe("relayProvider", () => {
             id: 1,
             depositEnabled: true,
             disabled: false,
-            erc20Currencies: [{symbol: "USDC", supportsBridging: true}],
+            erc20Currencies: [
+              {symbol: "USDC", address: "0x...", supportsBridging: true},
+            ],
           },
           {
             id: 999,
             depositEnabled: false, // Not enabled
             disabled: false,
-            erc20Currencies: [{symbol: "USDC", supportsBridging: true}],
+            erc20Currencies: [
+              {symbol: "USDC", address: "0x...", supportsBridging: true},
+            ],
           },
         ],
       }
@@ -150,37 +155,26 @@ describe("relayProvider", () => {
       ).rejects.toThrow("Fiat not supported")
     })
 
-    it("should reject Cadence destinations", async () => {
+    it("should reject Cadence destinations without COA", async () => {
+      // Mock flowClient to simulate no COA found
+      ;(mockFlowClient.query as jest.Mock).mockResolvedValueOnce(null)
+
       const providerFactory = relayProvider()
       const provider = providerFactory({flowClient: mockFlowClient})
       const intent: CryptoFundingIntent = {
         kind: "crypto",
         destination: "eip155:747:0x8c5303eaa26202d6", // Cadence address (16 hex chars)
-        currency: "USDC",
+        currency: "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48", // Use EVM address
         sourceChain: "eip155:1",
-        sourceCurrency: "USDC",
+        sourceCurrency: "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
       }
 
       await expect(provider.startSession(intent)).rejects.toThrow(
-        "Cadence destination detected"
+        /No COA.*found/
       )
     })
 
     it("should reject symbol-based currency identifiers", async () => {
-      // Mock currencies API (required even though we reject symbols)
-      fetchSpy.mockResolvedValueOnce({
-        ok: true,
-        json: async () => ({
-          currencies: [
-            {
-              symbol: "USDC",
-              address: "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
-              decimals: 6,
-            },
-          ],
-        }),
-      })
-
       const providerFactory = relayProvider()
       const provider = providerFactory({flowClient: mockFlowClient})
       const intent: CryptoFundingIntent = {
@@ -192,6 +186,7 @@ describe("relayProvider", () => {
         sourceCurrency: "USDC", // Symbol not supported
       }
 
+      // Should reject immediately without any API calls
       await expect(provider.startSession(intent)).rejects.toThrow(
         /Invalid currency format/
       )
@@ -199,30 +194,28 @@ describe("relayProvider", () => {
 
     it("should create session with explicit addresses", async () => {
       // Mock currencies API for decimal lookup (even with addresses, we need decimals)
+      // First call: for source currency on origin chain (chain 1)
       fetchSpy
         .mockResolvedValueOnce({
           ok: true,
-          json: async () => ({
-            currencies: [
-              {
-                symbol: "USDC",
-                address: "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
-                decimals: 6,
-              },
-            ],
-          }),
+          json: async () => [
+            {
+              symbol: "USDC",
+              address: "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
+              decimals: 6,
+            },
+          ],
         })
+        // Second call: for destination currency on destination chain (chain 8453)
         .mockResolvedValueOnce({
           ok: true,
-          json: async () => ({
-            currencies: [
-              {
-                symbol: "USDC",
-                address: "0x833589fcd6edb6e08f4c7c32d4f71b54bda02913",
-                decimals: 6,
-              },
-            ],
-          }),
+          json: async () => [
+            {
+              symbol: "USDC",
+              address: "0x833589fcd6edb6e08f4c7c32d4f71b54bda02913",
+              decimals: 6,
+            },
+          ],
         })
         // Mock quote API
         .mockResolvedValueOnce({
@@ -259,31 +252,27 @@ describe("relayProvider", () => {
     })
 
     it("should throw if deposit address not found in response", async () => {
-      // Mock currencies API
+      // Mock currencies API (returns array directly)
       fetchSpy
         .mockResolvedValueOnce({
           ok: true,
-          json: async () => ({
-            currencies: [
-              {
-                symbol: "USDC",
-                address: "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
-                decimals: 6,
-              },
-            ],
-          }),
+          json: async () => [
+            {
+              symbol: "USDC",
+              address: "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
+              decimals: 6,
+            },
+          ],
         })
         .mockResolvedValueOnce({
           ok: true,
-          json: async () => ({
-            currencies: [
-              {
-                symbol: "USDC",
-                address: "0x833589fcd6edb6e08f4c7c32d4f71b54bda02913",
-                decimals: 6,
-              },
-            ],
-          }),
+          json: async () => [
+            {
+              symbol: "USDC",
+              address: "0x833589fcd6edb6e08f4c7c32d4f71b54bda02913",
+              decimals: 6,
+            },
+          ],
         })
         // Mock quote API with no deposit address
         .mockResolvedValueOnce({
@@ -314,6 +303,8 @@ describe("relayProvider", () => {
       const providerFactory = relayProvider()
       const provider = providerFactory({flowClient: mockFlowClient})
 
+      let currenciesCallCount = 0
+
       // Mock Relay API responses
       fetchSpy.mockImplementation((url: string | Request | URL) => {
         const urlString = url.toString()
@@ -322,40 +313,43 @@ describe("relayProvider", () => {
           return Promise.resolve({
             ok: true,
             json: () =>
-              Promise.resolve([
-                {
-                  id: "1",
-                  name: "Ethereum",
-                  depositEnabled: true,
-                  erc20Currencies: [
-                    {
-                      symbol: "USDC",
-                      address: "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
-                      decimals: 6,
-                    },
-                  ],
-                },
-                {
-                  id: "747",
-                  name: "Flow EVM",
-                  depositEnabled: true,
-                  erc20Currencies: [
-                    {
-                      symbol: "FLOW",
-                      address: "0xd3bF53DAC106A0290B0483EcBC89d40FcC961f3e",
-                      decimals: 18,
-                    },
-                  ],
-                },
-              ]),
+              Promise.resolve({
+                chains: [
+                  {
+                    id: 1,
+                    name: "Ethereum",
+                    depositEnabled: true,
+                    erc20Currencies: [
+                      {
+                        symbol: "USDC",
+                        address: "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
+                        decimals: 6,
+                      },
+                    ],
+                  },
+                  {
+                    id: 747,
+                    name: "Flow EVM",
+                    depositEnabled: true,
+                    erc20Currencies: [
+                      {
+                        symbol: "FLOW",
+                        address: "0xd3bF53DAC106A0290B0483EcBC89d40FcC961f3e",
+                        decimals: 18,
+                      },
+                    ],
+                  },
+                ],
+              }),
           } as Response)
         }
 
         if (urlString.includes("/currencies")) {
-          const urlObj = new URL(urlString)
-          const chainId = urlObj.searchParams.get("chainId")
+          // currencies/v2 is called twice - once for origin, once for destination
+          currenciesCallCount++
 
-          if (chainId === "1") {
+          if (currenciesCallCount === 1) {
+            // First call: origin chain (Ethereum, chain 1)
             return Promise.resolve({
               ok: true,
               json: () =>
@@ -367,7 +361,8 @@ describe("relayProvider", () => {
                   },
                 ]),
             } as Response)
-          } else if (chainId === "747") {
+          } else {
+            // Second call: destination chain (Flow EVM, chain 747)
             return Promise.resolve({
               ok: true,
               json: () =>

@@ -34,6 +34,7 @@
     "@types/react-dom": "^19.0.4",
     "@vitejs/plugin-react": "^4.4.1",
     "autoprefixer": "^10.4.21",
+    "buffer": "^6.0.3",
     "concurrently": "^8.0.1",
     "cross-env": "^7.0.3",
     "eslint": "^9.25.0",
