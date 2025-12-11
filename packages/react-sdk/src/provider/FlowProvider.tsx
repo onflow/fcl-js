@@ -8,10 +8,7 @@ import {
 import {DefaultOptions, QueryClient} from "@tanstack/react-query"
 import {FlowQueryClientProvider} from "./FlowQueryClient"
 import {createFlowClient} from "@onflow/fcl"
-import {
-  createPaymentsClient,
-  FundingProviderFactory,
-} from "@onflow/payments"
+import {createPaymentsClient, FundingProviderFactory} from "@onflow/payments"
 import {ThemeProvider, Theme} from "../core/theme"
 import {GlobalTransactionProvider} from "./GlobalTransactionProvider"
 import tailwindStyles from "../styles/tailwind.css"

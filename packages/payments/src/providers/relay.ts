@@ -174,14 +174,14 @@ export function relayProvider(
             if (chain.erc20Currencies) {
               chain.erc20Currencies.forEach(currency => {
                 if (currency.supportsBridging) {
-                  flowCurrencies.add(currency.symbol)
+                  flowCurrencies.add(currency.address)
                 }
               })
             }
             // Also check featured tokens
             if (chain.featuredTokens) {
               chain.featuredTokens.forEach(token => {
-                flowCurrencies.add(token.symbol)
+                flowCurrencies.add(token.address)
               })
             }
           }

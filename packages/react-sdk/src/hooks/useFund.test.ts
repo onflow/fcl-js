@@ -1,136 +1,95 @@
-import {renderHook} from "@testing-library/react"
-import * as fcl from "@onflow/fcl"
-import {FlowProvider} from "../provider"
+import {renderHook, waitFor} from "@testing-library/react"
 import {useFund} from "./useFund"
-import {createMockFclInstance, MockFclInstance} from "../__mocks__/flow-client"
-import {
-  FundingProviderFactory,
-  FundingSession,
-  CryptoFundingIntent,
-} from "@onflow/payments"
-
-jest.mock("@onflow/fcl", () => require("../__mocks__/fcl").default)
+import {FundingIntent, FundingSession, PaymentsClient} from "@onflow/payments"
+import {FlowProvider} from "../provider/FlowProvider"
 
 describe("useFund", () => {
-  let mockFcl: MockFclInstance
+  const mockSession: FundingSession = {
+    provider: "test-provider",
+    instructions: {
+      kind: "crypto",
+      address: "0xTestDepositAddress",
+      chain: "eip155:1",
+      currency: "0xUSDC",
+    },
+  }
+
+  const mockIntent: FundingIntent = {
+    kind: "crypto",
+    destination: "eip155:747:0xRecipient",
+    currency: "0xUSDC",
+    amount: "100",
+    sourceChain: "eip155:1",
+    sourceCurrency: "0xUSDC",
+  }
+
+  // Create mock payments client
+  const createMockPaymentsClient = (shouldSucceed: boolean): PaymentsClient => {
+    return {
+      createSession: jest
+        .fn()
+        .mockResolvedValue(
+          shouldSucceed
+            ? mockSession
+            : Promise.reject(new Error("Provider failed"))
+        ),
+    } as any
+  }
 
   beforeEach(() => {
-    mockFcl = createMockFclInstance()
-    // Override getChainId to return numeric chain ID (payments client expects "747", not "mainnet")
-    mockFcl.mockFclInstance.getChainId = jest.fn().mockResolvedValue("747")
-    jest.mocked(fcl.createFlowClient).mockReturnValue(mockFcl.mockFclInstance)
-  })
-
-  afterEach(() => {
     jest.clearAllMocks()
   })
 
-  const createMockProviderFactory =
-    (session: FundingSession): FundingProviderFactory =>
-    () => ({
-      id: "mock-provider",
-      getCapabilities: jest.fn().mockResolvedValue([{type: "crypto"}]),
-      startSession: jest.fn().mockResolvedValue(session),
+  it("should successfully create a funding session", async () => {
+    const mockClient = createMockPaymentsClient(true)
+
+    const {result} = renderHook(() => useFund({paymentsClient: mockClient}), {
+      wrapper: FlowProvider,
     })
 
-  test("creates a funding session and returns it", async () => {
-    const mockSession: FundingSession = {
-      id: "session-123",
-      providerId: "mock-provider",
-      kind: "crypto",
-      instructions: {
-        address: "0x1234567890123456789012345678901234567890",
-      },
-    }
+    // Trigger the mutation
+    result.current.mutateAsync(mockIntent)
 
-    const startSessionSpy = jest.fn().mockResolvedValue(mockSession)
-    const mockProviderFactory = (): FundingProviderFactory => () => ({
-      id: "mock-provider",
-      getCapabilities: jest.fn().mockResolvedValue([{type: "crypto"}]),
-      startSession: startSessionSpy,
+    await waitFor(() => {
+      expect(result.current.isSuccess).toBe(true)
     })
 
-    const {result} = renderHook(
-      () =>
-        useFund({
-          providers: [mockProviderFactory()],
-        }),
-      {
-        wrapper: FlowProvider,
-      }
-    )
-
-    const intent: CryptoFundingIntent = {
-      kind: "crypto",
-      destination: "eip155:747:0xRecipient",
-      currency: "USDC",
-      amount: "100",
-      sourceChain: "eip155:1",
-      sourceCurrency: "USDC",
-    }
-
-    const session = await result.current.mutateAsync(intent)
-
-    expect(session).toEqual(mockSession)
-    expect(startSessionSpy).toHaveBeenCalledWith(intent)
+    expect(result.current.data).toEqual(mockSession)
+    expect(mockClient.createSession).toHaveBeenCalledWith(mockIntent)
   })
 
-  test("handles provider error", async () => {
+  it("should handle funding session errors", async () => {
     const error = new Error("Provider failed")
-    const mockProviderFactory: FundingProviderFactory = () => ({
-      id: "failing-provider",
-      getCapabilities: jest.fn().mockResolvedValue([{type: "crypto"}]),
-      startSession: jest.fn().mockRejectedValue(error),
+    const mockClient = createMockPaymentsClient(false)
+
+    const {result} = renderHook(() => useFund({paymentsClient: mockClient}), {
+      wrapper: FlowProvider,
     })
 
-    const {result} = renderHook(
-      () =>
-        useFund({
-          providers: [mockProviderFactory],
-        }),
-      {
-        wrapper: FlowProvider,
-      }
-    )
+    // Trigger the mutation
+    result.current.mutate(mockIntent)
 
-    const intent: CryptoFundingIntent = {
-      kind: "crypto",
-      destination: "eip155:747:0xRecipient",
-      currency: "USDC",
-      sourceChain: "eip155:1",
-      sourceCurrency: "USDC",
-    }
+    await waitFor(() => {
+      expect(result.current.isError).toBe(true)
+    })
 
-    await expect(result.current.mutateAsync(intent)).rejects.toThrow(
-      "Failed to create session: no provider could handle the request"
-    )
+    expect(result.current.error?.message).toContain("Provider failed")
   })
 
-  test("returns mutation state properties", () => {
-    const mockSession: FundingSession = {
-      id: "session-123",
-      providerId: "mock-provider",
-      kind: "crypto",
-      instructions: {address: "0x123"},
-    }
+  it("should throw error when no payments client is provided", async () => {
+    const {result} = renderHook(() => useFund(), {
+      wrapper: FlowProvider,
+    })
 
-    const mockProviderFactory = createMockProviderFactory(mockSession)
+    // Trigger the mutation
+    result.current.mutate(mockIntent)
 
-    const {result} = renderHook(
-      () =>
-        useFund({
-          providers: [mockProviderFactory],
-        }),
-      {
-        wrapper: FlowProvider,
-      }
+    await waitFor(() => {
+      expect(result.current.isError).toBe(true)
+    })
+
+    expect(result.current.error?.message).toContain(
+      "No payments client available"
     )
-
-    // Check that mutation properties are present
-    expect(result.current.mutate).toBeInstanceOf(Function)
-    expect(result.current.mutateAsync).toBeInstanceOf(Function)
-    expect(result.current.isPending).toBe(false)
-    expect(result.current.isError).toBe(false)
-    expect(result.current.isSuccess).toBe(false)
   })
 })
