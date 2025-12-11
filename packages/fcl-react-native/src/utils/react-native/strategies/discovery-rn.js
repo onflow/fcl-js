@@ -1,5 +1,6 @@
 import {ConnectModal} from "../ConnectModal"
 import {hideModal, showModal} from "../ConnectModalProvider"
+import {config} from "@onflow/config"
 
 /**
  * Execution strategy for React Native discovery services.
@@ -80,17 +81,9 @@ export async function execDiscoveryRN({
       }
     }
 
-    // Create a config wrapper that provides .get() method for ServiceDiscovery
-    // The discovery endpoint comes from service.endpoint (set by FlowProvider config)
+    // Use the global FCL config to give ConnectModal access to all config values including discovery.authn.endpoint
     const fclContext = {
-      config: {
-        get: key => {
-          if (key === "discovery.authn.endpoint") {
-            return Promise.resolve(service.endpoint)
-          }
-          return Promise.resolve(execConfig[key])
-        },
-      },
+      config: config(),
     }
 
     const result = showModal(ConnectModal, {
