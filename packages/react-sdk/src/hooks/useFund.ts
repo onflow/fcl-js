@@ -10,15 +10,15 @@ import {
   createPaymentsClient,
   FundingIntent,
   FundingSession,
-  FundingProvider,
+  FundingProviderFactory,
 } from "@onflow/payments"
 
 /**
  * Arguments for the useFund hook.
  */
 export interface UseFundArgs {
-  /** Array of funding providers to use (in priority order) */
-  providers: FundingProvider[]
+  /** Array of funding provider factories to use (in priority order) */
+  providers: FundingProviderFactory[]
   /** Optional React Query mutation settings (e.g., `onSuccess`, `onError`, `retry`) */
   mutation?: Omit<
     UseMutationOptions<FundingSession, Error, FundingIntent>,

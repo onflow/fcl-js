@@ -4,7 +4,7 @@ import {FlowProvider} from "../provider"
 import {useFund} from "./useFund"
 import {createMockFclInstance, MockFclInstance} from "../__mocks__/flow-client"
 import {
-  FundingProvider,
+  FundingProviderFactory,
   FundingSession,
   CryptoFundingIntent,
 } from "@onflow/payments"
@@ -25,11 +25,13 @@ describe("useFund", () => {
     jest.clearAllMocks()
   })
 
-  const createMockProvider = (session: FundingSession): FundingProvider => ({
-    id: "mock-provider",
-    getCapabilities: jest.fn().mockResolvedValue([{type: "crypto"}]),
-    startSession: jest.fn().mockResolvedValue(session),
-  })
+  const createMockProviderFactory =
+    (session: FundingSession): FundingProviderFactory =>
+    () => ({
+      id: "mock-provider",
+      getCapabilities: jest.fn().mockResolvedValue([{type: "crypto"}]),
+      startSession: jest.fn().mockResolvedValue(session),
+    })
 
   test("creates a funding session and returns it", async () => {
     const mockSession: FundingSession = {
@@ -41,12 +43,17 @@ describe("useFund", () => {
       },
     }
 
-    const mockProvider = createMockProvider(mockSession)
+    const startSessionSpy = jest.fn().mockResolvedValue(mockSession)
+    const mockProviderFactory = (): FundingProviderFactory => () => ({
+      id: "mock-provider",
+      getCapabilities: jest.fn().mockResolvedValue([{type: "crypto"}]),
+      startSession: startSessionSpy,
+    })
 
     const {result} = renderHook(
       () =>
         useFund({
-          providers: [mockProvider],
+          providers: [mockProviderFactory()],
         }),
       {
         wrapper: FlowProvider,
@@ -65,21 +72,21 @@ describe("useFund", () => {
     const session = await result.current.mutateAsync(intent)
 
     expect(session).toEqual(mockSession)
-    expect(mockProvider.startSession).toHaveBeenCalledWith(intent)
+    expect(startSessionSpy).toHaveBeenCalledWith(intent)
   })
 
   test("handles provider error", async () => {
     const error = new Error("Provider failed")
-    const mockProvider: FundingProvider = {
+    const mockProviderFactory: FundingProviderFactory = () => ({
       id: "failing-provider",
       getCapabilities: jest.fn().mockResolvedValue([{type: "crypto"}]),
       startSession: jest.fn().mockRejectedValue(error),
-    }
+    })
 
     const {result} = renderHook(
       () =>
         useFund({
-          providers: [mockProvider],
+          providers: [mockProviderFactory],
         }),
       {
         wrapper: FlowProvider,
@@ -94,7 +101,9 @@ describe("useFund", () => {
       sourceCurrency: "USDC",
     }
 
-    await expect(result.current.mutateAsync(intent)).rejects.toThrow(error)
+    await expect(result.current.mutateAsync(intent)).rejects.toThrow(
+      "Failed to create session: no provider could handle the request"
+    )
   })
 
   test("returns mutation state properties", () => {
@@ -105,12 +114,12 @@ describe("useFund", () => {
       instructions: {address: "0x123"},
     }
 
-    const mockProvider = createMockProvider(mockSession)
+    const mockProviderFactory = createMockProviderFactory(mockSession)
 
     const {result} = renderHook(
       () =>
         useFund({
-          providers: [mockProvider],
+          providers: [mockProviderFactory],
         }),
       {
         wrapper: FlowProvider,
