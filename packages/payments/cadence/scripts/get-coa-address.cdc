@@ -1,7 +1,7 @@
 import "EVM"
 
 /// Get the EVM address for a Cadence account's COA (Cadence Owned Account)
-/// Returns the EVM address as a hex string, or nil if no COA exists
+/// Returns the EVM address as a hex string with 0x prefix, or nil if no COA exists
 access(all) fun main(address: Address): String? {
     let account = getAccount(address)
     
@@ -11,7 +11,9 @@ access(all) fun main(address: Address): String? {
     )
     
     if let coa = coaRef {
-        return coa.address().toString()
+        // Get the address bytes and convert to hex string with 0x prefix
+        let addressBytes = coa.address().bytes
+        return "0x".concat(String.encodeHex(addressBytes))
     }
     
     return nil
