@@ -11,9 +11,14 @@ access(all) fun main(address: Address): String? {
     )
     
     if let coa = coaRef {
-        // Get the address bytes and convert to hex string with 0x prefix
+        // Get the address bytes - it's a fixed-size array [UInt8; 20]
+        // Convert to variable-size array for String.encodeHex
         let addressBytes = coa.address().bytes
-        return "0x".concat(String.encodeHex(addressBytes))
+        let variableBytes: [UInt8] = []
+        for byte in addressBytes {
+            variableBytes.append(byte)
+        }
+        return "0x".concat(String.encodeHex(variableBytes))
     }
     
     return nil
