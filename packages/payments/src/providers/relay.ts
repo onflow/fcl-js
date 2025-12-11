@@ -201,7 +201,13 @@ export function relayProvider(
               try {
                 const {chainId} = parseCAIP2(sourceChain)
                 const currencies = await getRelayCurrencies(apiUrl, chainId)
-                return currencies.map(c => c.address)
+                return currencies.map(c => ({
+                  address: c.address,
+                  symbol: c.symbol,
+                  name: c.name,
+                  decimals: c.decimals,
+                  logoURI: c.metadata?.logoURI,
+                }))
               } catch (error) {
                 console.error(
                   `Failed to fetch currencies for chain ${sourceChain}:`,

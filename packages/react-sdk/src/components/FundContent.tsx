@@ -13,7 +13,11 @@ import {QRCode} from "./internal/QRCode"
 import {Address} from "./internal/Address"
 import {useFund} from "../hooks/useFund"
 import {useFundingCapabilities} from "../hooks/useFundingCapabilities"
-import {relayProvider, CryptoProviderCapability} from "@onflow/payments"
+import {
+  relayProvider,
+  CryptoProviderCapability,
+  CurrencyMetadata,
+} from "@onflow/payments"
 import {useFlowCurrentUser} from "../hooks/useFlowCurrentUser"
 import {useFlowChainId} from "../hooks/useFlowChainId"
 import {useQuery} from "@tanstack/react-query"
@@ -57,6 +61,10 @@ export const FundContent: React.FC = () => {
     c => c.type === "crypto"
   ) as CryptoProviderCapability
 
+  // Get destination currencies (what can be received on Flow)
+  // These are typically FLOW, USDF, WFLOW, etc.
+  const destinationCurrencies = cryptoCapability?.currencies || []
+
   // Build SOURCE chains list (where user can send FROM)
   const sourceChains = (cryptoCapability?.sourceChains || []).map(
     (caipId, index) => ({
@@ -69,11 +77,8 @@ export const FundContent: React.FC = () => {
   const [selectedSourceChain, setSelectedSourceChain] = useState(
     sourceChains[0]
   )
-  const [selectedSourceToken, setSelectedSourceToken] = useState<{
-    id: number
-    name: string
-    address: string
-  } | null>(null)
+  const [selectedSourceToken, setSelectedSourceToken] =
+    useState<CurrencyMetadata | null>(null)
 
   // Update chain selection when capabilities load
   useEffect(() => {
@@ -101,12 +106,8 @@ export const FundContent: React.FC = () => {
     queryClient
   )
 
-  // Build token list from chain-specific currencies
-  const sourceTokens = (chainCurrencies || []).map((address, index) => ({
-    id: index + 1,
-    name: address,
-    address: address,
-  }))
+  // Use currency metadata directly
+  const sourceTokens = chainCurrencies || []
 
   // Update token selection when currencies load or chain changes
   useEffect(() => {
@@ -142,7 +143,9 @@ export const FundContent: React.FC = () => {
       createSession({
         kind: "crypto",
         destination,
-        currency: selectedSourceToken.address, // Destination currency (will be same token on Flow)
+        // Use first available destination currency (e.g., FLOW, USDF)
+        // Relay will automatically bridge source token to this
+        currency: destinationCurrencies[0] || selectedSourceToken.address,
         sourceChain: selectedSourceChain.caipId,
         sourceCurrency: selectedSourceToken.address,
         amount: amount || undefined,
@@ -307,13 +310,44 @@ export const FundContent: React.FC = () => {
                         {({open}) => (
                           <div className="flow-relative">
                             <ListboxButton>
-                              {selectedSourceToken?.name || "Select token"}
+                              <div className="flow-flex flow-items-center flow-gap-2">
+                                {selectedSourceToken?.logoURI && (
+                                  <img
+                                    src={selectedSourceToken.logoURI}
+                                    alt={selectedSourceToken.symbol}
+                                    className="flow-w-5 flow-h-5 flow-rounded-full"
+                                  />
+                                )}
+                                <span>
+                                  {selectedSourceToken?.symbol ||
+                                    "Select token"}
+                                </span>
+                              </div>
                             </ListboxButton>
                             {open && (
                               <ListboxOptions>
                                 {sourceTokens.map(token => (
-                                  <ListboxOption key={token.id} value={token}>
-                                    {token.name}
+                                  <ListboxOption
+                                    key={token.address}
+                                    value={token}
+                                  >
+                                    <div className="flow-flex flow-items-center flow-gap-2">
+                                      {token.logoURI && (
+                                        <img
+                                          src={token.logoURI}
+                                          alt={token.symbol}
+                                          className="flow-w-5 flow-h-5 flow-rounded-full"
+                                        />
+                                      )}
+                                      <div className="flow-flex flow-flex-col">
+                                        <span className="flow-text-sm flow-font-medium">
+                                          {token.symbol}
+                                        </span>
+                                        <span className="flow-text-xs flow-text-slate-500 dark:flow-text-slate-400">
+                                          {token.name}
+                                        </span>
+                                      </div>
+                                    </div>
                                   </ListboxOption>
                                 ))}
                               </ListboxOptions>
@@ -386,7 +420,7 @@ export const FundContent: React.FC = () => {
                       flow-border-blue-200 dark:flow-border-blue-800 flow-p-4"
                   >
                     <p className="flow-text-xs flow-text-blue-800 dark:flow-text-blue-200">
-                      Send {selectedSourceToken?.name || "tokens"} from{" "}
+                      Send {selectedSourceToken?.symbol || "tokens"} from{" "}
                       {selectedSourceChain?.name || "any chain"} to this
                       address. Funds will be automatically bridged to your Flow
                       account.
