@@ -89,8 +89,12 @@ export function Connect({
         handleDisconnect()
       }
     } else {
-      await authenticate()
-      onConnect?.()
+      try {
+        await authenticate()
+        onConnect?.()
+      } catch {
+        // Authentication was cancelled or failed - no action needed
+      }
     }
   }, [isLoggedIn, modalEnabled, authenticate, onConnect, handleDisconnect])
 

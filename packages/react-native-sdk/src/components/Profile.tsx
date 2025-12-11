@@ -151,15 +151,23 @@ export const Profile: React.FC<ProfileProps> = ({
 
   const handleCopy = useCallback(async () => {
     if (user?.addr) {
-      await Clipboard.setStringAsync(user.addr)
-      setCopied(true)
-      setTimeout(() => setCopied(false), 1500)
+      try {
+        await Clipboard.setStringAsync(user.addr)
+        setCopied(true)
+        setTimeout(() => setCopied(false), 1500)
+      } catch {
+        // Silently fail - clipboard may not be available in all environments
+      }
     }
   }, [user?.addr])
 
-  const handleOpenFlowscan = useCallback(() => {
+  const handleOpenFlowscan = useCallback(async () => {
     if (flowscanUrl) {
-      Linking.openURL(flowscanUrl)
+      try {
+        await Linking.openURL(flowscanUrl)
+      } catch {
+        // Silently fail - URL may not be supported
+      }
     }
   }, [flowscanUrl])
 
