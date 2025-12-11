@@ -13,11 +13,7 @@ import {QRCode} from "./internal/QRCode"
 import {Address} from "./internal/Address"
 import {useFund} from "../hooks/useFund"
 import {useFundingCapabilities} from "../hooks/useFundingCapabilities"
-import {
-  relayProvider,
-  CryptoProviderCapability,
-  CurrencyMetadata,
-} from "@onflow/payments"
+import {CryptoProviderCapability, CurrencyMetadata} from "@onflow/payments"
 import {useFlowCurrentUser} from "../hooks/useFlowCurrentUser"
 import {useFlowChainId} from "../hooks/useFlowChainId"
 import {useQuery} from "@tanstack/react-query"
@@ -45,16 +41,12 @@ export const FundContent: React.FC = () => {
   const {user} = useFlowCurrentUser()
   const {data: chainId} = useFlowChainId()
 
-  const providers = [relayProvider()]
-
   // Fetch available funding capabilities
   const {
     data: capabilities,
     isLoading: isLoadingCapabilities,
     error: capabilitiesError,
-  } = useFundingCapabilities({
-    providers,
-  })
+  } = useFundingCapabilities()
 
   // Extract crypto capabilities
   const cryptoCapability = capabilities?.find(
@@ -119,14 +111,7 @@ export const FundContent: React.FC = () => {
   }, [selectedSourceChain, chainCurrencies])
 
   // Initialize useFund hook with relay provider
-  const {
-    mutate: createSession,
-    data: session,
-    isPending,
-    error,
-  } = useFund({
-    providers,
-  })
+  const {mutate: createSession, data: session, isPending, error} = useFund({})
 
   // Create funding session when crypto tab is selected and user is authenticated
   useEffect(() => {
