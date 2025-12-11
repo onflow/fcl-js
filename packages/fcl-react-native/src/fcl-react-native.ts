@@ -1,3 +1,7 @@
+// Polyfill must be imported first
+// This provides crypto.getRandomValues for WalletConnect
+import "react-native-get-random-values"
+
 export {
   VERSION,
   query,

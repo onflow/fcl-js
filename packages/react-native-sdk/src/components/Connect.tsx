@@ -2,14 +2,11 @@ import {useFlowCurrentUser} from "@onflow/react-core"
 import {UseCrossVmTokenBalanceData} from "@onflow/react-core"
 import React, {useCallback, useMemo, useState} from "react"
 import {
-  ActivityIndicator,
   Modal,
   Pressable,
   StyleSheet,
   Text,
   TouchableOpacity,
-  type TextStyle,
-  type ViewStyle,
 } from "react-native"
 import {Profile} from "./Profile"
 
@@ -34,18 +31,6 @@ export interface ConnectProps {
   balanceTokens?: TokenConfig[]
   /** Whether to show profile modal when connected (default: true) */
   modalEnabled?: boolean
-  /** Button container style */
-  style?: ViewStyle
-  /** Button text style */
-  textStyle?: TextStyle
-  /** Style when connected */
-  connectedStyle?: ViewStyle
-  /** Text style when connected */
-  connectedTextStyle?: TextStyle
-  /** Custom text for connect button */
-  connectText?: string
-  /** Custom text for connecting state */
-  connectingText?: string
 }
 
 /**
@@ -72,16 +57,6 @@ export interface ConnectProps {
  *   ]}
  * />
  * ```
- *
- * @example
- * ```tsx
- * // Custom styling
- * <Connect
- *   style={{backgroundColor: "#6366F1"}}
- *   textStyle={{fontSize: 18}}
- *   connectText="Sign In"
- * />
- * ```
  */
 export function Connect({
   onConnect,
@@ -89,16 +64,9 @@ export function Connect({
   balanceType = "cadence",
   balanceTokens,
   modalEnabled = true,
-  style,
-  textStyle,
-  connectedStyle,
-  connectedTextStyle,
-  connectText = "Connect Wallet",
-  connectingText = "Connecting...",
 }: ConnectProps) {
   const {user, authenticate, unauthenticate} = useFlowCurrentUser()
   const [modalVisible, setModalVisible] = useState(false)
-  const [isConnecting, setIsConnecting] = useState(false)
 
   const isLoggedIn = user?.loggedIn ?? false
 
@@ -121,29 +89,20 @@ export function Connect({
         handleDisconnect()
       }
     } else {
-      setIsConnecting(true)
-      try {
-        await authenticate()
-        onConnect?.()
-      } catch (error) {
-        console.error("Authentication failed:", error)
-      } finally {
-        setIsConnecting(false)
-      }
+      await authenticate()
+      onConnect?.()
     }
   }, [isLoggedIn, modalEnabled, authenticate, onConnect, handleDisconnect])
 
   const buttonText = useMemo(() => {
-    if (isConnecting) return connectingText
     if (isLoggedIn) return displayAddress
-    return connectText
-  }, [isConnecting, isLoggedIn, displayAddress, connectText, connectingText])
+    return "Connect Wallet"
+  }, [isLoggedIn, displayAddress])
 
   const accessibilityLabel = useMemo(() => {
-    if (isConnecting) return "Connecting to wallet"
     if (isLoggedIn) return `Connected: ${displayAddress}`
     return "Connect wallet"
-  }, [isConnecting, isLoggedIn, displayAddress])
+  }, [isLoggedIn, displayAddress])
 
   return (
     <>
@@ -151,34 +110,21 @@ export function Connect({
         style={[
           styles.button,
           isLoggedIn ? styles.connectedButton : styles.disconnectedButton,
-          style,
-          isLoggedIn && connectedStyle,
         ]}
         onPress={handlePress}
-        disabled={isConnecting}
         accessible
         accessibilityRole="button"
         accessibilityLabel={accessibilityLabel}
         accessibilityHint={
           isLoggedIn ? "Tap to view profile" : "Tap to connect wallet"
         }
-        accessibilityState={{disabled: isConnecting}}
       >
-        {isConnecting && (
-          <ActivityIndicator
-            size="small"
-            color="#FFFFFF"
-            style={styles.spinner}
-          />
-        )}
         <Text
           style={[
             styles.buttonText,
             isLoggedIn
               ? styles.connectedButtonText
               : styles.disconnectedButtonText,
-            textStyle,
-            isLoggedIn && connectedTextStyle,
           ]}
         >
           {buttonText}
@@ -229,12 +175,12 @@ const styles = StyleSheet.create({
     minHeight: 48,
   },
   disconnectedButton: {
-    backgroundColor: "#2563EB",
+    backgroundColor: "#0F172A",
   },
   connectedButton: {
     backgroundColor: "transparent",
     borderWidth: 1,
-    borderColor: "#2563EB",
+    borderColor: "#E2E8F0",
   },
   buttonText: {
     fontSize: 16,
@@ -244,10 +190,7 @@ const styles = StyleSheet.create({
     color: "#FFFFFF",
   },
   connectedButtonText: {
-    color: "#2563EB",
-  },
-  spinner: {
-    marginRight: 8,
+    color: "#0F172A",
   },
   modalOverlay: {
     flex: 1,

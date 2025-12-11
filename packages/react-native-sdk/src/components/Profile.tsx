@@ -1,12 +1,6 @@
 import React, {useCallback, useMemo, useState, useEffect} from "react"
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  StyleSheet,
-  Linking,
-  type ViewStyle,
-} from "react-native"
+import {View, Text, TouchableOpacity, StyleSheet, Linking} from "react-native"
+import * as Clipboard from "expo-clipboard"
 import {
   useFlowCurrentUser,
   useCrossVmTokenBalance,
@@ -16,6 +10,13 @@ import {
   CONTRACT_ADDRESSES,
 } from "@onflow/react-core"
 import type {TokenConfig} from "./Connect"
+import {
+  UserIcon,
+  CopyIcon,
+  CheckIcon,
+  LogOutIcon,
+  ExternalLinkIcon,
+} from "../icons"
 
 type BalanceType = keyof UseCrossVmTokenBalanceData
 
@@ -26,8 +27,6 @@ export interface ProfileProps {
   balanceType?: BalanceType
   /** Custom tokens to display balance for */
   balanceTokens?: TokenConfig[]
-  /** Container style override */
-  style?: ViewStyle
 }
 
 /**
@@ -48,7 +47,6 @@ export const Profile: React.FC<ProfileProps> = ({
   onDisconnect,
   balanceType = "cadence",
   balanceTokens,
-  style,
 }) => {
   const {user, unauthenticate} = useFlowCurrentUser()
   const {data: chainId} = useFlowChainId()
@@ -153,16 +151,7 @@ export const Profile: React.FC<ProfileProps> = ({
 
   const handleCopy = useCallback(async () => {
     if (user?.addr) {
-      try {
-        // Try to use @react-native-clipboard/clipboard if available
-        const Clipboard = require("@react-native-clipboard/clipboard").default
-        Clipboard.setString(user.addr)
-      } catch {
-        // Fallback: just show copied feedback without actual clipboard
-        console.warn(
-          "Clipboard not available. Install @react-native-clipboard/clipboard for copy functionality."
-        )
-      }
+      await Clipboard.setStringAsync(user.addr)
       setCopied(true)
       setTimeout(() => setCopied(false), 1500)
     }
@@ -186,9 +175,9 @@ export const Profile: React.FC<ProfileProps> = ({
   // Not connected state
   if (!user?.loggedIn) {
     return (
-      <View style={[styles.container, styles.centerContent, style]}>
+      <View style={[styles.container, styles.centerContent]}>
         <View style={styles.avatarPlaceholder}>
-          <Text style={styles.avatarIcon}>👤</Text>
+          <UserIcon size={32} color="#64748B" />
         </View>
         <Text style={styles.notConnectedText}>No connected wallet</Text>
       </View>
@@ -197,11 +186,11 @@ export const Profile: React.FC<ProfileProps> = ({
 
   // Connected state
   return (
-    <View style={[styles.container, style]}>
+    <View style={styles.container}>
       {/* Header with avatar and address */}
       <View style={styles.header}>
         <View style={styles.avatar}>
-          <Text style={styles.avatarIcon}>👤</Text>
+          <UserIcon size={32} color="#64748B" />
         </View>
         <View style={styles.addressRow}>
           <Text style={styles.address}>{displayAddress}</Text>
@@ -212,7 +201,7 @@ export const Profile: React.FC<ProfileProps> = ({
               accessibilityRole="link"
               accessibilityLabel="View on Flowscan"
             >
-              <Text style={styles.externalLink}>↗</Text>
+              <ExternalLinkIcon size={16} color="#64748B" />
             </TouchableOpacity>
           )}
         </View>
@@ -274,7 +263,11 @@ export const Profile: React.FC<ProfileProps> = ({
           accessibilityRole="button"
           accessibilityLabel={copied ? "Address copied" : "Copy address"}
         >
-          <Text style={styles.actionIcon}>{copied ? "✓" : "📋"}</Text>
+          {copied ? (
+            <CheckIcon size={16} color="#16A34A" />
+          ) : (
+            <CopyIcon size={16} color="#0F172A" />
+          )}
           <Text style={styles.actionText}>
             {copied ? "Copied!" : "Copy Address"}
           </Text>
@@ -287,7 +280,7 @@ export const Profile: React.FC<ProfileProps> = ({
           accessibilityRole="button"
           accessibilityLabel="Disconnect wallet"
         >
-          <Text style={styles.actionIcon}>🚪</Text>
+          <LogOutIcon size={16} color="#0F172A" />
           <Text style={styles.actionText}>Disconnect</Text>
         </TouchableOpacity>
       </View>
@@ -335,9 +328,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginBottom: 12,
   },
-  avatarIcon: {
-    fontSize: 32,
-  },
   addressRow: {
     flexDirection: "row",
     alignItems: "center",
@@ -347,10 +337,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "600",
     color: "#0F172A",
-  },
-  externalLink: {
-    fontSize: 16,
-    color: "#64748B",
   },
 
   // Token selector
@@ -431,9 +417,6 @@ const styles = StyleSheet.create({
     borderColor: "#E2E8F0",
     backgroundColor: "#FFFFFF",
     gap: 8,
-  },
-  actionIcon: {
-    fontSize: 16,
   },
   actionText: {
     fontSize: 14,
