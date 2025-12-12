@@ -73,13 +73,13 @@ jobs:
         run: npm run build
 
       - name: Publish to npm
-        run: npx changeset publish
+        uses: changesets/action@v1
+        with:
+          publish: npx changeset publish
         env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           # Clear tokens to allow OIDC authentication
           # https://github.com/orgs/community/discussions/176761
           # https://github.com/changesets/changesets/issues/1152
           NODE_AUTH_TOKEN: ""
           NPM_TOKEN: ""
-
-      - name: Push tags
-        run: git push origin --tags
