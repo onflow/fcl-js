@@ -1,14 +1,16 @@
 {
   "name": "@onflow/react-core",
   "version": "0.7.0",
-  "description": "Platform-agnostic React hooks and utilities for Flow blockchain (private internal package)",
-  "private": true,
+  "description": "Platform-agnostic React hooks and utilities for Flow blockchain",
   "license": "Apache-2.0",
   "author": "Flow Foundation",
   "homepage": "https://flow.com",
   "repository": {
     "type": "git",
     "url": "git+ssh://git@github.com/onflow/fcl-js.git"
+  },
+  "bugs": {
+    "url": "https://github.com/onflow/fcl-js/issues"
   },
   "sideEffects": false,
   "main": "dist/index.js",
@@ -20,6 +22,7 @@
     "types"
   ],
   "scripts": {
+    "prepublishOnly": "npm test && npm run build",
     "test": "jest",
     "build": "fcl-bundle",
     "build:types": "tsc",

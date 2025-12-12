@@ -50,10 +50,12 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       id-token: write
-      contents: read
+      contents: write
     steps:
       - name: Checkout Repo
         uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -78,3 +80,6 @@ jobs:
           # https://github.com/changesets/changesets/issues/1152
           NODE_AUTH_TOKEN: ""
           NPM_TOKEN: ""
+
+      - name: Push tags
+        run: git push origin --tags
