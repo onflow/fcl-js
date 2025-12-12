@@ -1,8 +1,7 @@
 {
   "name": "@onflow/react-core",
   "version": "0.7.0",
-  "description": "Platform-agnostic React hooks and utilities for Flow blockchain (private internal package)",
-  "private": true,
+  "description": "Platform-agnostic React hooks and utilities for Flow blockchain",
   "license": "Apache-2.0",
   "author": "Flow Foundation",
   "homepage": "https://flow.com",
