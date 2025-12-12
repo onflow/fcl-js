@@ -1,5 +1,23 @@
 # @onflow/demo
 
+## 1.7.0
+
+### Minor Changes
+
+- [#2763](https://github.com/onflow/fcl-js/pull/2763) [`61a68051a6d6732c84a918b298eec5aabd561da7`](https://github.com/onflow/fcl-js/commit/61a68051a6d6732c84a918b298eec5aabd561da7) Thanks [@mfbz](https://github.com/mfbz)! - Trigger Changeset Release workflow.
+
+## 1.6.0
+
+### Minor Changes
+
+- [#2761](https://github.com/onflow/fcl-js/pull/2761) [`aa737c359559d9f9f44d518805d5b1228aad9754`](https://github.com/onflow/fcl-js/commit/aa737c359559d9f9f44d518805d5b1228aad9754) Thanks [@mfbz](https://github.com/mfbz)! - Trigger Changeset Release workflow.
+
+## 1.5.0
+
+### Minor Changes
+
+- [#2759](https://github.com/onflow/fcl-js/pull/2759) [`efad6e114bd53e11347c261aaa0e826a6452fd69`](https://github.com/onflow/fcl-js/commit/efad6e114bd53e11347c261aaa0e826a6452fd69) Thanks [@mfbz](https://github.com/mfbz)! - Trigger Changeset Release workflow.
+
 ## 1.4.0
 
 ### Minor Changes
