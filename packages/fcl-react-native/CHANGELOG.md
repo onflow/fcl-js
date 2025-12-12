@@ -1,5 +1,18 @@
 # @onflow/fcl-react-native
 
+## 1.19.0
+
+### Minor Changes
+
+- [#2763](https://github.com/onflow/fcl-js/pull/2763) [`61a68051a6d6732c84a918b298eec5aabd561da7`](https://github.com/onflow/fcl-js/commit/61a68051a6d6732c84a918b298eec5aabd561da7) Thanks [@mfbz](https://github.com/mfbz)! - Trigger Changeset Release workflow.
+
+### Patch Changes
+
+- Updated dependencies [[`61a68051a6d6732c84a918b298eec5aabd561da7`](https://github.com/onflow/fcl-js/commit/61a68051a6d6732c84a918b298eec5aabd561da7)]:
+  - @onflow/config@1.10.0
+  - @onflow/fcl-core@1.29.0
+  - @onflow/sdk@1.13.5
+
 ## 1.18.0
 
 ### Minor Changes
