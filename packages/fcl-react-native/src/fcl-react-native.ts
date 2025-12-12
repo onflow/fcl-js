@@ -80,7 +80,7 @@ import {
   setIsReactNative,
 } from "@onflow/fcl-core"
 
-import {getClient} from "./walletconnect/client"
+import {disconnectWalletConnect} from "./walletconnect/client"
 
 // Get AsyncStorage instance when module loads
 // This ensures storage is ready before any component subscribes to currentUser
@@ -97,32 +97,8 @@ export const mutate = getMutate(currentUser)
 export const authenticate = (opts = {}) => currentUser().authenticate(opts)
 
 export const unauthenticate = async () => {
-  // First unauthenticate from FCL
   currentUser().unauthenticate()
-
-  // Then disconnect WalletConnect (both sessions and pairings for complete cleanup)
-  try {
-    const client = await getClient()
-    if (!client) return
-
-    const sessions = client.session.getAll()
-    const pairings = client.core.pairing.pairings.getAll()
-
-    // Disconnect all in parallel
-    await Promise.allSettled([
-      ...sessions.map((session: any) =>
-        client.disconnect({
-          topic: session.topic,
-          reason: {code: 6000, message: "User disconnected"},
-        })
-      ),
-      ...pairings.map((pairing: any) =>
-        client.core.pairing.disconnect({topic: pairing.topic})
-      ),
-    ])
-  } catch {
-    // WC client not initialized or disconnect failed (safe to ignore)
-  }
+  await disconnectWalletConnect()
 }
 
 export const reauthenticate = async (opts = {}) => {

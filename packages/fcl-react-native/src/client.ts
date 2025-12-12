@@ -6,6 +6,7 @@ import {
 import {getAsyncStorage} from "./utils/react-native/storage"
 import {loadFclWc} from "./walletconnect/loader"
 import {DISCOVERY_RN_METHOD} from "./utils/react-native/constants"
+import {disconnectWalletConnect} from "./walletconnect/client"
 
 const PLATFORM = "react-native"
 
@@ -71,7 +72,14 @@ export function createFlowClient(params: FlowClientConfig) {
     serviceOpenIdScopes: params.serviceOpenIdScopes,
   })
 
+  // Create unauthenticate that also disconnects WalletConnect sessions
+  const unauthenticate = async () => {
+    fclCore.unauthenticate()
+    await disconnectWalletConnect()
+  }
+
   return {
     ...fclCore,
+    unauthenticate,
   }
 }
