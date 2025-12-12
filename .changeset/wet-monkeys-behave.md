@@ -1,10 +1,10 @@
 ---
-"@onflow/config": minor
-"@onflow/demo": minor
-"@onflow/fcl-react-native": minor
-"@onflow/fcl-core": minor
-"@onflow/react-core": minor
-"@onflow/react-sdk": minor
+"@onflow/config": patch
+"@onflow/demo": patch
+"@onflow/fcl-react-native": patch
+"@onflow/fcl-core": patch
+"@onflow/react-core": patch
+"@onflow/react-sdk": patch
 "@onflow/transport-http": patch
 ---
 
