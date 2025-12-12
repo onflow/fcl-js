@@ -1,0 +1,14 @@
+{
+  "extends": "../../tsconfig",
+  "include": ["src/**/*.ts", "src/**/*.tsx"],
+  "compilerOptions": {
+    "declarationDir": "types",
+    "rootDir": "src",
+    "jsx": "react",
+    "lib": ["ES2015", "ES2022.Error"],
+    "skipLibCheck": true,
+    "paths": {
+      "react": ["../../node_modules/@types/react/index"]
+    }
+  }
+}
