@@ -1,5 +1,17 @@
 # @onflow/react-sdk
 
+## 0.17.0
+
+### Minor Changes
+
+- [#2763](https://github.com/onflow/fcl-js/pull/2763) [`61a68051a6d6732c84a918b298eec5aabd561da7`](https://github.com/onflow/fcl-js/commit/61a68051a6d6732c84a918b298eec5aabd561da7) Thanks [@mfbz](https://github.com/mfbz)! - Trigger Changeset Release workflow.
+
+### Patch Changes
+
+- Updated dependencies [[`61a68051a6d6732c84a918b298eec5aabd561da7`](https://github.com/onflow/fcl-js/commit/61a68051a6d6732c84a918b298eec5aabd561da7)]:
+  - @onflow/react-core@0.7.0
+  - @onflow/fcl@1.21.7
+
 ## 0.16.0
 
 ### Minor Changes
