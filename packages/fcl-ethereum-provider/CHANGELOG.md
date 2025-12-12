@@ -6,7 +6,7 @@
 
 - Updated dependencies []:
   - @onflow/fcl@1.21.7
-  - @onflow/fcl-wc@7.0.0
+  - @onflow/fcl-wc@6.0.19
 
 ## 0.0.20
 
