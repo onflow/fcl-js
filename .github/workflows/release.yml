@@ -82,4 +82,4 @@ jobs:
           NPM_TOKEN: ""
 
       - name: Push tags
-        run: git push --tags
+        run: git push origin --tags
