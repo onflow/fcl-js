@@ -1,5 +1,11 @@
 # @onflow/transport-http
 
+## 1.15.6
+
+### Patch Changes
+
+- [#2767](https://github.com/onflow/fcl-js/pull/2767) [`9a982e62e45a2f6f75fb566c0ce53ee56d3c447c`](https://github.com/onflow/fcl-js/commit/9a982e62e45a2f6f75fb566c0ce53ee56d3c447c) Thanks [@mfbz](https://github.com/mfbz)! - Trigger Changeset Release workflow.
+
 ## 1.15.5
 
 ### Patch Changes
