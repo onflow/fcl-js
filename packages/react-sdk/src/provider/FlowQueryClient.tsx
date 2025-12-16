@@ -1,7 +1,6 @@
-import React, {createContext, useContext, PropsWithChildren} from "react"
+import React, {PropsWithChildren} from "react"
 import {QueryClient} from "@tanstack/react-query"
-
-const FlowQueryClientContext = createContext<QueryClient | undefined>(undefined)
+import {FlowQueryClientContext} from "@onflow/react-core"
 
 export function FlowQueryClientProvider({
   queryClient,
@@ -12,12 +11,5 @@ export function FlowQueryClientProvider({
   )
 }
 
-export function useFlowQueryClient() {
-  const queryClient = useContext(FlowQueryClientContext)
-  if (!queryClient) {
-    throw new Error(
-      "useFlowQueryClient must be used within a FlowQueryClientProvider"
-    )
-  }
-  return queryClient
-}
+// Re-export the hook from react-core for convenience
+export {useFlowQueryClient} from "@onflow/react-core"

@@ -1,5 +1,5 @@
 import * as fcl from "@onflow/fcl"
-import {FlowProvider, type FlowNetwork} from "@onflow/react-sdk"
+import {FlowProvider} from "@onflow/react-sdk"
 import React, {createContext, useCallback, useContext, useState} from "react"
 
 // Dark mode context
@@ -10,8 +10,8 @@ interface DarkModeContextType {
 
 // Network switching context
 interface NetworkSwitchContextType {
-  currentNetwork: FlowNetwork
-  switchNetwork: (network: FlowNetwork) => Promise<void>
+  currentNetwork: DemoFlowNetwork
+  switchNetwork: (network: DemoFlowNetwork) => Promise<void>
   isNetworkSwitching: boolean
 }
 
@@ -49,9 +49,12 @@ export const useNetworkSwitch = () => {
   return context
 }
 
+// Standard networks supported by the demo
+type DemoFlowNetwork = "emulator" | "testnet" | "mainnet"
+
 const flowNetwork =
-  (import.meta.env.VITE_FLOW_NETWORK as FlowNetwork) || "emulator"
-const flowConfig: Record<FlowNetwork, FlowConfig> = {
+  (import.meta.env.VITE_FLOW_NETWORK as DemoFlowNetwork) || "emulator"
+const flowConfig: Record<DemoFlowNetwork, FlowConfig> = {
   emulator: {
     accessNodeUrl: "http://localhost:8888",
     discoveryWallet: "http://localhost:8701/fcl/authn",
@@ -76,11 +79,12 @@ const flowConfig: Record<FlowNetwork, FlowConfig> = {
 
 // Network switching provider component
 function NetworkSwitchProvider({children}: {children: React.ReactNode}) {
-  const [currentNetwork, setCurrentNetwork] = useState<FlowNetwork>(flowNetwork)
+  const [currentNetwork, setCurrentNetwork] =
+    useState<DemoFlowNetwork>(flowNetwork)
   const [isNetworkSwitching, setIsNetworkSwitching] = useState(false)
 
   const switchNetwork = useCallback(
-    async (network: FlowNetwork) => {
+    async (network: DemoFlowNetwork) => {
       setIsNetworkSwitching(true)
 
       try {

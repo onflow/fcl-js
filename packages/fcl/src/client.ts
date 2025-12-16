@@ -1,7 +1,7 @@
 import {
   createFlowClientCore,
-  SdkTransport,
-  StorageProvider,
+  type FlowClientCoreConfig,
+  type StorageProvider,
 } from "@onflow/fcl-core"
 import {LOCAL_STORAGE} from "./fcl"
 import {execStrategyHook} from "./discovery/exec-hook"
@@ -13,40 +13,22 @@ export const discoveryOpts = {
   execStrategy: execStrategyHook,
 }
 
-export interface FlowClientConfig {
-  // Core network configuration (most commonly used)
-  accessNodeUrl: string // Required - must specify which network to connect to
-  flowNetwork?: string
-  flowJson?: any
-
-  // Wallet/Discovery configuration
-  discoveryWallet?: string
-  discoveryWalletMethod?: string
-  discoveryAuthnEndpoint?: string
-  discoveryAuthnInclude?: string[]
-  discoveryAuthnExclude?: string[]
-
-  // WalletConnect configuration
-  walletconnectProjectId?: string
-  walletconnectDisableNotifications?: boolean
-
-  // Storage configuration
+/**
+ * Configuration for creating a Flow client on the web platform.
+ * Extends core configuration with web-specific features like WalletConnect.
+ */
+export interface FlowClientConfig
+  extends Omit<
+    FlowClientCoreConfig,
+    "platform" | "discovery" | "computeLimit" | "storage"
+  > {
+  // Override to make optional (defaults provided by implementation)
+  computeLimit?: number
   storage?: StorageProvider
 
-  // App detail properties
-  appDetailTitle?: string
-  appDetailIcon?: string
-  appDetailDescription?: string
-  appDetailUrl?: string
-
-  // Service configuration
-  serviceOpenIdScopes?: string[]
-
-  // Advanced/SDK configuration (least commonly used)
-  transport?: SdkTransport
-  computeLimit?: number
-  customResolver?: any
-  customDecoders?: any
+  // WalletConnect configuration (web-specific)
+  walletconnectProjectId?: string
+  walletconnectDisableNotifications?: boolean
 }
 
 /**

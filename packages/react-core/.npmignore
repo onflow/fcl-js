@@ -1,0 +1,8 @@
+src/
+*.test.ts
+*.test.tsx
+__tests__/
+__mocks__/
+tsconfig.json
+.eslintrc.js
+jest.config.js

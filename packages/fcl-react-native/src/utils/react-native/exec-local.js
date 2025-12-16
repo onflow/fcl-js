@@ -8,9 +8,10 @@ const NOT_IMPLEMENTED = strategy => () => {
 }
 
 const VIEWS = {
-  "VIEW/IFRAME": NOT_IMPLEMENTED("VIEW/IFRAME"),
-  "VIEW/POP": NOT_IMPLEMENTED("VIEW/IFRAME"),
-  "VIEW/TAB": NOT_IMPLEMENTED("VIEW/TAB"),
+  // In React Native, VIEW/IFRAME, VIEW/POP, and VIEW/TAB all open in mobile browser
+  "VIEW/IFRAME": renderBrowser,
+  "VIEW/POP": renderBrowser,
+  "VIEW/TAB": renderBrowser,
   "VIEW/MOBILE_BROWSER": renderBrowser,
   "VIEW/DEEPLINK": renderDeeplink,
 }
@@ -20,10 +21,5 @@ export async function execLocal(
   opts = {serviceEndpoint: () => {}, onClose: () => {}}
 ) {
   const {serviceEndpoint} = opts
-  try {
-    return VIEWS[service.method](serviceEndpoint(service), opts)
-  } catch (error) {
-    console.error("execLocal({service, opts = {}})", error, {service, opts})
-    throw error
-  }
+  return VIEWS[service.method](serviceEndpoint(service), opts)
 }
