@@ -11,11 +11,13 @@ import {
 } from "./internal/Listbox"
 import {QRCode} from "./internal/QRCode"
 import {Address} from "./internal/Address"
-import {useFund} from "../hooks/useFund"
-import {useFundingCapabilities} from "../hooks/useFundingCapabilities"
+import {
+  useFund,
+  useFundingCapabilities,
+  useFlowCurrentUser,
+  useFlowChainId,
+} from "@onflow/react-core"
 import {CryptoProviderCapability, CurrencyMetadata} from "@onflow/payments"
-import {useFlowCurrentUser} from "../hooks/useFlowCurrentUser"
-import {useFlowChainId} from "../hooks/useFlowChainId"
 import {useQuery} from "@tanstack/react-query"
 import {useFlowQueryClient} from "../provider/FlowQueryClient"
 import * as viemChains from "viem/chains"
