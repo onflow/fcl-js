@@ -4,11 +4,11 @@ import {
   FlowConfigContext,
   FlowClientContext,
   FlowQueryClientProvider,
+  GlobalTransactionProvider,
 } from "@onflow/react-core"
 import {DefaultOptions, QueryClient} from "@tanstack/react-query"
 import {createFlowClient} from "@onflow/fcl"
 import {ThemeProvider, Theme} from "../core/theme"
-import {GlobalTransactionProvider} from "./GlobalTransactionProvider"
 import tailwindStyles from "../styles/tailwind.css"
 import {DarkModeProvider} from "./DarkModeProvider"
 

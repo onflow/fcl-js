@@ -4,6 +4,7 @@ import {
   FlowConfigContext,
   FlowClientContext,
   FlowQueryClientProvider,
+  GlobalTransactionProvider,
 } from "@onflow/react-core"
 import {DefaultOptions, QueryClient} from "@tanstack/react-query"
 import {
@@ -11,7 +12,6 @@ import {
   ConnectModalProvider,
   config,
 } from "@onflow/fcl-react-native"
-import {GlobalTransactionProvider} from "./GlobalTransactionProvider"
 
 export interface FlowProviderProps {
   config?: FlowConfig

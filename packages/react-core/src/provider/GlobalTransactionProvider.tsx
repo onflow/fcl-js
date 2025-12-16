@@ -1,6 +1,6 @@
 import React, {createContext, useContext, useState, useEffect} from "react"
 import {TransactionExecutionStatus} from "@onflow/typedefs"
-import {useFlowClient} from "@onflow/react-core"
+import {useFlowClient} from "../hooks/useFlowClient"
 
 interface GlobalTransactionContextValue {
   /** Current global transaction ID, or null if none */
@@ -70,7 +70,7 @@ export function GlobalTransactionProvider({
     return () => {
       unsub()
     }
-  }, [txId, fcl])
+  }, [txId])
 
   const value: GlobalTransactionContextValue = {
     globalTxId: txId,
