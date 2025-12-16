@@ -10,6 +10,7 @@ import {
   TabPanel,
   TabPanels,
 } from "@headlessui/react"
+import {sansPrefix} from "@onflow/fcl"
 import {useFlowCurrentUser} from "@onflow/react-core"
 import {
   useCrossVmTokenBalance,
@@ -64,7 +65,7 @@ export const Profile: React.FC<ProfileProps> = ({
         : CONTRACT_ADDRESSES.mainnet.FlowToken
     }
 
-    const address = getFlowTokenAddress().replace("0x", "")
+    const address = sansPrefix(getFlowTokenAddress())
     return [
       {
         symbol: "FLOW",

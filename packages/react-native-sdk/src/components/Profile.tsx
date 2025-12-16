@@ -1,6 +1,7 @@
 import React, {useCallback, useMemo, useState, useEffect} from "react"
 import {View, Text, TouchableOpacity, StyleSheet, Linking} from "react-native"
 import * as Clipboard from "expo-clipboard"
+import {sansPrefix} from "@onflow/fcl-react-native"
 import {
   useFlowCurrentUser,
   useCrossVmTokenBalance,
@@ -73,7 +74,7 @@ export const Profile: React.FC<ProfileProps> = ({
         : CONTRACT_ADDRESSES.mainnet.FlowToken
     }
 
-    const address = getFlowTokenAddress().replace("0x", "")
+    const address = sansPrefix(getFlowTokenAddress())
     return [
       {
         symbol: "FLOW",
