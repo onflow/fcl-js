@@ -149,7 +149,10 @@ export function createPaymentsClient(
           allCapabilities.push(...capabilities)
         } catch (err) {
           // Skip providers that fail to return capabilities
-          console.warn(`Provider ${provider.id} failed to get capabilities:`, err)
+          console.warn(
+            `Provider ${provider.id} failed to get capabilities:`,
+            err
+          )
         }
       }
       return allCapabilities
