@@ -2,6 +2,8 @@
 
 A React Native library that provides hooks for interacting with the Flow blockchain. It helps you authenticate users, run Cadence scripts and transactions, listen to events, and manage network configuration directly from your components. Fully compatible with Expo.
 
+This package provides a comparable API to [@onflow/react-sdk](https://www.npmjs.com/package/@onflow/react-sdk) for React Native applications. See the hooks in action in the [React SDK Playground](https://react.flow.com).
+
 ## 🔧 Installation
 
 ```bash
