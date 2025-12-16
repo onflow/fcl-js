@@ -33,6 +33,9 @@ export {
   useFlowScheduledTransactionCancel,
   ScheduledTransactionPriority,
   ScheduledTransactionStatus,
+  useFund,
+  useFundingCapabilities,
+  usePaymentsClient,
 } from "@onflow/react-core"
 
 // Re-export types from hooks

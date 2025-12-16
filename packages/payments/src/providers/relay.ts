@@ -11,6 +11,7 @@ import type {createFlowClientCore} from "@onflow/fcl-core"
 import {parseCAIP2, parseCAIP10} from "../utils/caip"
 import {isEvmAddress, isCadenceAddress} from "../utils/address"
 import {getFlowEvmChainId} from "../utils/network"
+import {getCoaAddress} from "../bridge-service"
 
 /**
  * Configuration for the Relay funding provider
@@ -172,15 +173,18 @@ export function relayProvider(
             // Add ERC20 currencies from Flow
             if (chain.erc20Currencies) {
               chain.erc20Currencies.forEach(currency => {
-                if (currency.supportsBridging) {
-                  flowCurrencies.add(currency.symbol)
+                // Only add currencies that support bridging AND have an address
+                if (currency.supportsBridging && currency.address) {
+                  flowCurrencies.add(currency.address)
                 }
               })
             }
             // Also check featured tokens
             if (chain.featuredTokens) {
               chain.featuredTokens.forEach(token => {
-                flowCurrencies.add(token.symbol)
+                if (token.address) {
+                  flowCurrencies.add(token.address)
+                }
               })
             }
           }
@@ -194,8 +198,27 @@ export function relayProvider(
           {
             type: "crypto",
             sourceChains: supportedChains,
-            sourceCurrencies: flowCurrenciesArray,
             currencies: flowCurrenciesArray,
+            // Query chain-specific source currencies dynamically
+            getCurrenciesForChain: async (sourceChain: string) => {
+              try {
+                const {chainId} = parseCAIP2(sourceChain)
+                const currencies = await getRelayCurrencies(apiUrl, chainId)
+                return currencies.map(c => ({
+                  address: c.address,
+                  symbol: c.symbol,
+                  name: c.name,
+                  decimals: c.decimals,
+                  logoURI: c.metadata?.logoURI,
+                }))
+              } catch (error) {
+                console.error(
+                  `Failed to fetch currencies for chain ${sourceChain}:`,
+                  error
+                )
+                return []
+              }
+            },
           },
         ]
       } catch (error) {
@@ -224,22 +247,35 @@ export function relayProvider(
         destination.chainId
       )
 
-      // Detect if destination is Cadence (needs bridging after EVM funding)
+      // Detect if destination is Cadence and convert to COA EVM address
       const isCadenceDestination = isCadenceAddress(destination.address)
       let actualDestination = destination.address
 
-      // TODO: For Cadence destinations, we need to:
-      // 1. Determine the user's COA (Cadence Owned Account) EVM address
-      // 2. Fund the COA instead
-      // 3. Return instructions for the user to bridge COA -> Cadence
-      // For now, we reject Cadence destinations until this is implemented
       if (isCadenceDestination) {
-        throw new Error(
-          `Cadence destination detected: ${destination.address}. ` +
-            `Automatic Cadence routing is not yet implemented. ` +
-            `Please provide the COA (Cadence Owned Account) EVM address instead. ` +
-            `Future versions will automatically route funds through the COA and provide bridging instructions.`
-        )
+        // Fetch the user's COA (Cadence Owned Account) EVM address
+        try {
+          const coaAddress = await getCoaAddress({
+            flowClient,
+            cadenceAddress: destination.address,
+          })
+
+          if (!coaAddress) {
+            throw new Error(
+              `No COA (Cadence Owned Account) found for Cadence address ${destination.address}. ` +
+                `Please ensure your Flow account has a COA set up. ` +
+                `Alternatively, connect using your Flow EVM address directly.`
+            )
+          }
+
+          actualDestination = coaAddress
+        } catch (error) {
+          throw new Error(
+            `Failed to get COA for Cadence address ${destination.address}: ${
+              error instanceof Error ? error.message : String(error)
+            }. ` +
+              `Try connecting with your Flow EVM address instead, or ensure your account has a COA set up.`
+          )
+        }
       }
 
       if (!isEvmAddress(actualDestination)) {
@@ -263,19 +299,24 @@ export function relayProvider(
         cryptoIntent.currency
       )
 
-      // Convert human-readable amount to base units if provided
-      const amountInBaseUnits = cryptoIntent.amount
-        ? toBaseUnits(cryptoIntent.amount, originCurrency.decimals)
-        : undefined
+      // Convert human-readable amount to base units
+      // For deposit address mode, if no amount is specified, use a default that covers fees
+      // The actual amount sent by the user can be different for deposit addresses
+      // Use 1.0 (~$1 for stablecoins) which is enough to cover fees but not hit liquidity limits
+      const amountForQuote = cryptoIntent.amount || "1.0"
+      const amountInBaseUnits = toBaseUnits(
+        amountForQuote,
+        originCurrency.decimals
+      )
 
       // Call Relay API with deposit address mode
       const quote = await callRelayQuote(apiUrl, {
-        user: destination.address,
+        user: actualDestination,
         originChainId: parseInt(originChainId),
         destinationChainId: parseInt(destinationChainId),
         originCurrency: originCurrency.address,
         destinationCurrency: destinationCurrency.address,
-        recipient: destination.address,
+        recipient: actualDestination,
         amount: amountInBaseUnits,
         tradeType: DEPOSIT_ADDRESS_TRADE_TYPE, // Deposit addresses only work with EXACT_INPUT
         useDepositAddress: true,
@@ -419,8 +460,16 @@ async function getRelayCurrencies(
   apiUrl: string,
   chainId: number | string
 ): Promise<RelayCurrency[]> {
-  const response = await fetch(`${apiUrl}/currencies?chainId=${chainId}`, {
-    method: "GET",
+  const response = await fetch(`${apiUrl}/currencies/v2`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      chainIds: [typeof chainId === "string" ? parseInt(chainId) : chainId],
+      verified: true,
+      depositAddressOnly: true,
+    }),
   })
 
   if (!response.ok) {
@@ -430,6 +479,6 @@ async function getRelayCurrencies(
   }
 
   const data = await response.json()
-  // Response might be array or object with currencies property
-  return Array.isArray(data) ? data : data.currencies || data.data || []
+  // Response is an array of currency objects
+  return Array.isArray(data) ? data : []
 }
