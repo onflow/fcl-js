@@ -36,6 +36,8 @@ import flowJson from "../flow.json"
 
 ## 🪝 Available Hooks
 
+Here's a look at some of the hooks available. For a full list, see the [official documentation](https://developers.flow.com/tools/react-native-sdk/hooks).
+
 - `useFlowCurrentUser`
 - `useFlowAccount`
 - `useFlowBlock`
