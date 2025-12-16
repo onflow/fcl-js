@@ -1,93 +1,82 @@
 import React, {createContext, useContext} from "react"
 
-export type ButtonVariant = {
-  background: string
-  text: string
-  hover: string
-  border?: string
-}
-
+/**
+ * Semantic color tokens for theming Flow SDK components.
+ * Each token accepts Tailwind class(es) (e.g., "flow-bg-blue-600 dark:flow-bg-blue-500")
+ */
 export type ThemeColors = {
-  primary: ButtonVariant
-  secondary: ButtonVariant
-  outline: ButtonVariant
-  link: ButtonVariant
+  /** Primary action color (CTAs, main buttons) */
+  primary?: string
+  /** Text color on primary backgrounds */
+  primaryForeground?: string
+  /** Secondary action color (secondary buttons) */
+  secondary?: string
+  /** Text color on secondary backgrounds */
+  secondaryForeground?: string
+  /** Accent color for highlights, selected states */
+  accent?: string
+  /** Default background color (cards, modals) */
+  background?: string
+  /** Default text color */
+  foreground?: string
+  /** Muted/subtle background color */
+  muted?: string
+  /** Muted text color */
+  mutedForeground?: string
+  /** Border color */
+  border?: string
+  /** Success state color */
+  success?: string
+  /** Error state color */
+  error?: string
+  /** Link text color */
+  link?: string
 }
 
 export type Theme = {
-  colors: ThemeColors
+  colors?: ThemeColors
 }
 
-const defaultTheme: Theme = {
-  colors: {
-    primary: {
-      background: "flow-bg-slate-900 dark:flow-bg-slate-100",
-      text: "flow-text-white dark:flow-text-slate-900",
-      hover: "hover:flow-bg-slate-800 dark:hover:flow-bg-slate-200",
-      border: undefined,
-    },
-    secondary: {
-      background: "flow-bg-slate-100 dark:flow-bg-slate-800",
-      text: "flow-text-slate-900 dark:flow-text-slate-100",
-      hover: "hover:flow-bg-slate-200 dark:hover:flow-bg-slate-700",
-      border: undefined,
-    },
-    outline: {
-      background: "flow-bg-transparent",
-      text: "flow-text-slate-900 dark:flow-text-slate-100",
-      hover: "hover:flow-bg-slate-100 dark:hover:flow-bg-slate-800",
-      border: "flow-border flow-border-slate-200 dark:flow-border-slate-700",
-    },
-    link: {
-      background: "flow-bg-transparent",
-      text: "flow-text-slate-900 dark:flow-text-slate-100",
-      hover: "hover:flow-underline",
-      border: undefined,
-    },
-  },
+const defaultColors: Required<ThemeColors> = {
+  primary: "flow-bg-slate-900 dark:flow-bg-slate-100",
+  primaryForeground: "flow-text-white dark:flow-text-slate-900",
+  secondary: "flow-bg-slate-100 dark:flow-bg-slate-800",
+  secondaryForeground: "flow-text-slate-900 dark:flow-text-slate-100",
+  accent: "flow-bg-blue-500",
+  background: "flow-bg-white dark:flow-bg-slate-900",
+  foreground: "flow-text-slate-900 dark:flow-text-slate-100",
+  muted: "flow-bg-slate-100 dark:flow-bg-slate-800",
+  mutedForeground: "flow-text-slate-500 dark:flow-text-slate-400",
+  border: "flow-border-slate-200 dark:flow-border-slate-700",
+  success: "flow-text-green-500",
+  error: "flow-text-red-500",
+  link: "flow-text-blue-600 dark:flow-text-blue-400",
 }
 
-const ThemeContext = createContext<Theme>(defaultTheme)
+type InternalTheme = {
+  colors: Required<ThemeColors>
+}
+
+const defaultTheme: InternalTheme = {
+  colors: defaultColors,
+}
+
+const ThemeContext = createContext<InternalTheme>(defaultTheme)
 export const useTheme = () => useContext(ThemeContext)
 
-type DeepPartial<T> = {
-  [P in keyof T]?: T[P] extends object ? DeepPartial<T[P]> : T[P]
-}
-
 type ThemeProviderProps = React.PropsWithChildren<{
-  theme?: DeepPartial<Theme>
+  theme?: Theme
 }>
-
-const deepMerge = <T extends object>(target: T, source?: DeepPartial<T>): T => {
-  if (!source) return target
-  const result = {...target}
-
-  Object.keys(source).forEach(key => {
-    const targetValue = target[key as keyof T]
-    const sourceValue = source[key as keyof DeepPartial<T>]
-
-    if (
-      sourceValue &&
-      typeof sourceValue === "object" &&
-      targetValue &&
-      typeof targetValue === "object"
-    ) {
-      result[key as keyof T] = deepMerge(
-        targetValue as object,
-        sourceValue as object
-      ) as T[keyof T]
-    } else if (sourceValue !== undefined) {
-      result[key as keyof T] = sourceValue as T[keyof T]
-    }
-  })
-
-  return result
-}
 
 export const ThemeProvider = ({
   theme: customTheme,
   children,
 }: ThemeProviderProps) => {
-  const theme = deepMerge(defaultTheme, customTheme)
+  const theme: InternalTheme = {
+    colors: {
+      ...defaultColors,
+      ...customTheme?.colors,
+    },
+  }
   return <ThemeContext.Provider value={theme}>{children}</ThemeContext.Provider>
 }

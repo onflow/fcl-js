@@ -5,6 +5,8 @@ import {TransactionLink} from "./TransactionLink"
 import {LoaderCircleIcon} from "../icons/LoaderCircleIcon"
 import {CircleCheckIcon} from "../icons/CircleCheckIcon"
 import {useFlowTransactionStatus} from "@onflow/react-core"
+import {useTheme} from "../core/theme"
+import {twMerge} from "tailwind-merge"
 
 interface TransactionDialogProps {
   open: boolean
@@ -30,6 +32,7 @@ export const TransactionDialog: React.FC<TransactionDialogProps> = ({
   successDescription,
   closeOnSuccess,
 }) => {
+  const {colors} = useTheme()
   const {transactionStatus} = useFlowTransactionStatus({id: txId})
   const isSuccess =
     typeof transactionStatus?.status === "number" &&
@@ -50,17 +53,37 @@ export const TransactionDialog: React.FC<TransactionDialogProps> = ({
       >
         <div className="flow-flex flow-flex-col flow-items-center flow-gap-2">
           {!isSuccess ? (
-            <LoaderCircleIcon className="flow-animate-spin flow-text-blue-500 flow-w-12 flow-h-12" />
+            <LoaderCircleIcon
+              className={twMerge(
+                "flow-animate-spin flow-w-12 flow-h-12",
+                colors.accent
+              )}
+            />
           ) : (
-            <CircleCheckIcon className="flow-text-green-500 flow-animate-pop flow-w-12 flow-h-12" />
+            <CircleCheckIcon
+              className={twMerge(
+                "flow-animate-pop flow-w-12 flow-h-12",
+                colors.success
+              )}
+            />
           )}
-          <div className="flow-text-lg flow-font-semibold flow-text-center">
+          <div
+            className={twMerge(
+              "flow-text-lg flow-font-semibold flow-text-center",
+              colors.foreground
+            )}
+          >
             {!isSuccess
               ? pendingTitle || "Transaction Pending"
               : successTitle || "Transaction Successful"}
           </div>
         </div>
-        <div className="flow-text-center flow-text-gray-500 flow-text-sm">
+        <div
+          className={twMerge(
+            "flow-text-center flow-text-sm",
+            colors.mutedForeground
+          )}
+        >
           {!isSuccess
             ? pendingDescription ||
               "Your transaction is being processed. Please wait..."

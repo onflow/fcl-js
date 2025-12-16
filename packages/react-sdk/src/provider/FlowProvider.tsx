@@ -19,7 +19,7 @@ interface FlowProviderProps {
   queryClient?: QueryClient
   flowClient?: ReturnType<typeof createFlowClient>
   flowJson?: Record<string, any>
-  theme?: Partial<Theme>
+  theme?: Theme
   colorMode?: ColorMode
 }
 
