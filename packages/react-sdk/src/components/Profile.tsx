@@ -11,7 +11,7 @@ import {
   TabPanels,
 } from "@headlessui/react"
 import {sansPrefix} from "@onflow/fcl"
-import {useFlowCurrentUser} from "@onflow/react-core"
+import {useFlowCurrentUser, truncateAddress} from "@onflow/react-core"
 import {
   useCrossVmTokenBalance,
   UseCrossVmTokenBalanceData,
@@ -133,9 +133,7 @@ export const Profile: React.FC<ProfileProps> = ({
   })
 
   const displayAddress =
-    user?.loggedIn && user.addr
-      ? `${user.addr.slice(0, 6)}...${user.addr.slice(-4)}`
-      : ""
+    user?.loggedIn && user.addr ? truncateAddress(user.addr) : ""
 
   const flowscanUrl = getFlowscanAccountUrl(user?.addr || "", chainId)
 

@@ -1,4 +1,4 @@
-import {useFlowCurrentUser} from "@onflow/react-core"
+import {useFlowCurrentUser, truncateAddress} from "@onflow/react-core"
 import {UseCrossVmTokenBalanceData} from "@onflow/react-core"
 import React, {useCallback, useMemo, useState} from "react"
 import {
@@ -81,7 +81,7 @@ export function Connect({
 
   const displayAddress = useMemo(() => {
     if (!user?.addr) return ""
-    return `${user.addr.slice(0, 6)}...${user.addr.slice(-4)}`
+    return truncateAddress(user.addr)
   }, [user?.addr])
 
   const handleDisconnect = useCallback(() => {

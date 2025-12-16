@@ -9,6 +9,7 @@ import {
   useFlowChainId,
   getFlowscanAccountUrl,
   CONTRACT_ADDRESSES,
+  truncateAddress,
 } from "@onflow/react-core"
 import type {TokenConfig} from "./Connect"
 import {
@@ -134,7 +135,7 @@ export const Profile: React.FC<ProfileProps> = ({
 
   const displayAddress = useMemo(() => {
     if (!user?.addr) return ""
-    return `${user.addr.slice(0, 6)}...${user.addr.slice(-4)}`
+    return truncateAddress(user.addr)
   }, [user?.addr])
 
   const flowscanUrl = useMemo(
