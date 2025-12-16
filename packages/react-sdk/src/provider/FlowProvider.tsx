@@ -3,9 +3,9 @@ import {
   FlowConfig,
   FlowConfigContext,
   FlowClientContext,
+  FlowQueryClientProvider,
 } from "@onflow/react-core"
 import {DefaultOptions, QueryClient} from "@tanstack/react-query"
-import {FlowQueryClientProvider} from "./FlowQueryClient"
 import {createFlowClient} from "@onflow/fcl"
 import {ThemeProvider, Theme} from "../core/theme"
 import {GlobalTransactionProvider} from "./GlobalTransactionProvider"

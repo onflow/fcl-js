@@ -1,4 +1,4 @@
-import {createContext, useContext} from "react"
+import React, {createContext, useContext, PropsWithChildren} from "react"
 import {QueryClient} from "@tanstack/react-query"
 
 export const FlowQueryClientContext = createContext<QueryClient | undefined>(
@@ -13,4 +13,13 @@ export function useFlowQueryClient() {
     )
   }
   return queryClient
+}
+
+export function FlowQueryClientProvider({
+  queryClient,
+  children,
+}: PropsWithChildren<{queryClient: QueryClient}>) {
+  return (
+    <FlowQueryClientContext.Provider value={queryClient} children={children} />
+  )
 }

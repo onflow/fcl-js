@@ -1,1 +1,5 @@
-export {useFlowQueryClient, FlowQueryClientContext} from "./FlowQueryClient"
+export {
+  useFlowQueryClient,
+  FlowQueryClientContext,
+  FlowQueryClientProvider,
+} from "./FlowQueryClient"
