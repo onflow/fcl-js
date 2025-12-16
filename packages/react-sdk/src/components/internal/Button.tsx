@@ -1,11 +1,11 @@
 import React from "react"
 import {Button as HeadlessButton} from "@headlessui/react"
-import {useTheme} from "../../core/theme"
+import {useTheme, getButtonStyles, ButtonVariant} from "../../core/theme"
 import {twMerge} from "tailwind-merge"
 
 export interface ButtonProps
   extends React.ComponentProps<typeof HeadlessButton> {
-  variant?: "primary" | "secondary" | "outline" | "link"
+  variant?: ButtonVariant
 }
 
 export const Button: React.FC<ButtonProps> = ({
@@ -14,16 +14,16 @@ export const Button: React.FC<ButtonProps> = ({
   ...props
 }) => {
   const {colors} = useTheme()
-  const buttonVariant = colors[variant]
+  const buttonStyles = getButtonStyles(colors, variant)
 
   const baseStyles =
     "flow-px-4 flow-py-2 flow-rounded-md flow-font-medium flow-transition-colors"
 
   const variantClasses = twMerge(
-    buttonVariant.background,
-    buttonVariant.text,
-    buttonVariant.hover,
-    buttonVariant.border
+    buttonStyles.background,
+    buttonStyles.text,
+    buttonStyles.hover,
+    buttonStyles.border
   )
 
   return (

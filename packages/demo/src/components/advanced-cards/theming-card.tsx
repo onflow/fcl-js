@@ -10,14 +10,13 @@ const THEMING_CODE = `import { FlowProvider } from "@onflow/react-sdk"
 const customTheme = {
   colors: {
     primary: {
-      background: "flow-bg-purple-600 dark:flow-bg-purple-400",
+      base: "flow-bg-purple-600 dark:flow-bg-purple-400",
       text: "flow-text-white dark:flow-text-purple-900",
-      hover: "hover:flow-bg-purple-700 dark:hover:flow-bg-purple-300"
-    },
-    secondary: {
-      background: "flow-bg-emerald-500 dark:flow-bg-emerald-400",
-      text: "flow-text-white dark:flow-text-emerald-900",
-      hover: "hover:flow-bg-emerald-600 dark:hover:flow-bg-emerald-300"
+      hover: "hover:flow-bg-purple-700 dark:hover:flow-bg-purple-300",
+      muted: "flow-bg-purple-100 dark:flow-bg-purple-900",
+      mutedText: "flow-text-purple-900 dark:flow-text-purple-100",
+      mutedHover: "hover:flow-bg-purple-200 dark:hover:flow-bg-purple-800",
+      border: "flow-border-purple-200 dark:flow-border-purple-700",
     }
   }
 }
@@ -53,11 +52,21 @@ export function ThemingCard() {
       theme: {
         colors: {
           primary: {
-            background: darkMode ? "flow-bg-purple-400" : "flow-bg-purple-600",
+            base: darkMode ? "flow-bg-purple-400" : "flow-bg-purple-600",
             text: "flow-text-white",
             hover: darkMode
               ? "hover:flow-bg-purple-300"
               : "hover:flow-bg-purple-700",
+            muted: darkMode ? "flow-bg-purple-900" : "flow-bg-purple-100",
+            mutedText: darkMode
+              ? "flow-text-purple-100"
+              : "flow-text-purple-900",
+            mutedHover: darkMode
+              ? "hover:flow-bg-purple-800"
+              : "hover:flow-bg-purple-200",
+            border: darkMode
+              ? "flow-border-purple-700"
+              : "flow-border-purple-200",
           },
         },
       },
@@ -72,13 +81,21 @@ export function ThemingCard() {
       theme: {
         colors: {
           primary: {
-            background: darkMode
-              ? "flow-bg-emerald-400"
-              : "flow-bg-emerald-600",
+            base: darkMode ? "flow-bg-emerald-400" : "flow-bg-emerald-600",
             text: "flow-text-white",
             hover: darkMode
               ? "hover:flow-bg-emerald-300"
               : "hover:flow-bg-emerald-700",
+            muted: darkMode ? "flow-bg-emerald-900" : "flow-bg-emerald-100",
+            mutedText: darkMode
+              ? "flow-text-emerald-100"
+              : "flow-text-emerald-900",
+            mutedHover: darkMode
+              ? "hover:flow-bg-emerald-800"
+              : "hover:flow-bg-emerald-200",
+            border: darkMode
+              ? "flow-border-emerald-700"
+              : "flow-border-emerald-200",
           },
         },
       },
@@ -93,11 +110,17 @@ export function ThemingCard() {
       theme: {
         colors: {
           primary: {
-            background: darkMode ? "flow-bg-rose-400" : "flow-bg-rose-600",
+            base: darkMode ? "flow-bg-rose-400" : "flow-bg-rose-600",
             text: "flow-text-white",
             hover: darkMode
               ? "hover:flow-bg-rose-300"
               : "hover:flow-bg-rose-700",
+            muted: darkMode ? "flow-bg-rose-900" : "flow-bg-rose-100",
+            mutedText: darkMode ? "flow-text-rose-100" : "flow-text-rose-900",
+            mutedHover: darkMode
+              ? "hover:flow-bg-rose-800"
+              : "hover:flow-bg-rose-200",
+            border: darkMode ? "flow-border-rose-700" : "flow-border-rose-200",
           },
         },
       },
