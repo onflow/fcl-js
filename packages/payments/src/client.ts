@@ -20,8 +20,8 @@ export interface PaymentsClient {
    */
   createSession(intent: FundingIntent): Promise<FundingSession>
   /**
-   * Get the capabilities supported by all configured providers
-   * @returns Promise resolving to an array of capability objects from all providers
+   * Get capabilities from all configured providers
+   * @returns Promise resolving to an array of provider capabilities
    */
   getCapabilities(): Promise<ProviderCapability[]>
 }
@@ -141,19 +141,10 @@ export function createPaymentsClient(
       )
     },
     async getCapabilities() {
-      // Aggregate capabilities from all providers
       const allCapabilities: ProviderCapability[] = []
       for (const provider of providers) {
-        try {
-          const capabilities = await provider.getCapabilities()
-          allCapabilities.push(...capabilities)
-        } catch (err) {
-          // Skip providers that fail to return capabilities
-          console.warn(
-            `Provider ${provider.id} failed to get capabilities:`,
-            err
-          )
-        }
+        const capabilities = await provider.getCapabilities()
+        allCapabilities.push(...capabilities)
       }
       return allCapabilities
     },
