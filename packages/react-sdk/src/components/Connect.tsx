@@ -1,5 +1,5 @@
 import React, {useState} from "react"
-import {useFlowCurrentUser} from "@onflow/react-core"
+import {useFlowCurrentUser, truncateAddress} from "@onflow/react-core"
 import {UseCrossVmTokenBalanceData} from "@onflow/react-core"
 import {Button, ButtonProps} from "./internal/Button"
 import {Dialog} from "./internal/Dialog"
@@ -52,9 +52,7 @@ export const Connect: React.FC<ConnectProps> = ({
     : "flow-max-w-md"
 
   const displayAddress =
-    user?.loggedIn && user.addr
-      ? `${user.addr.slice(0, 6)}...${user.addr.slice(-4)}`
-      : ""
+    user?.loggedIn && user.addr ? truncateAddress(user.addr) : ""
 
   const handleButtonClick = async () => {
     if (user?.loggedIn) {
