@@ -1,6 +1,6 @@
 import {TransactionExecutionStatus} from "@onflow/typedefs"
 import React, {createContext, useContext, useState, useEffect} from "react"
-import {useFlowClient} from "../hooks/useFlowClient"
+import {useFlowClient} from "@onflow/react-core"
 
 interface GlobalTransactionContextValue {
   /** Check if a global transaction is currently running */

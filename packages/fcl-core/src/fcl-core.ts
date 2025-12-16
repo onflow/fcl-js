@@ -5,7 +5,10 @@ export {verifyUserSignatures} from "./exec/verify"
 export {serialize} from "./serialize"
 export {transaction as tx, TransactionError} from "./transaction"
 export {events} from "./events"
-export {pluginRegistry} from "./current-user/exec-service/plugins"
+export {
+  pluginRegistry,
+  getServiceRegistry,
+} from "./current-user/exec-service/plugins"
 
 import {discovery} from "./discovery"
 export {discovery}
@@ -112,4 +115,8 @@ export type {
   VerifySignaturesScriptOptions,
 } from "./app-utils/verify-signatures"
 
-export {createFlowClientCore, type FlowClientCoreConfig} from "./client"
+export {
+  createFlowClientCore,
+  type FlowClientCoreConfig,
+  type FlowClientCore,
+} from "./client"

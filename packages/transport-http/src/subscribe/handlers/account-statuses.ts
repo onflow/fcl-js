@@ -21,7 +21,7 @@ type AccountStatusesArgsDto = {
 type AccountStatusesDataDto = {
   block_id: string
   height: string
-  account_events: {
+  account_events?: {
     [address: string]: {
       type: string
       transaction_id: string
@@ -48,31 +48,37 @@ export const accountStatusesHandler = createSubscriptionHandler<{
 
     return {
       onData(rawData: AccountStatusesDataDto) {
-        const data: AccountStatusesData[] = []
-        for (const [address, events] of Object.entries(
-          rawData.account_events
-        )) {
-          for (const event of events) {
-            // Parse the raw data
-            const parsedData: AccountStatusesData = {
-              accountStatusEvent: {
-                accountAddress: address,
-                blockId: rawData.block_id,
-                blockHeight: Number(rawData.height),
-                type: event.type,
-                transactionId: event.transaction_id,
-                transactionIndex: Number(event.transaction_index),
-                eventIndex: Number(event.event_index),
-                payload: JSON.parse(
-                  Buffer.from(event.payload, "base64").toString()
-                ),
-              },
-            }
+        // The API may send messages without an account_events field when there are no events (heartbeat)
+        // Process events if they exist
+        if (rawData.account_events) {
+          const data: AccountStatusesData[] = []
 
-            data.push(parsedData)
+          // Collect all events from all accounts
+          for (const [address, events] of Object.entries(
+            rawData.account_events
+          )) {
+            for (const event of events) {
+              // Parse the raw data
+              const parsedData: AccountStatusesData = {
+                accountStatusEvent: {
+                  accountAddress: address,
+                  blockId: rawData.block_id,
+                  blockHeight: Number(rawData.height),
+                  type: event.type,
+                  transactionId: event.transaction_id,
+                  transactionIndex: Number(event.transaction_index),
+                  eventIndex: Number(event.event_index),
+                  payload: JSON.parse(
+                    Buffer.from(event.payload, "base64").toString()
+                  ),
+                },
+              }
+
+              data.push(parsedData)
+            }
           }
 
-          // Sort the messages by increasing message index
+          // Sort the messages by increasing transaction and event index
           data.sort((a, b) => {
             const txIndexDiff =
               a.accountStatusEvent.transactionIndex -
@@ -84,17 +90,17 @@ export const accountStatusesHandler = createSubscriptionHandler<{
             )
           })
 
-          // Emit the messages
+          // Emit all the messages
           for (const message of data) {
             onData(message)
           }
+        }
 
-          // Update the resume args
-          resumeArgs = {
-            ...resumeArgs,
-            startBlockHeight: Number(BigInt(rawData.height) + BigInt(1)),
-            startBlockId: undefined,
-          }
+        // Always update resume args (for both heartbeat and event messages)
+        resumeArgs = {
+          ...resumeArgs,
+          startBlockHeight: Number(BigInt(rawData.height) + BigInt(1)),
+          startBlockId: undefined,
         }
       },
       onError(error: Error) {
