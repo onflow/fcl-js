@@ -10,3 +10,4 @@
 
 - Updated dependencies [[`706e08247a1e13eb49f01671772e2172bf664338`](https://github.com/onflow/fcl-js/commit/706e08247a1e13eb49f01671772e2172bf664338)]:
   - @onflow/fcl-react-native@1.21.0
+  - @onflow/react-core@0.9.0
