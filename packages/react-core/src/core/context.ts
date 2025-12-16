@@ -1,6 +1,7 @@
 import {createContext} from "react"
 import type {FlowClientCore} from "@onflow/fcl-core"
 import type {FlowNetwork} from "./types"
+import type {PaymentsClient} from "@onflow/payments"
 
 // FlowConfig based on @onflow/fcl-core's FlowClientCoreConfig
 // This matches the config structure used by both @onflow/fcl and @onflow/fcl-react-native
@@ -38,3 +39,7 @@ export type FlowConfig = {
 export const FlowConfigContext = createContext<FlowConfig>({})
 
 export const FlowClientContext = createContext<FlowClientCore | null>(null)
+
+export const PaymentsClientContext = createContext<PaymentsClient | undefined>(
+  undefined
+)
