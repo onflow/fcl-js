@@ -17,6 +17,15 @@ import {
   LogOutIcon,
   ExternalLinkIcon,
 } from "../icons"
+import {
+  colors,
+  spacing,
+  radius,
+  borderWidths,
+  sizes,
+  fontSizes,
+  fontWeights,
+} from "../styles"
 
 type BalanceType = keyof UseCrossVmTokenBalanceData
 
@@ -185,7 +194,7 @@ export const Profile: React.FC<ProfileProps> = ({
     return (
       <View style={[styles.container, styles.centerContent]}>
         <View style={styles.avatarPlaceholder}>
-          <UserIcon size={32} color="#64748B" />
+          <UserIcon size={sizes.iconMd} color={colors.slate500} />
         </View>
         <Text style={styles.notConnectedText}>No connected wallet</Text>
       </View>
@@ -195,10 +204,9 @@ export const Profile: React.FC<ProfileProps> = ({
   // Connected state
   return (
     <View style={styles.container}>
-      {/* Header with avatar and address */}
       <View style={styles.header}>
         <View style={styles.avatar}>
-          <UserIcon size={32} color="#64748B" />
+          <UserIcon size={sizes.iconMd} color={colors.slate500} />
         </View>
         <View style={styles.addressRow}>
           <Text style={styles.address}>{displayAddress}</Text>
@@ -209,13 +217,12 @@ export const Profile: React.FC<ProfileProps> = ({
               accessibilityRole="link"
               accessibilityLabel="View on Flowscan"
             >
-              <ExternalLinkIcon size={16} color="#64748B" />
+              <ExternalLinkIcon size={sizes.iconSm} color={colors.slate500} />
             </TouchableOpacity>
           )}
         </View>
       </View>
 
-      {/* Token selector (when multiple tokens) */}
       {availableTokens.length > 1 && (
         <View style={styles.tokenSelector}>
           <Text style={styles.sectionLabel}>Token</Text>
@@ -250,7 +257,6 @@ export const Profile: React.FC<ProfileProps> = ({
         </View>
       )}
 
-      {/* Balance display */}
       <View style={styles.balanceCard}>
         <Text style={styles.sectionLabel}>Balance</Text>
         <View style={styles.balanceRow}>
@@ -261,7 +267,6 @@ export const Profile: React.FC<ProfileProps> = ({
         </View>
       </View>
 
-      {/* Action buttons */}
       <View style={styles.actions}>
         <TouchableOpacity
           style={styles.actionButton}
@@ -272,9 +277,9 @@ export const Profile: React.FC<ProfileProps> = ({
           accessibilityLabel={copied ? "Address copied" : "Copy address"}
         >
           {copied ? (
-            <CheckIcon size={16} color="#16A34A" />
+            <CheckIcon size={sizes.iconSm} color={colors.success} />
           ) : (
-            <CopyIcon size={16} color="#0F172A" />
+            <CopyIcon size={sizes.iconSm} color={colors.slate900} />
           )}
           <Text style={styles.actionText}>
             {copied ? "Copied!" : "Copy Address"}
@@ -288,7 +293,7 @@ export const Profile: React.FC<ProfileProps> = ({
           accessibilityRole="button"
           accessibilityLabel="Disconnect wallet"
         >
-          <LogOutIcon size={16} color="#0F172A" />
+          <LogOutIcon size={sizes.iconSm} color={colors.slate900} />
           <Text style={styles.actionText}>Disconnect</Text>
         </TouchableOpacity>
       </View>
@@ -298,137 +303,132 @@ export const Profile: React.FC<ProfileProps> = ({
 
 const styles = StyleSheet.create({
   container: {
-    padding: 20,
+    padding: spacing.lg,
   },
   centerContent: {
     alignItems: "center",
     justifyContent: "center",
-    paddingVertical: 48,
+    paddingVertical: spacing.xxl,
   },
 
-  // Not connected state
   avatarPlaceholder: {
-    width: 64,
-    height: 64,
-    borderRadius: 32,
-    backgroundColor: "#F1F5F9",
+    width: sizes.avatar,
+    height: sizes.avatar,
+    borderRadius: radius.full,
+    backgroundColor: colors.slate100,
     justifyContent: "center",
     alignItems: "center",
-    marginBottom: 12,
+    marginBottom: spacing.sm,
   },
   notConnectedText: {
-    fontSize: 14,
-    fontWeight: "500",
-    color: "#64748B",
+    fontSize: fontSizes.sm,
+    fontWeight: fontWeights.medium,
+    color: colors.slate500,
   },
 
-  // Header
   header: {
     alignItems: "center",
-    marginBottom: 20,
+    marginBottom: spacing.lg,
   },
   avatar: {
-    width: 64,
-    height: 64,
-    borderRadius: 32,
-    backgroundColor: "#F1F5F9",
+    width: sizes.avatar,
+    height: sizes.avatar,
+    borderRadius: radius.full,
+    backgroundColor: colors.slate100,
     justifyContent: "center",
     alignItems: "center",
-    marginBottom: 12,
+    marginBottom: spacing.sm,
   },
   addressRow: {
     flexDirection: "row",
     alignItems: "center",
-    gap: 8,
+    gap: spacing.xs,
   },
   address: {
-    fontSize: 16,
-    fontWeight: "600",
-    color: "#0F172A",
+    fontSize: fontSizes.md,
+    fontWeight: fontWeights.semibold,
+    color: colors.slate900,
   },
 
-  // Token selector
   tokenSelector: {
-    marginBottom: 16,
+    marginBottom: spacing.md,
   },
   sectionLabel: {
-    fontSize: 12,
-    fontWeight: "600",
-    color: "#64748B",
-    marginBottom: 8,
+    fontSize: fontSizes.xs,
+    fontWeight: fontWeights.semibold,
+    color: colors.slate500,
+    marginBottom: spacing.xs,
   },
   tokenList: {
     flexDirection: "row",
     flexWrap: "wrap",
-    gap: 8,
+    gap: spacing.xs,
   },
   tokenOption: {
-    paddingHorizontal: 16,
-    paddingVertical: 8,
-    borderRadius: 8,
-    borderWidth: 1,
-    borderColor: "#E2E8F0",
-    backgroundColor: "#FFFFFF",
+    paddingHorizontal: spacing.md,
+    paddingVertical: spacing.xs,
+    borderRadius: radius.sm,
+    borderWidth: borderWidths.default,
+    borderColor: colors.slate200,
+    backgroundColor: colors.white,
   },
   tokenOptionSelected: {
-    borderColor: "#2563EB",
-    backgroundColor: "#EFF6FF",
+    borderColor: colors.primary,
+    backgroundColor: colors.primaryLight,
   },
   tokenSymbol: {
-    fontSize: 14,
-    fontWeight: "600",
-    color: "#64748B",
+    fontSize: fontSizes.sm,
+    fontWeight: fontWeights.semibold,
+    color: colors.slate500,
   },
   tokenSymbolSelected: {
-    color: "#2563EB",
+    color: colors.primary,
   },
 
-  // Balance card
   balanceCard: {
-    backgroundColor: "#F8FAFC",
-    borderRadius: 12,
-    borderWidth: 1,
-    borderColor: "#E2E8F0",
-    padding: 16,
-    marginBottom: 16,
+    backgroundColor: colors.slate50,
+    borderRadius: radius.md,
+    borderWidth: borderWidths.default,
+    borderColor: colors.slate200,
+    padding: spacing.md,
+    marginBottom: spacing.md,
   },
   balanceRow: {
     flexDirection: "row",
     alignItems: "baseline",
   },
   balanceAmount: {
-    fontSize: 28,
-    fontWeight: "700",
-    color: "#0F172A",
+    fontSize: fontSizes.lg,
+    fontWeight: fontWeights.bold,
+    color: colors.slate900,
   },
   balanceSymbol: {
-    fontSize: 14,
-    fontWeight: "500",
-    color: "#64748B",
-    marginLeft: 8,
+    fontSize: fontSizes.sm,
+    fontWeight: fontWeights.medium,
+    color: colors.slate500,
+    marginLeft: spacing.xs,
   },
 
-  // Actions
   actions: {
     flexDirection: "row",
-    gap: 12,
+    gap: spacing.sm,
   },
   actionButton: {
     flex: 1,
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
-    paddingVertical: 12,
-    paddingHorizontal: 16,
-    borderRadius: 8,
-    borderWidth: 1,
-    borderColor: "#E2E8F0",
-    backgroundColor: "#FFFFFF",
-    gap: 8,
+    paddingVertical: spacing.sm,
+    paddingHorizontal: spacing.md,
+    borderRadius: radius.sm,
+    borderWidth: borderWidths.default,
+    borderColor: colors.slate200,
+    backgroundColor: colors.white,
+    gap: spacing.xs,
   },
   actionText: {
-    fontSize: 14,
-    fontWeight: "500",
-    color: "#0F172A",
+    fontSize: fontSizes.sm,
+    fontWeight: fontWeights.medium,
+    color: colors.slate900,
   },
 })

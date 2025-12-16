@@ -8,6 +8,15 @@ import {
   Text,
   TouchableOpacity,
 } from "react-native"
+import {
+  colors,
+  spacing,
+  radius,
+  borderWidths,
+  sizes,
+  fontSizes,
+  fontWeights,
+} from "../styles"
 import {Profile} from "./Profile"
 
 type BalanceType = keyof UseCrossVmTokenBalanceData
@@ -173,45 +182,45 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
-    paddingVertical: 12,
-    paddingHorizontal: 24,
-    borderRadius: 8,
-    minHeight: 48,
+    paddingVertical: spacing.sm,
+    paddingHorizontal: spacing.xl,
+    borderRadius: radius.sm,
+    minHeight: sizes.buttonMinHeight,
   },
   disconnectedButton: {
-    backgroundColor: "#0F172A",
+    backgroundColor: colors.slate900,
   },
   connectedButton: {
-    backgroundColor: "transparent",
-    borderWidth: 1,
-    borderColor: "#E2E8F0",
+    backgroundColor: colors.transparent,
+    borderWidth: borderWidths.default,
+    borderColor: colors.slate200,
   },
   buttonText: {
-    fontSize: 16,
-    fontWeight: "600",
+    fontSize: fontSizes.md,
+    fontWeight: fontWeights.semibold,
   },
   disconnectedButtonText: {
-    color: "#FFFFFF",
+    color: colors.white,
   },
   connectedButtonText: {
-    color: "#0F172A",
+    color: colors.slate900,
   },
   modalOverlay: {
     flex: 1,
-    backgroundColor: "rgba(0, 0, 0, 0.5)",
+    backgroundColor: colors.overlay,
     justifyContent: "center",
     alignItems: "center",
-    padding: 20,
+    padding: spacing.lg,
   },
   modalContent: {
-    backgroundColor: "#FFFFFF",
-    borderRadius: 16,
+    backgroundColor: colors.white,
+    borderRadius: radius.lg,
     width: "100%",
-    maxWidth: 400,
-    shadowColor: "#000",
+    maxWidth: sizes.modalMaxWidth,
+    shadowColor: colors.slate900,
     shadowOffset: {width: 0, height: 4},
     shadowOpacity: 0.15,
-    shadowRadius: 12,
+    shadowRadius: radius.md,
     elevation: 8,
   },
 })
