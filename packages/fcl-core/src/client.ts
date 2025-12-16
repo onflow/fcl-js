@@ -86,3 +86,5 @@ export function createFlowClientCore(params: FlowClientCoreConfig) {
     ...context.sdk,
   }
 }
+
+export type FlowClientCore = ReturnType<typeof createFlowClientCore>
