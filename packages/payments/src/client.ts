@@ -1,4 +1,9 @@
-import type {FundingIntent, FundingSession, FundingProvider} from "./types"
+import type {
+  FundingIntent,
+  FundingSession,
+  FundingProvider,
+  FundingProviderFactory,
+} from "./types"
 import type {createFlowClientCore} from "@onflow/fcl-core"
 import {ADDRESS_PATTERN} from "./constants"
 import {getEvmAddressFromVaultType} from "./bridge-service"
@@ -19,8 +24,8 @@ export interface PaymentsClient {
  * Configuration for creating a payments client
  */
 export interface PaymentsClientConfig {
-  /** Array of funding providers to use (in priority order) */
-  providers: FundingProvider[]
+  /** Array of funding provider factories to use (in priority order) */
+  providers: FundingProviderFactory[]
   /** Flow client (FCL Core or SDK) for Cadence vault ID conversion */
   flowClient: ReturnType<typeof createFlowClientCore>
 }
@@ -97,6 +102,11 @@ async function convertCadenceCurrencies(
 export function createPaymentsClient(
   config: PaymentsClientConfig
 ): PaymentsClient {
+  // Initialize providers by passing flowClient to each factory
+  const providers: FundingProvider[] = config.providers.map(factory =>
+    factory({flowClient: config.flowClient})
+  )
+
   return {
     async createSession(intent) {
       // Convert Cadence vault identifiers to EVM addresses
@@ -106,7 +116,7 @@ export function createPaymentsClient(
       )
 
       const providerErrors: {id?: string; error: any}[] = []
-      for (const provider of config.providers) {
+      for (const provider of providers) {
         try {
           return await provider.startSession(processedIntent)
         } catch (err) {
