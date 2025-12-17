@@ -14,7 +14,7 @@ import {TrashIcon} from "../icons/TrashIcon"
 import {FlowIcon} from "../icons/FlowIcon"
 import {ExternalLinkIcon} from "../icons/ExternalLink"
 import {twMerge} from "tailwind-merge"
-import {useFlowQueryClient} from "../provider/FlowQueryClient"
+import {useFlowQueryClient} from "@onflow/react-core"
 import {useFlowChainId} from "@onflow/react-core"
 import {getFlowscanScheduledTxUrl} from "@onflow/react-core"
 
