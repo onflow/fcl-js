@@ -1,19 +1,32 @@
 import React, {createContext, useContext} from "react"
 
-export type ColorPalette = {
-  base: string // Base background color (e.g., "flow-bg-slate-900 dark:flow-bg-slate-100")
-  text: string // Text color when used on base (e.g., "flow-text-white dark:flow-text-slate-900")
-  hover: string // Hover variant (e.g., "hover:flow-bg-slate-800 dark:hover:flow-bg-slate-200")
-  muted: string // Muted/lighter variant (e.g., "flow-bg-slate-100 dark:flow-bg-slate-800")
-  mutedText: string // Text color for muted variant
-  mutedHover: string // Hover for muted variant
-  border: string // Border color (e.g., "flow-border-slate-200 dark:flow-border-slate-700")
-}
-
 export type ThemeColors = {
-  primary: ColorPalette
-  secondary: ColorPalette
-  tertiary: ColorPalette
+  /** Primary action color (CTAs, main buttons) */
+  primary?: string
+  /** Text color on primary backgrounds */
+  primaryForeground?: string
+  /** Secondary action color (secondary buttons) */
+  secondary?: string
+  /** Text color on secondary backgrounds */
+  secondaryForeground?: string
+  /** Accent color for highlights, selected states */
+  accent?: string
+  /** Default background color (cards, modals) */
+  background?: string
+  /** Default text color */
+  foreground?: string
+  /** Muted/subtle background color */
+  muted?: string
+  /** Muted text color */
+  mutedForeground?: string
+  /** Border color */
+  border?: string
+  /** Success state color */
+  success?: string
+  /** Error state color */
+  error?: string
+  /** Link text color */
+  link?: string
 }
 
 export type Theme = {
@@ -22,77 +35,68 @@ export type Theme = {
 
 export type ButtonVariant = "primary" | "secondary" | "outline" | "link"
 
-export const getButtonStyles = (colors: ThemeColors, variant: ButtonVariant) => {
-  const {primary} = colors
+export type ButtonStyles = {
+  background?: string
+  text?: string
+  hover?: string
+  border?: string
+  underline?: boolean
+}
 
+export const getButtonStyles = (
+  colors: ThemeColors,
+  variant: ButtonVariant
+): ButtonStyles => {
   switch (variant) {
     case "primary":
       return {
-        background: primary.base,
-        text: primary.text,
-        hover: primary.hover,
-        border: undefined,
+        background: colors.primary,
+        text: colors.primaryForeground,
+        hover: colors.accent,
       }
     case "secondary":
       return {
-        background: primary.muted,
-        text: primary.mutedText,
-        hover: primary.mutedHover,
-        border: undefined,
+        background: colors.secondary,
+        text: colors.secondaryForeground,
+        hover: colors.muted,
       }
     case "outline":
       return {
         background: "flow-bg-transparent",
-        text: primary.mutedText,
-        hover: primary.mutedHover,
-        border: `flow-border ${primary.border}`,
+        text: colors.foreground,
+        hover: colors.muted,
+        border: colors.border,
       }
     case "link":
       return {
         background: "flow-bg-transparent",
-        text: primary.mutedText,
-        hover: "hover:flow-underline",
-        border: undefined,
+        text: colors.link,
+        underline: true,
       }
     default:
       return {
-        background: primary.base,
-        text: primary.text,
-        hover: primary.hover,
-        border: undefined,
+        background: colors.primary,
+        text: colors.primaryForeground,
+        hover: colors.accent,
       }
   }
 }
 
 const defaultTheme: Theme = {
   colors: {
-    primary: {
-      base: "flow-bg-slate-900 dark:flow-bg-slate-100",
-      text: "flow-text-white dark:flow-text-slate-900",
-      hover: "hover:flow-bg-slate-800 dark:hover:flow-bg-slate-200",
-      muted: "flow-bg-slate-100 dark:flow-bg-slate-800",
-      mutedText: "flow-text-slate-900 dark:flow-text-slate-100",
-      mutedHover: "hover:flow-bg-slate-200 dark:hover:flow-bg-slate-700",
-      border: "flow-border-slate-200 dark:flow-border-slate-700",
-    },
-    secondary: {
-      base: "flow-bg-slate-600 dark:flow-bg-slate-400",
-      text: "flow-text-white dark:flow-text-slate-900",
-      hover: "hover:flow-bg-slate-500 dark:hover:flow-bg-slate-300",
-      muted: "flow-bg-slate-50 dark:flow-bg-slate-900",
-      mutedText: "flow-text-slate-700 dark:flow-text-slate-300",
-      mutedHover: "hover:flow-bg-slate-100 dark:hover:flow-bg-slate-800",
-      border: "flow-border-slate-300 dark:flow-border-slate-600",
-    },
-    tertiary: {
-      base: "flow-bg-slate-400 dark:flow-bg-slate-600",
-      text: "flow-text-white dark:flow-text-slate-100",
-      hover: "hover:flow-bg-slate-300 dark:hover:flow-bg-slate-500",
-      muted: "flow-bg-slate-50 dark:flow-bg-slate-900",
-      mutedText: "flow-text-slate-600 dark:flow-text-slate-400",
-      mutedHover: "hover:flow-bg-slate-100 dark:hover:flow-bg-slate-800",
-      border: "flow-border-slate-400 dark:flow-border-slate-500",
-    },
+    primary: "flow-bg-slate-900",
+    primaryForeground: "flow-text-white",
+    secondary: "flow-bg-slate-100",
+    secondaryForeground: "flow-text-slate-900",
+    accent: "flow-bg-slate-800",
+    background: "flow-bg-white",
+    foreground: "flow-text-slate-900",
+    muted: "flow-bg-slate-100",
+    mutedForeground: "flow-text-slate-500",
+    border: "flow-border-slate-200",
+    success: "flow-text-green-600",
+    error: "flow-text-red-600",
+    link: "flow-text-slate-900",
   },
 }
 

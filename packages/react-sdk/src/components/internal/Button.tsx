@@ -19,11 +19,14 @@ export const Button: React.FC<ButtonProps> = ({
   const baseStyles =
     "flow-px-4 flow-py-2 flow-rounded-md flow-font-medium flow-transition-colors"
 
+  const hoverClass = buttonStyles.hover ? `hover:${buttonStyles.hover}` : ""
+
   const variantClasses = twMerge(
     buttonStyles.background,
     buttonStyles.text,
-    buttonStyles.hover,
-    buttonStyles.border
+    hoverClass,
+    buttonStyles.border ? `flow-border ${buttonStyles.border}` : undefined,
+    buttonStyles.underline ? "hover:flow-underline" : undefined
   )
 
   return (
