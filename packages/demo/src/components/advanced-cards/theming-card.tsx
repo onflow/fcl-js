@@ -60,12 +60,16 @@ export function ThemingCard() {
             : "flow-text-purple-900",
           accent: darkMode ? "flow-bg-purple-300" : "flow-bg-purple-700",
           background: darkMode ? "flow-bg-purple-950" : "flow-bg-white",
-          foreground: darkMode ? "flow-text-purple-100" : "flow-text-purple-900",
+          foreground: darkMode
+            ? "flow-text-purple-100"
+            : "flow-text-purple-900",
           muted: darkMode ? "flow-bg-purple-800" : "flow-bg-purple-50",
           mutedForeground: darkMode
             ? "flow-text-purple-400"
             : "flow-text-purple-500",
-          border: darkMode ? "flow-border-purple-700" : "flow-border-purple-200",
+          border: darkMode
+            ? "flow-border-purple-700"
+            : "flow-border-purple-200",
           link: darkMode ? "flow-text-purple-300" : "flow-text-purple-600",
         },
       },
