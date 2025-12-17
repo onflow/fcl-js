@@ -9,17 +9,16 @@ const THEMING_CODE = `import { FlowProvider } from "@onflow/react-sdk"
 
 const customTheme = {
   colors: {
-    primary: {
-      base: "flow-bg-purple-600 dark:flow-bg-purple-400",
-      text: "flow-text-white dark:flow-text-purple-900",
-      hover: "hover:flow-bg-purple-700 dark:hover:flow-bg-purple-300",
-      muted: "flow-bg-purple-100 dark:flow-bg-purple-900",
-      mutedText: "flow-text-purple-900 dark:flow-text-purple-100",
-      mutedHover: "hover:flow-bg-purple-200 dark:hover:flow-bg-purple-800",
-      border: "flow-border-purple-200 dark:flow-border-purple-700",
-    },
-    secondary: { /* ... */ },
-    tertiary: { /* ... */ },
+    primary: "flow-bg-purple-600",
+    primaryForeground: "flow-text-white",
+    secondary: "flow-bg-purple-100",
+    secondaryForeground: "flow-text-purple-900",
+    accent: "flow-bg-purple-700",
+    background: "flow-bg-white",
+    foreground: "flow-text-purple-900",
+    muted: "flow-bg-purple-50",
+    mutedForeground: "flow-text-purple-500",
+    border: "flow-border-purple-200",
   }
 }
 
@@ -43,187 +42,95 @@ export function ThemingCard() {
     default: {
       name: "Flow Default",
       theme: null,
-      swatches: {
-        primary: darkMode ? "bg-slate-100" : "bg-slate-900",
-        secondary: darkMode ? "bg-slate-400" : "bg-slate-600",
-        tertiary: darkMode ? "bg-slate-600" : "bg-slate-400",
+      colors: {
+        primary: darkMode ? "bg-black" : "bg-gray-900",
+        secondary: darkMode ? "bg-gray-700" : "bg-gray-200",
+        accent: "bg-flow-primary",
       },
     },
     purple: {
       name: "Purple Theme",
       theme: {
         colors: {
-          primary: {
-            base: darkMode ? "flow-bg-purple-400" : "flow-bg-purple-600",
-            text: "flow-text-white",
-            hover: darkMode
-              ? "hover:flow-bg-purple-300"
-              : "hover:flow-bg-purple-700",
-            muted: darkMode ? "flow-bg-purple-900" : "flow-bg-purple-100",
-            mutedText: darkMode
-              ? "flow-text-purple-100"
-              : "flow-text-purple-900",
-            mutedHover: darkMode
-              ? "hover:flow-bg-purple-800"
-              : "hover:flow-bg-purple-200",
-            border: darkMode
-              ? "flow-border-purple-700"
-              : "flow-border-purple-200",
-          },
-          secondary: {
-            base: darkMode ? "flow-bg-purple-300" : "flow-bg-purple-500",
-            text: "flow-text-white",
-            hover: darkMode
-              ? "hover:flow-bg-purple-200"
-              : "hover:flow-bg-purple-600",
-            muted: darkMode ? "flow-bg-purple-800" : "flow-bg-purple-50",
-            mutedText: darkMode
-              ? "flow-text-purple-200"
-              : "flow-text-purple-700",
-            mutedHover: darkMode
-              ? "hover:flow-bg-purple-700"
-              : "hover:flow-bg-purple-100",
-            border: darkMode
-              ? "flow-border-purple-600"
-              : "flow-border-purple-300",
-          },
-          tertiary: {
-            base: darkMode ? "flow-bg-purple-200" : "flow-bg-purple-400",
-            text: darkMode ? "flow-text-purple-900" : "flow-text-white",
-            hover: darkMode
-              ? "hover:flow-bg-purple-100"
-              : "hover:flow-bg-purple-500",
-            muted: darkMode ? "flow-bg-purple-700" : "flow-bg-purple-50",
-            mutedText: darkMode
-              ? "flow-text-purple-300"
-              : "flow-text-purple-600",
-            mutedHover: darkMode
-              ? "hover:flow-bg-purple-600"
-              : "hover:flow-bg-purple-100",
-            border: darkMode
-              ? "flow-border-purple-500"
-              : "flow-border-purple-400",
-          },
+          primary: darkMode ? "flow-bg-purple-400" : "flow-bg-purple-600",
+          primaryForeground: "flow-text-white",
+          secondary: darkMode ? "flow-bg-purple-900" : "flow-bg-purple-100",
+          secondaryForeground: darkMode
+            ? "flow-text-purple-100"
+            : "flow-text-purple-900",
+          accent: darkMode ? "flow-bg-purple-300" : "flow-bg-purple-700",
+          background: darkMode ? "flow-bg-purple-950" : "flow-bg-white",
+          foreground: darkMode ? "flow-text-purple-100" : "flow-text-purple-900",
+          muted: darkMode ? "flow-bg-purple-800" : "flow-bg-purple-50",
+          mutedForeground: darkMode
+            ? "flow-text-purple-400"
+            : "flow-text-purple-500",
+          border: darkMode ? "flow-border-purple-700" : "flow-border-purple-200",
+          link: darkMode ? "flow-text-purple-300" : "flow-text-purple-600",
         },
       },
-      swatches: {
+      colors: {
         primary: darkMode ? "bg-purple-400" : "bg-purple-600",
-        secondary: darkMode ? "bg-purple-300" : "bg-purple-500",
-        tertiary: darkMode ? "bg-purple-200" : "bg-purple-400",
+        secondary: darkMode ? "bg-purple-800" : "bg-purple-100",
+        accent: darkMode ? "bg-purple-300" : "bg-purple-700",
       },
     },
     emerald: {
       name: "Emerald Theme",
       theme: {
         colors: {
-          primary: {
-            base: darkMode ? "flow-bg-emerald-400" : "flow-bg-emerald-600",
-            text: "flow-text-white",
-            hover: darkMode
-              ? "hover:flow-bg-emerald-300"
-              : "hover:flow-bg-emerald-700",
-            muted: darkMode ? "flow-bg-emerald-900" : "flow-bg-emerald-100",
-            mutedText: darkMode
-              ? "flow-text-emerald-100"
-              : "flow-text-emerald-900",
-            mutedHover: darkMode
-              ? "hover:flow-bg-emerald-800"
-              : "hover:flow-bg-emerald-200",
-            border: darkMode
-              ? "flow-border-emerald-700"
-              : "flow-border-emerald-200",
-          },
-          secondary: {
-            base: darkMode ? "flow-bg-emerald-300" : "flow-bg-emerald-500",
-            text: "flow-text-white",
-            hover: darkMode
-              ? "hover:flow-bg-emerald-200"
-              : "hover:flow-bg-emerald-600",
-            muted: darkMode ? "flow-bg-emerald-800" : "flow-bg-emerald-50",
-            mutedText: darkMode
-              ? "flow-text-emerald-200"
-              : "flow-text-emerald-700",
-            mutedHover: darkMode
-              ? "hover:flow-bg-emerald-700"
-              : "hover:flow-bg-emerald-100",
-            border: darkMode
-              ? "flow-border-emerald-600"
-              : "flow-border-emerald-300",
-          },
-          tertiary: {
-            base: darkMode ? "flow-bg-emerald-200" : "flow-bg-emerald-400",
-            text: darkMode ? "flow-text-emerald-900" : "flow-text-white",
-            hover: darkMode
-              ? "hover:flow-bg-emerald-100"
-              : "hover:flow-bg-emerald-500",
-            muted: darkMode ? "flow-bg-emerald-700" : "flow-bg-emerald-50",
-            mutedText: darkMode
-              ? "flow-text-emerald-300"
-              : "flow-text-emerald-600",
-            mutedHover: darkMode
-              ? "hover:flow-bg-emerald-600"
-              : "hover:flow-bg-emerald-100",
-            border: darkMode
-              ? "flow-border-emerald-500"
-              : "flow-border-emerald-400",
-          },
+          primary: darkMode ? "flow-bg-emerald-400" : "flow-bg-emerald-600",
+          primaryForeground: "flow-text-white",
+          secondary: darkMode ? "flow-bg-emerald-900" : "flow-bg-emerald-100",
+          secondaryForeground: darkMode
+            ? "flow-text-emerald-100"
+            : "flow-text-emerald-900",
+          accent: darkMode ? "flow-bg-emerald-300" : "flow-bg-emerald-700",
+          background: darkMode ? "flow-bg-emerald-950" : "flow-bg-white",
+          foreground: darkMode
+            ? "flow-text-emerald-100"
+            : "flow-text-emerald-900",
+          muted: darkMode ? "flow-bg-emerald-800" : "flow-bg-emerald-50",
+          mutedForeground: darkMode
+            ? "flow-text-emerald-400"
+            : "flow-text-emerald-500",
+          border: darkMode
+            ? "flow-border-emerald-700"
+            : "flow-border-emerald-200",
+          link: darkMode ? "flow-text-emerald-300" : "flow-text-emerald-600",
         },
       },
-      swatches: {
+      colors: {
         primary: darkMode ? "bg-emerald-400" : "bg-emerald-600",
-        secondary: darkMode ? "bg-emerald-300" : "bg-emerald-500",
-        tertiary: darkMode ? "bg-emerald-200" : "bg-emerald-400",
+        secondary: darkMode ? "bg-emerald-800" : "bg-emerald-100",
+        accent: darkMode ? "bg-emerald-300" : "bg-emerald-700",
       },
     },
     rose: {
       name: "Rose Theme",
       theme: {
         colors: {
-          primary: {
-            base: darkMode ? "flow-bg-rose-400" : "flow-bg-rose-600",
-            text: "flow-text-white",
-            hover: darkMode
-              ? "hover:flow-bg-rose-300"
-              : "hover:flow-bg-rose-700",
-            muted: darkMode ? "flow-bg-rose-900" : "flow-bg-rose-100",
-            mutedText: darkMode ? "flow-text-rose-100" : "flow-text-rose-900",
-            mutedHover: darkMode
-              ? "hover:flow-bg-rose-800"
-              : "hover:flow-bg-rose-200",
-            border: darkMode ? "flow-border-rose-700" : "flow-border-rose-200",
-          },
-          secondary: {
-            base: darkMode ? "flow-bg-rose-300" : "flow-bg-rose-500",
-            text: "flow-text-white",
-            hover: darkMode
-              ? "hover:flow-bg-rose-200"
-              : "hover:flow-bg-rose-600",
-            muted: darkMode ? "flow-bg-rose-800" : "flow-bg-rose-50",
-            mutedText: darkMode ? "flow-text-rose-200" : "flow-text-rose-700",
-            mutedHover: darkMode
-              ? "hover:flow-bg-rose-700"
-              : "hover:flow-bg-rose-100",
-            border: darkMode ? "flow-border-rose-600" : "flow-border-rose-300",
-          },
-          tertiary: {
-            base: darkMode ? "flow-bg-rose-200" : "flow-bg-rose-400",
-            text: darkMode ? "flow-text-rose-900" : "flow-text-white",
-            hover: darkMode
-              ? "hover:flow-bg-rose-100"
-              : "hover:flow-bg-rose-500",
-            muted: darkMode ? "flow-bg-rose-700" : "flow-bg-rose-50",
-            mutedText: darkMode ? "flow-text-rose-300" : "flow-text-rose-600",
-            mutedHover: darkMode
-              ? "hover:flow-bg-rose-600"
-              : "hover:flow-bg-rose-100",
-            border: darkMode ? "flow-border-rose-500" : "flow-border-rose-400",
-          },
+          primary: darkMode ? "flow-bg-rose-400" : "flow-bg-rose-600",
+          primaryForeground: "flow-text-white",
+          secondary: darkMode ? "flow-bg-rose-900" : "flow-bg-rose-100",
+          secondaryForeground: darkMode
+            ? "flow-text-rose-100"
+            : "flow-text-rose-900",
+          accent: darkMode ? "flow-bg-rose-300" : "flow-bg-rose-700",
+          background: darkMode ? "flow-bg-rose-950" : "flow-bg-white",
+          foreground: darkMode ? "flow-text-rose-100" : "flow-text-rose-900",
+          muted: darkMode ? "flow-bg-rose-800" : "flow-bg-rose-50",
+          mutedForeground: darkMode
+            ? "flow-text-rose-400"
+            : "flow-text-rose-500",
+          border: darkMode ? "flow-border-rose-700" : "flow-border-rose-200",
+          link: darkMode ? "flow-text-rose-300" : "flow-text-rose-600",
         },
       },
-      swatches: {
+      colors: {
         primary: darkMode ? "bg-rose-400" : "bg-rose-600",
-        secondary: darkMode ? "bg-rose-300" : "bg-rose-500",
-        tertiary: darkMode ? "bg-rose-200" : "bg-rose-400",
+        secondary: darkMode ? "bg-rose-800" : "bg-rose-100",
+        accent: darkMode ? "bg-rose-300" : "bg-rose-700",
       },
     },
   }
@@ -280,7 +187,7 @@ export function ThemingCard() {
             <div className="grid grid-cols-3 gap-3">
               <div className="text-center">
                 <div
-                  className={`w-full h-12 rounded-lg ${currentTheme.swatches.primary} mb-2`}
+                  className={`w-full h-12 rounded-lg ${currentTheme.colors.primary} mb-2`}
                 />
                 <span
                   className={`text-xs ${darkMode ? "text-gray-400" : "text-gray-600"}`}
@@ -290,7 +197,7 @@ export function ThemingCard() {
               </div>
               <div className="text-center">
                 <div
-                  className={`w-full h-12 rounded-lg ${currentTheme.swatches.secondary} mb-2`}
+                  className={`w-full h-12 rounded-lg ${currentTheme.colors.secondary} mb-2`}
                 />
                 <span
                   className={`text-xs ${darkMode ? "text-gray-400" : "text-gray-600"}`}
@@ -300,12 +207,12 @@ export function ThemingCard() {
               </div>
               <div className="text-center">
                 <div
-                  className={`w-full h-12 rounded-lg ${currentTheme.swatches.tertiary} mb-2`}
+                  className={`w-full h-12 rounded-lg ${currentTheme.colors.accent} mb-2`}
                 />
                 <span
                   className={`text-xs ${darkMode ? "text-gray-400" : "text-gray-600"}`}
                 >
-                  Tertiary
+                  Accent
                 </span>
               </div>
             </div>
