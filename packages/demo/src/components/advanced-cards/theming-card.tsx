@@ -78,7 +78,8 @@ export function ThemingCard() {
           primary: "flow-bg-emerald-600 dark:flow-bg-emerald-400",
           primaryForeground: "flow-text-white",
           secondary: "flow-bg-emerald-100 dark:flow-bg-emerald-900",
-          secondaryForeground: "flow-text-emerald-900 dark:flow-text-emerald-100",
+          secondaryForeground:
+            "flow-text-emerald-900 dark:flow-text-emerald-100",
           accent: "flow-bg-emerald-700 dark:flow-bg-emerald-300",
           background: "flow-bg-white dark:flow-bg-emerald-950",
           foreground: "flow-text-emerald-900 dark:flow-text-emerald-100",
