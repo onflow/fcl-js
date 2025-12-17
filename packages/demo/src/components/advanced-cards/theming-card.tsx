@@ -9,16 +9,16 @@ const THEMING_CODE = `import { FlowProvider } from "@onflow/react-sdk"
 
 const customTheme = {
   colors: {
-    primary: "flow-bg-purple-600",
-    primaryForeground: "flow-text-white",
-    secondary: "flow-bg-purple-100",
-    secondaryForeground: "flow-text-purple-900",
-    accent: "flow-bg-purple-700",
-    background: "flow-bg-white",
-    foreground: "flow-text-purple-900",
-    muted: "flow-bg-purple-50",
-    mutedForeground: "flow-text-purple-500",
-    border: "flow-border-purple-200",
+    primary: "flow-bg-purple-600 dark:flow-bg-purple-400",
+    primaryForeground: "flow-text-white dark:flow-text-white",
+    secondary: "flow-bg-purple-100 dark:flow-bg-purple-900",
+    secondaryForeground: "flow-text-purple-900 dark:flow-text-purple-100",
+    accent: "flow-bg-purple-700 dark:flow-bg-purple-300",
+    background: "flow-bg-white dark:flow-bg-purple-950",
+    foreground: "flow-text-purple-900 dark:flow-text-purple-100",
+    muted: "flow-bg-purple-50 dark:flow-bg-purple-800",
+    mutedForeground: "flow-text-purple-500 dark:flow-text-purple-400",
+    border: "flow-border-purple-200 dark:flow-border-purple-700",
   }
 }
 
@@ -52,25 +52,17 @@ export function ThemingCard() {
       name: "Purple Theme",
       theme: {
         colors: {
-          primary: darkMode ? "flow-bg-purple-400" : "flow-bg-purple-600",
+          primary: "flow-bg-purple-600 dark:flow-bg-purple-400",
           primaryForeground: "flow-text-white",
-          secondary: darkMode ? "flow-bg-purple-900" : "flow-bg-purple-100",
-          secondaryForeground: darkMode
-            ? "flow-text-purple-100"
-            : "flow-text-purple-900",
-          accent: darkMode ? "flow-bg-purple-300" : "flow-bg-purple-700",
-          background: darkMode ? "flow-bg-purple-950" : "flow-bg-white",
-          foreground: darkMode
-            ? "flow-text-purple-100"
-            : "flow-text-purple-900",
-          muted: darkMode ? "flow-bg-purple-800" : "flow-bg-purple-50",
-          mutedForeground: darkMode
-            ? "flow-text-purple-400"
-            : "flow-text-purple-500",
-          border: darkMode
-            ? "flow-border-purple-700"
-            : "flow-border-purple-200",
-          link: darkMode ? "flow-text-purple-300" : "flow-text-purple-600",
+          secondary: "flow-bg-purple-100 dark:flow-bg-purple-900",
+          secondaryForeground: "flow-text-purple-900 dark:flow-text-purple-100",
+          accent: "flow-bg-purple-700 dark:flow-bg-purple-300",
+          background: "flow-bg-white dark:flow-bg-purple-950",
+          foreground: "flow-text-purple-900 dark:flow-text-purple-100",
+          muted: "flow-bg-purple-50 dark:flow-bg-purple-800",
+          mutedForeground: "flow-text-purple-500 dark:flow-text-purple-400",
+          border: "flow-border-purple-200 dark:flow-border-purple-700",
+          link: "flow-text-purple-600 dark:flow-text-purple-300",
         },
       },
       colors: {
@@ -83,25 +75,17 @@ export function ThemingCard() {
       name: "Emerald Theme",
       theme: {
         colors: {
-          primary: darkMode ? "flow-bg-emerald-400" : "flow-bg-emerald-600",
+          primary: "flow-bg-emerald-600 dark:flow-bg-emerald-400",
           primaryForeground: "flow-text-white",
-          secondary: darkMode ? "flow-bg-emerald-900" : "flow-bg-emerald-100",
-          secondaryForeground: darkMode
-            ? "flow-text-emerald-100"
-            : "flow-text-emerald-900",
-          accent: darkMode ? "flow-bg-emerald-300" : "flow-bg-emerald-700",
-          background: darkMode ? "flow-bg-emerald-950" : "flow-bg-white",
-          foreground: darkMode
-            ? "flow-text-emerald-100"
-            : "flow-text-emerald-900",
-          muted: darkMode ? "flow-bg-emerald-800" : "flow-bg-emerald-50",
-          mutedForeground: darkMode
-            ? "flow-text-emerald-400"
-            : "flow-text-emerald-500",
-          border: darkMode
-            ? "flow-border-emerald-700"
-            : "flow-border-emerald-200",
-          link: darkMode ? "flow-text-emerald-300" : "flow-text-emerald-600",
+          secondary: "flow-bg-emerald-100 dark:flow-bg-emerald-900",
+          secondaryForeground: "flow-text-emerald-900 dark:flow-text-emerald-100",
+          accent: "flow-bg-emerald-700 dark:flow-bg-emerald-300",
+          background: "flow-bg-white dark:flow-bg-emerald-950",
+          foreground: "flow-text-emerald-900 dark:flow-text-emerald-100",
+          muted: "flow-bg-emerald-50 dark:flow-bg-emerald-800",
+          mutedForeground: "flow-text-emerald-500 dark:flow-text-emerald-400",
+          border: "flow-border-emerald-200 dark:flow-border-emerald-700",
+          link: "flow-text-emerald-600 dark:flow-text-emerald-300",
         },
       },
       colors: {
@@ -114,21 +98,17 @@ export function ThemingCard() {
       name: "Rose Theme",
       theme: {
         colors: {
-          primary: darkMode ? "flow-bg-rose-400" : "flow-bg-rose-600",
+          primary: "flow-bg-rose-600 dark:flow-bg-rose-400",
           primaryForeground: "flow-text-white",
-          secondary: darkMode ? "flow-bg-rose-900" : "flow-bg-rose-100",
-          secondaryForeground: darkMode
-            ? "flow-text-rose-100"
-            : "flow-text-rose-900",
-          accent: darkMode ? "flow-bg-rose-300" : "flow-bg-rose-700",
-          background: darkMode ? "flow-bg-rose-950" : "flow-bg-white",
-          foreground: darkMode ? "flow-text-rose-100" : "flow-text-rose-900",
-          muted: darkMode ? "flow-bg-rose-800" : "flow-bg-rose-50",
-          mutedForeground: darkMode
-            ? "flow-text-rose-400"
-            : "flow-text-rose-500",
-          border: darkMode ? "flow-border-rose-700" : "flow-border-rose-200",
-          link: darkMode ? "flow-text-rose-300" : "flow-text-rose-600",
+          secondary: "flow-bg-rose-100 dark:flow-bg-rose-900",
+          secondaryForeground: "flow-text-rose-900 dark:flow-text-rose-100",
+          accent: "flow-bg-rose-700 dark:flow-bg-rose-300",
+          background: "flow-bg-white dark:flow-bg-rose-950",
+          foreground: "flow-text-rose-900 dark:flow-text-rose-100",
+          muted: "flow-bg-rose-50 dark:flow-bg-rose-800",
+          mutedForeground: "flow-text-rose-500 dark:flow-text-rose-400",
+          border: "flow-border-rose-200 dark:flow-border-rose-700",
+          link: "flow-text-rose-600 dark:flow-text-rose-300",
         },
       },
       colors: {
