@@ -84,19 +84,19 @@ export const getButtonStyles = (
 
 const defaultTheme: Theme = {
   colors: {
-    primary: "flow-bg-slate-900",
-    primaryForeground: "flow-text-white",
-    secondary: "flow-bg-slate-100",
-    secondaryForeground: "flow-text-slate-900",
-    accent: "flow-bg-slate-800",
-    background: "flow-bg-white",
-    foreground: "flow-text-slate-900",
-    muted: "flow-bg-slate-100",
-    mutedForeground: "flow-text-slate-500",
-    border: "flow-border-slate-200",
-    success: "flow-text-green-600",
-    error: "flow-text-red-600",
-    link: "flow-text-slate-900",
+    primary: "flow-bg-slate-900 dark:flow-bg-white",
+    primaryForeground: "flow-text-white dark:flow-text-slate-900",
+    secondary: "flow-bg-slate-100 dark:flow-bg-slate-800",
+    secondaryForeground: "flow-text-slate-900 dark:flow-text-slate-100",
+    accent: "flow-bg-slate-800 dark:flow-bg-slate-200",
+    background: "flow-bg-white dark:flow-bg-slate-800",
+    foreground: "flow-text-slate-900 dark:flow-text-slate-100",
+    muted: "flow-bg-slate-100 dark:flow-bg-slate-700",
+    mutedForeground: "flow-text-slate-500 dark:flow-text-slate-400",
+    border: "flow-border-slate-200 dark:flow-border-slate-700",
+    success: "flow-text-green-600 dark:flow-text-green-400",
+    error: "flow-text-red-600 dark:flow-text-red-400",
+    link: "flow-text-slate-900 dark:flow-text-slate-100",
   },
 }
 
