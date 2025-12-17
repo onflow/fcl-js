@@ -41,8 +41,8 @@ export const Dialog: React.FC<DialogProps> = ({
       <div className="flow-fixed flow-inset-0 flow-flex flow-items-center flow-justify-center flow-p-4">
         <HeadlessDialog.Panel
           className={twMerge(
-            `flow-w-full flow-rounded-lg flow-bg-white dark:flow-bg-slate-800 flow-p-6
-            flow-shadow-xl flow-relative`,
+            "flow-w-full flow-rounded-lg flow-p-6 flow-shadow-xl flow-relative",
+            colors.background,
             className || "flow-max-w-md"
           )}
         >
@@ -63,7 +63,8 @@ export const Dialog: React.FC<DialogProps> = ({
             <div className="flow-mb-4">
               <HeadlessDialog.Title
                 className={twMerge(
-                  "flow-text-lg flow-font-semibold flow-text-slate-900 dark:flow-text-slate-100"
+                  "flow-text-lg flow-font-semibold",
+                  colors.foreground
                 )}
               >
                 {title}
@@ -72,7 +73,7 @@ export const Dialog: React.FC<DialogProps> = ({
           )}
 
           {/* Content starts at the top */}
-          <div className="flow-mt-2 flow-text-slate-700 dark:flow-text-slate-300">
+          <div className={twMerge("flow-mt-2", colors.mutedForeground)}>
             {children}
           </div>
         </HeadlessDialog.Panel>
