@@ -141,7 +141,8 @@ const ScheduledTransactionCard: React.FC<ScheduledTransactionCardProps> = ({
         {metadata.thumbnail && (
           <div
             className={twMerge(
-              "max-sm:flow-hidden flow-flex-shrink-0 flow-w-16 flow-h-16 flow-rounded flow-overflow-hidden",
+              `max-sm:flow-hidden flow-flex-shrink-0 flow-w-16 flow-h-16 flow-rounded
+              flow-overflow-hidden`,
               colors.muted
             )}
           >
@@ -189,7 +190,8 @@ const ScheduledTransactionCard: React.FC<ScheduledTransactionCardProps> = ({
 
           <div
             className={twMerge(
-              "flow-flex flow-items-center flow-flex-wrap flow-gap-2 sm:flow-gap-2.5 flow-text-[10px] flow-mt-2",
+              `flow-flex flow-items-center flow-flex-wrap flow-gap-2 sm:flow-gap-2.5
+              flow-text-[10px] flow-mt-2`,
               colors.mutedForeground
             )}
           >
@@ -402,10 +404,25 @@ export const ScheduledTransactionList: React.FC<
                       )}
                     ></div>
                     <div className="flow-flex-1 flow-min-w-0 flow-space-y-2">
-                      <div className={twMerge("flow-h-4 flow-rounded flow-w-1/3", colors.muted)}></div>
-                      <div className={twMerge("flow-h-3 flow-rounded flow-w-2/3", colors.muted)}></div>
+                      <div
+                        className={twMerge(
+                          "flow-h-4 flow-rounded flow-w-1/3",
+                          colors.muted
+                        )}
+                      ></div>
+                      <div
+                        className={twMerge(
+                          "flow-h-3 flow-rounded flow-w-2/3",
+                          colors.muted
+                        )}
+                      ></div>
                     </div>
-                    <div className={twMerge("flow-h-8 flow-w-8 flow-rounded", colors.muted)}></div>
+                    <div
+                      className={twMerge(
+                        "flow-h-8 flow-w-8 flow-rounded",
+                        colors.muted
+                      )}
+                    ></div>
                   </div>
                 </div>
               ))}
@@ -415,8 +432,18 @@ export const ScheduledTransactionList: React.FC<
               className="flow-flex flow-flex-col flow-items-center flow-justify-center flow-h-full
                 flow-gap-3 flow-py-12"
             >
-              <AlertCircleIcon className={twMerge("flow-h-16 flow-w-16", colors.mutedForeground)} />
-              <p className={twMerge("flow-text-sm flow-font-medium", colors.mutedForeground)}>
+              <AlertCircleIcon
+                className={twMerge(
+                  "flow-h-16 flow-w-16",
+                  colors.mutedForeground
+                )}
+              />
+              <p
+                className={twMerge(
+                  "flow-text-sm flow-font-medium",
+                  colors.mutedForeground
+                )}
+              >
                 Failed to load scheduled transactions
               </p>
               <p
@@ -435,12 +462,16 @@ export const ScheduledTransactionList: React.FC<
             >
               <div
                 className={twMerge(
-                  "flow-h-16 flow-w-16 flow-rounded-full flow-flex flow-items-center flow-justify-center",
+                  `flow-h-16 flow-w-16 flow-rounded-full flow-flex flow-items-center
+                    flow-justify-center`,
                   colors.muted
                 )}
               >
                 <svg
-                  className={twMerge("flow-h-8 flow-w-8", colors.mutedForeground)}
+                  className={twMerge(
+                    "flow-h-8 flow-w-8",
+                    colors.mutedForeground
+                  )}
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
@@ -453,7 +484,12 @@ export const ScheduledTransactionList: React.FC<
                   />
                 </svg>
               </div>
-              <p className={twMerge("flow-text-sm flow-font-medium", colors.mutedForeground)}>
+              <p
+                className={twMerge(
+                  "flow-text-sm flow-font-medium",
+                  colors.mutedForeground
+                )}
+              >
                 No scheduled transactions
               </p>
             </div>
