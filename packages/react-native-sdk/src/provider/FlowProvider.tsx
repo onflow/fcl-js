@@ -30,6 +30,23 @@ const defaultQueryOptions: DefaultOptions = {
   },
 }
 
+// Singleton to preserve flowClient across remounts (e.g., deeplink navigation)
+// This prevents auth state from being lost when expo-router causes remounts
+let cachedFlowClient: ReturnType<typeof createFlowClient> | null = null
+let cachedConfigKey: string | null = null
+
+function getConfigKey(
+  cfg: FlowConfig,
+  flowJson?: Record<string, unknown>
+): string {
+  // Create a stable key from config to detect if config actually changed
+  return JSON.stringify({
+    accessNodeUrl: cfg.accessNodeUrl,
+    flowNetwork: cfg.flowNetwork,
+    walletconnectProjectId: cfg.walletconnectProjectId,
+  })
+}
+
 export function FlowProvider({
   config: initialConfig = {},
   queryClient: _queryClient,
@@ -43,7 +60,14 @@ export function FlowProvider({
 
   const flowClient = useMemo(() => {
     if (_flowClient) return _flowClient
-    return createFlowClient({
+
+    // Check if we can reuse cached client (same config)
+    const configKey = getConfigKey(initialConfig, flowJson)
+    if (cachedFlowClient && cachedConfigKey === configKey) {
+      return cachedFlowClient
+    }
+
+    const client = createFlowClient({
       accessNodeUrl: initialConfig.accessNodeUrl!,
       discoveryWallet: initialConfig.discoveryWallet,
       discoveryWalletMethod: initialConfig.discoveryWalletMethod,
@@ -62,6 +86,12 @@ export function FlowProvider({
       appDetailUrl: initialConfig.appDetailUrl,
       serviceOpenIdScopes: initialConfig.serviceOpenIdScopes,
     })
+
+    // Cache for reuse across remounts
+    cachedFlowClient = client
+    cachedConfigKey = configKey
+
+    return client
   }, [_flowClient, initialConfig, flowJson])
 
   // Set discovery.authn.endpoint in global FCL config for ServiceDiscovery
