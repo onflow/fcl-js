@@ -35,7 +35,10 @@ const defaultQueryOptions: DefaultOptions = {
 let cachedFlowClient: ReturnType<typeof createFlowClient> | null = null
 let cachedConfigKey: string | null = null
 
-function getConfigKey(cfg: FlowConfig, flowJson?: Record<string, unknown>): string {
+function getConfigKey(
+  cfg: FlowConfig,
+  flowJson?: Record<string, unknown>
+): string {
   // Create a stable key from config to detect if config actually changed
   return JSON.stringify({
     accessNodeUrl: cfg.accessNodeUrl,
@@ -61,11 +64,9 @@ export function FlowProvider({
     // Check if we can reuse cached client (same config)
     const configKey = getConfigKey(initialConfig, flowJson)
     if (cachedFlowClient && cachedConfigKey === configKey) {
-      console.log("[RN-SDK:PROVIDER] Reusing cached flowClient")
       return cachedFlowClient
     }
 
-    console.log("[RN-SDK:PROVIDER] Creating new flowClient")
     const client = createFlowClient({
       accessNodeUrl: initialConfig.accessNodeUrl!,
       discoveryWallet: initialConfig.discoveryWallet,

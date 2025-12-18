@@ -56,6 +56,12 @@ Here's a look at some of the hooks available. For a full list, see the [official
 - `<Connect />` - Wallet connection button with built-in profile modal
 - `<Profile />` - Displays connected wallet information with disconnect option
 
+## 🔗 WalletConnect Deeplinks
+
+This SDK uses `wc-redirect` as the deeplink path for WalletConnect redirects (e.g., `myapp://wc-redirect`). When a wallet approves a connection or transaction, it redirects back to your app using this path.
+
+To prevent navigation flashes, you can intercept this path using Expo Router's `+native-intent.tsx`. See [Expo Router Native Intent documentation](https://docs.expo.dev/router/advanced/native-intent/) for details.
+
 ## 📚 Full Documentation
 
 Looking for full API docs, examples, and usage tips?

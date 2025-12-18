@@ -68,7 +68,9 @@ const initClient = async ({
     await initializeWalletConnect()
 
     // Auto-detect redirect URI using expo-linking (always available as dependency)
-    const redirect = Linking.createURL("")
+    // We use a unique path that apps can intercept
+    // This allows apps to handle the redirect however they want (e.g., stay on current screen)
+    const redirect = Linking.createURL("wc-redirect")
 
     // Build metadata
     const clientMetadata = metadata || {
