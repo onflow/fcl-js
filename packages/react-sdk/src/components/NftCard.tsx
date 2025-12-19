@@ -9,6 +9,7 @@ import {MoreVerticalIcon} from "../icons/MoreVerticalIcon"
 import {Dialog} from "./internal/Dialog"
 import {Button} from "./internal/Button"
 import {twMerge} from "tailwind-merge"
+import {useTheme} from "../core/theme"
 
 export interface NftCardAction {
   title: string
@@ -40,6 +41,7 @@ export const NftCard: React.FC<NftCardProps> = ({
   const [actionLoading, setActionLoading] = React.useState<number | null>(null)
   const [isDropdownOpen, setIsDropdownOpen] = React.useState(false)
   const dropdownRef = React.useRef<HTMLDivElement>(null)
+  const {colors} = useTheme()
 
   const {
     data: nft,
@@ -92,24 +94,29 @@ export const NftCard: React.FC<NftCardProps> = ({
     <StyleWrapper>
       <div
         className={twMerge(
-          `flow-w-full flow-rounded-lg flow-bg-white dark:flow-bg-slate-900
-          flow-overflow-hidden`,
+          "flow-w-full flow-rounded-lg flow-overflow-hidden",
           "flow-shadow-lg hover:flow-shadow-xl flow-transition-shadow",
-          "flow-duration-300 flow-border flow-border-slate-200 dark:flow-border-slate-800",
+          "flow-duration-300 flow-border",
+          colors.background,
+          colors.border,
           className
         )}
         style={style}
       >
         <div className="flow-relative">
           <div
-            className="flow-relative flow-w-full flow-aspect-square flow-bg-slate-100
-              dark:flow-bg-slate-800 flow-overflow-hidden"
+            className={twMerge(
+              "flow-relative flow-w-full flow-aspect-square flow-overflow-hidden",
+              colors.secondary
+            )}
           >
             {isLoading ? (
               <div className="flow-absolute flow-inset-0 flow-flex flow-items-center flow-justify-center">
                 <LoaderCircleIcon
-                  className="flow-h-16 flow-w-16 flow-text-slate-400 dark:flow-text-slate-600
-                    flow-animate-spin"
+                  className={twMerge(
+                    "flow-h-16 flow-w-16 flow-animate-spin",
+                    colors.mutedForeground
+                  )}
                 />
               </div>
             ) : hasError ? (
@@ -117,8 +124,18 @@ export const NftCard: React.FC<NftCardProps> = ({
                 className="flow-absolute flow-inset-0 flow-flex flow-flex-col flow-items-center
                   flow-justify-center flow-gap-3"
               >
-                <AlertCircleIcon className="flow-h-16 flow-w-16 flow-text-slate-400 dark:flow-text-slate-600" />
-                <p className="flow-text-sm flow-text-slate-500 dark:flow-text-slate-500 flow-font-medium">
+                <AlertCircleIcon
+                  className={twMerge(
+                    "flow-h-16 flow-w-16",
+                    colors.mutedForeground
+                  )}
+                />
+                <p
+                  className={twMerge(
+                    "flow-text-sm flow-font-medium",
+                    colors.mutedForeground
+                  )}
+                >
                   Failed to load NFT
                 </p>
               </div>
@@ -130,7 +147,12 @@ export const NftCard: React.FC<NftCardProps> = ({
               />
             ) : (
               <div className="flow-absolute flow-inset-0 flow-flex flow-items-center flow-justify-center">
-                <ImageIcon className="flow-h-16 flow-w-16 flow-text-slate-400 dark:flow-text-slate-600" />
+                <ImageIcon
+                  className={twMerge(
+                    "flow-h-16 flow-w-16",
+                    colors.mutedForeground
+                  )}
+                />
               </div>
             )}
           </div>
@@ -157,14 +179,19 @@ export const NftCard: React.FC<NftCardProps> = ({
                   aria-label="Actions menu"
                   aria-expanded={isDropdownOpen}
                 >
-                  <MoreVerticalIcon className="flow-h-4 flow-w-4 flow-text-slate-700 dark:flow-text-slate-300" />
+                  <MoreVerticalIcon
+                    className={twMerge("flow-h-4 flow-w-4", colors.foreground)}
+                  />
                 </button>
 
                 {isDropdownOpen && (
                   <div
-                    className="flow-absolute flow-top-full flow-mt-2 flow-w-52 flow-rounded-lg flow-bg-white
-                      dark:flow-bg-slate-900 flow-shadow-sm hover:flow-shadow-md flow-border
-                      flow-border-slate-200 dark:flow-border-slate-800 flow-p-1 flow-origin-top-right"
+                    className={twMerge(
+                      "flow-absolute flow-top-full flow-mt-2 flow-w-52 flow-rounded-lg",
+                      "flow-shadow-sm hover:flow-shadow-md flow-border flow-p-1 flow-origin-top-right",
+                      colors.background,
+                      colors.border
+                    )}
                     style={{right: "0px"}}
                   >
                     {actions.map((action, index) => (
@@ -193,8 +220,10 @@ export const NftCard: React.FC<NftCardProps> = ({
                         <span className="flow-truncate">{action.title}</span>
                         {actionLoading === index && (
                           <LoaderCircleIcon
-                            className="flow-h-4 flow-w-4 flow-flex-shrink-0 flow-animate-spin flow-text-slate-500
-                              dark:flow-text-slate-400"
+                            className={twMerge(
+                              "flow-h-4 flow-w-4 flow-flex-shrink-0 flow-animate-spin",
+                              colors.mutedForeground
+                            )}
                           />
                         )}
                       </button>
@@ -242,16 +271,20 @@ export const NftCard: React.FC<NftCardProps> = ({
                 <div className="flow-flex-1 flow-min-w-0 flow-pr-2">
                   {!hasError && nft.collectionName && (
                     <p
-                      className="flow-text-xs flow-text-slate-500 dark:flow-text-slate-400 flow-uppercase
-                        flow-tracking-wider flow-font-semibold flow-mb-1"
+                      className={twMerge(
+                        "flow-text-xs flow-uppercase flow-tracking-wider flow-font-semibold flow-mb-1",
+                        colors.mutedForeground
+                      )}
                     >
                       {nft.collectionName}
                     </p>
                   )}
 
                   <h3
-                    className="flow-text-xl flow-font-bold flow-text-slate-900 dark:flow-text-white
-                      flow-truncate flow-leading-tight"
+                    className={twMerge(
+                      "flow-text-xl flow-font-bold flow-truncate flow-leading-tight",
+                      colors.foreground
+                    )}
                   >
                     {hasError
                       ? `NFT #${tokenId}`
@@ -261,8 +294,10 @@ export const NftCard: React.FC<NftCardProps> = ({
 
                 <div className="flow-flex-shrink-0 flow-self-start">
                   <span
-                    className="flow-text-sm flow-font-medium flow-text-slate-400 dark:flow-text-slate-500
-                      flow-whitespace-nowrap"
+                    className={twMerge(
+                      "flow-text-sm flow-font-medium flow-whitespace-nowrap",
+                      colors.mutedForeground
+                    )}
                   >
                     #{tokenId}
                   </span>
@@ -272,15 +307,17 @@ export const NftCard: React.FC<NftCardProps> = ({
 
             {!isLoading && !hasError && nft.description && (
               <p
-                className="flow-text-sm flow-text-slate-600 dark:flow-text-slate-400 flow-line-clamp-2
-                  flow-leading-relaxed"
+                className={twMerge(
+                  "flow-text-sm flow-line-clamp-2 flow-leading-relaxed",
+                  colors.mutedForeground
+                )}
               >
                 {nft.description}
               </p>
             )}
 
             {!isLoading && hasError && (
-              <p className="flow-text-sm flow-text-slate-500 dark:flow-text-slate-500">
+              <p className={twMerge("flow-text-sm", colors.mutedForeground)}>
                 Unable to load NFT metadata
               </p>
             )}
@@ -336,8 +373,10 @@ export const NftCard: React.FC<NftCardProps> = ({
           {showTraits && !hasError && nft.traits && totalTraits > 0 && (
             <div className="flow-space-y-3">
               <p
-                className="flow-text-xs flow-font-bold flow-text-slate-700 dark:flow-text-slate-300
-                  flow-uppercase flow-tracking-wider"
+                className={twMerge(
+                  "flow-text-xs flow-font-bold flow-uppercase flow-tracking-wider",
+                  colors.foreground
+                )}
               >
                 Traits
               </p>
@@ -347,18 +386,25 @@ export const NftCard: React.FC<NftCardProps> = ({
                   .map(([key, value]) => (
                     <div
                       key={key}
-                      className="flow-px-3 flow-py-2 flow-rounded-lg flow-bg-slate-50 dark:flow-bg-slate-800/50
-                        flow-border flow-border-slate-200 dark:flow-border-slate-700"
+                      className={twMerge(
+                        "flow-px-3 flow-py-2 flow-rounded-lg flow-border",
+                        colors.muted,
+                        colors.border
+                      )}
                     >
                       <p
-                        className="flow-text-xs flow-text-slate-500 dark:flow-text-slate-400 flow-truncate
-                          flow-mb-0.5"
+                        className={twMerge(
+                          "flow-text-xs flow-truncate flow-mb-0.5",
+                          colors.mutedForeground
+                        )}
                       >
                         {key}
                       </p>
                       <p
-                        className="flow-text-sm flow-font-semibold flow-text-slate-900 dark:flow-text-white
-                          flow-truncate"
+                        className={twMerge(
+                          "flow-text-sm flow-font-semibold flow-truncate",
+                          colors.foreground
+                        )}
                       >
                         {value}
                       </p>
@@ -396,18 +442,25 @@ export const NftCard: React.FC<NftCardProps> = ({
               Object.entries(nft.traits).map(([key, value]) => (
                 <div
                   key={key}
-                  className="flow-px-3 flow-py-2 flow-rounded-lg flow-bg-slate-50 dark:flow-bg-slate-800/50
-                    flow-border flow-border-slate-200 dark:flow-border-slate-700"
+                  className={twMerge(
+                    "flow-px-3 flow-py-2 flow-rounded-lg flow-border",
+                    colors.muted,
+                    colors.border
+                  )}
                 >
                   <p
-                    className="flow-text-xs flow-text-slate-500 dark:flow-text-slate-400 flow-truncate
-                      flow-mb-0.5"
+                    className={twMerge(
+                      "flow-text-xs flow-truncate flow-mb-0.5",
+                      colors.mutedForeground
+                    )}
                   >
                     {key}
                   </p>
                   <p
-                    className="flow-text-sm flow-font-semibold flow-text-slate-900 dark:flow-text-white
-                      flow-truncate"
+                    className={twMerge(
+                      "flow-text-sm flow-font-semibold flow-truncate",
+                      colors.foreground
+                    )}
                   >
                     {value}
                   </p>
