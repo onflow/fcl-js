@@ -1,10 +1,10 @@
 import React from "react"
-import {useFlowMutate} from "../hooks"
+import {useFlowMutate} from "@onflow/react-core"
 import {Button, ButtonProps} from "./internal/Button"
 import {StyleWrapper} from "./internal/StyleWrapper"
 import {UseMutationOptions} from "@tanstack/react-query"
 import {type mutate} from "@onflow/fcl"
-import {useGlobalTransaction} from "../provider/GlobalTransactionProvider"
+import {useGlobalTransaction} from "@onflow/react-core"
 
 interface TransactionButtonProps
   extends Omit<ButtonProps, "onClick" | "children"> {

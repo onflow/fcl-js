@@ -68,7 +68,9 @@ const initClient = async ({
     await initializeWalletConnect()
 
     // Auto-detect redirect URI using expo-linking (always available as dependency)
-    const redirect = Linking.createURL("")
+    // We use a unique path that apps can intercept
+    // This allows apps to handle the redirect however they want (e.g., stay on current screen)
+    const redirect = Linking.createURL("wc-redirect")
 
     // Build metadata
     const clientMetadata = metadata || {
@@ -150,4 +152,29 @@ export async function getClient() {
 
     return client
   })
+}
+
+export async function disconnectWalletConnect(): Promise<void> {
+  try {
+    const client = await getClient()
+    if (!client) return
+
+    const sessions = client.session.getAll()
+    const pairings = client.core.pairing.pairings.getAll()
+
+    // Disconnect all in parallel
+    await Promise.allSettled([
+      ...sessions.map((session: any) =>
+        client.disconnect({
+          topic: session.topic,
+          reason: {code: 6000, message: "User disconnected"},
+        })
+      ),
+      ...pairings.map((pairing: any) =>
+        client.core.pairing.disconnect({topic: pairing.topic})
+      ),
+    ])
+  } catch {
+    // WC client not initialized or disconnect failed (safe to ignore)
+  }
 }

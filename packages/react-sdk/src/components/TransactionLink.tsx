@@ -1,9 +1,9 @@
 import React from "react"
 import {Button, ButtonProps} from "./internal/Button"
 import {StyleWrapper} from "./internal/StyleWrapper"
-import {useFlowChainId} from "../hooks/useFlowChainId"
+import {useFlowChainId} from "@onflow/react-core"
 import {ExternalLinkIcon} from "../icons/ExternalLink"
-import {getFlowscanTxUrl} from "../utils/flowscan"
+import {getFlowscanTxUrl} from "@onflow/react-core"
 
 interface TransactionLinkProps {
   /** The transaction ID (256-bit hash as hex string) or scheduled transaction ID (UInt64 as decimal string) */

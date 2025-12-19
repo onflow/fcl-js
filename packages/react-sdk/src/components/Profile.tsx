@@ -10,12 +10,13 @@ import {
   TabPanel,
   TabPanels,
 } from "@headlessui/react"
-import {useFlowCurrentUser} from "../hooks"
+import {sansPrefix} from "@onflow/fcl"
+import {useFlowCurrentUser, truncateAddress} from "@onflow/react-core"
 import {
   useCrossVmTokenBalance,
   UseCrossVmTokenBalanceData,
-} from "../hooks/useCrossVmTokenBalance"
-import {useFlowChainId} from "../hooks/useFlowChainId"
+} from "@onflow/react-core"
+import {useFlowChainId} from "@onflow/react-core"
 import {Button} from "./internal/Button"
 import {StyleWrapper} from "./internal/StyleWrapper"
 import {UserIcon} from "../icons/UserIcon"
@@ -23,8 +24,7 @@ import {CopyIcon} from "../icons/CopyIcon"
 import {LogOutIcon} from "../icons/LogOutIcon"
 import {ExternalLinkIcon} from "../icons/ExternalLink"
 import {ScheduledTransactionList} from "./ScheduledTransactionList"
-import {CONTRACT_ADDRESSES} from "../constants"
-import {getFlowscanAccountUrl} from "../utils/flowscan"
+import {CONTRACT_ADDRESSES, getFlowscanAccountUrl} from "@onflow/react-core"
 import {twMerge} from "tailwind-merge"
 import type {TokenConfig, ConnectModalConfig} from "./Connect"
 
@@ -65,7 +65,7 @@ export const Profile: React.FC<ProfileProps> = ({
         : CONTRACT_ADDRESSES.mainnet.FlowToken
     }
 
-    const address = getFlowTokenAddress().replace("0x", "")
+    const address = sansPrefix(getFlowTokenAddress())
     return [
       {
         symbol: "FLOW",
@@ -133,9 +133,7 @@ export const Profile: React.FC<ProfileProps> = ({
   })
 
   const displayAddress =
-    user?.loggedIn && user.addr
-      ? `${user.addr.slice(0, 6)}...${user.addr.slice(-4)}`
-      : ""
+    user?.loggedIn && user.addr ? truncateAddress(user.addr) : ""
 
   const flowscanUrl = getFlowscanAccountUrl(user?.addr || "", chainId)
 

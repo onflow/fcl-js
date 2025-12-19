@@ -1,5 +1,103 @@
 # @onflow/fcl-react-native
 
+## 1.22.0
+
+### Minor Changes
+
+- [#2774](https://github.com/onflow/fcl-js/pull/2774) [`d8cbe12f20ca9c047567155b40642e3dbea66c89`](https://github.com/onflow/fcl-js/commit/d8cbe12f20ca9c047567155b40642e3dbea66c89) Thanks [@mfbz](https://github.com/mfbz)! - Improved wc redirect flexibility and updated connect modal to be normal centered modal for better layout support.
+
+## 1.21.0
+
+### Minor Changes
+
+- [#2745](https://github.com/onflow/fcl-js/pull/2745) [`706e08247a1e13eb49f01671772e2172bf664338`](https://github.com/onflow/fcl-js/commit/706e08247a1e13eb49f01671772e2172bf664338) Thanks [@mfbz](https://github.com/mfbz)! - Added react-native-sdk package, similar to react-sdk but for react-native applications. It fully supports all the same hooks available in react-sdk, plus the connect and profile components. It leverages fcl-react-native for managing blockchain interactions and it's compatible to both react-native and expo applications.
+
+## 1.20.1
+
+### Patch Changes
+
+- [#2767](https://github.com/onflow/fcl-js/pull/2767) [`9a982e62e45a2f6f75fb566c0ce53ee56d3c447c`](https://github.com/onflow/fcl-js/commit/9a982e62e45a2f6f75fb566c0ce53ee56d3c447c) Thanks [@mfbz](https://github.com/mfbz)! - Trigger Changeset Release workflow.
+
+- Updated dependencies [[`9a982e62e45a2f6f75fb566c0ce53ee56d3c447c`](https://github.com/onflow/fcl-js/commit/9a982e62e45a2f6f75fb566c0ce53ee56d3c447c)]:
+  - @onflow/config@1.11.1
+  - @onflow/fcl-core@1.30.1
+  - @onflow/sdk@1.13.7
+
+## 1.20.0
+
+### Minor Changes
+
+- [#2765](https://github.com/onflow/fcl-js/pull/2765) [`0fe606e92ab3103dd29ba6a60c407c438aa86d9e`](https://github.com/onflow/fcl-js/commit/0fe606e92ab3103dd29ba6a60c407c438aa86d9e) Thanks [@mfbz](https://github.com/mfbz)! - Trigger Changeset Release workflow.
+
+### Patch Changes
+
+- Updated dependencies [[`0fe606e92ab3103dd29ba6a60c407c438aa86d9e`](https://github.com/onflow/fcl-js/commit/0fe606e92ab3103dd29ba6a60c407c438aa86d9e)]:
+  - @onflow/config@1.11.0
+  - @onflow/fcl-core@1.30.0
+  - @onflow/sdk@1.13.6
+
+## 1.19.0
+
+### Minor Changes
+
+- [#2763](https://github.com/onflow/fcl-js/pull/2763) [`61a68051a6d6732c84a918b298eec5aabd561da7`](https://github.com/onflow/fcl-js/commit/61a68051a6d6732c84a918b298eec5aabd561da7) Thanks [@mfbz](https://github.com/mfbz)! - Trigger Changeset Release workflow.
+
+### Patch Changes
+
+- Updated dependencies [[`61a68051a6d6732c84a918b298eec5aabd561da7`](https://github.com/onflow/fcl-js/commit/61a68051a6d6732c84a918b298eec5aabd561da7)]:
+  - @onflow/config@1.10.0
+  - @onflow/fcl-core@1.29.0
+  - @onflow/sdk@1.13.5
+
+## 1.18.0
+
+### Minor Changes
+
+- [#2761](https://github.com/onflow/fcl-js/pull/2761) [`aa737c359559d9f9f44d518805d5b1228aad9754`](https://github.com/onflow/fcl-js/commit/aa737c359559d9f9f44d518805d5b1228aad9754) Thanks [@mfbz](https://github.com/mfbz)! - Trigger Changeset Release workflow.
+
+### Patch Changes
+
+- Updated dependencies [[`aa737c359559d9f9f44d518805d5b1228aad9754`](https://github.com/onflow/fcl-js/commit/aa737c359559d9f9f44d518805d5b1228aad9754)]:
+  - @onflow/config@1.9.0
+  - @onflow/fcl-core@1.28.0
+  - @onflow/sdk@1.13.4
+
+## 1.17.0
+
+### Minor Changes
+
+- [#2759](https://github.com/onflow/fcl-js/pull/2759) [`efad6e114bd53e11347c261aaa0e826a6452fd69`](https://github.com/onflow/fcl-js/commit/efad6e114bd53e11347c261aaa0e826a6452fd69) Thanks [@mfbz](https://github.com/mfbz)! - Trigger Changeset Release workflow.
+
+### Patch Changes
+
+- Updated dependencies [[`efad6e114bd53e11347c261aaa0e826a6452fd69`](https://github.com/onflow/fcl-js/commit/efad6e114bd53e11347c261aaa0e826a6452fd69)]:
+  - @onflow/config@1.8.0
+  - @onflow/fcl-core@1.27.0
+  - @onflow/sdk@1.13.3
+
+## 1.16.4
+
+### Patch Changes
+
+- Updated dependencies [[`60f568702df22f874cea5a756962f701e79783d6`](https://github.com/onflow/fcl-js/commit/60f568702df22f874cea5a756962f701e79783d6)]:
+  - @onflow/fcl-core@1.26.0
+
+## 1.16.3
+
+### Patch Changes
+
+- Updated dependencies [[`197938abdc11798c0299aab3394daa5cf1959f65`](https://github.com/onflow/fcl-js/commit/197938abdc11798c0299aab3394daa5cf1959f65)]:
+  - @onflow/config@1.7.0
+  - @onflow/fcl-core@1.25.0
+  - @onflow/sdk@1.13.2
+
+## 1.16.2
+
+### Patch Changes
+
+- Updated dependencies [[`b5da56b93755f2871135573bfa806a8e12a50ddd`](https://github.com/onflow/fcl-js/commit/b5da56b93755f2871135573bfa806a8e12a50ddd)]:
+  - @onflow/fcl-core@1.24.0
+
 ## 1.16.1
 
 ### Patch Changes

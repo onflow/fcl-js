@@ -1,8 +1,8 @@
 import {Image} from "expo-image"
-import {createElement, useEffect, useRef, useState} from "react"
+import {createElement, useEffect, useState} from "react"
 import {
-  Animated,
   Modal,
+  Pressable,
   SafeAreaView,
   ScrollView,
   StyleSheet,
@@ -92,40 +92,15 @@ export const ConnectModal = ({
 }) => {
   const {services, isLoading} = useServiceDiscovery({fcl})
 
-  // Animation values
-  const backdropOpacity = useRef(new Animated.Value(0)).current
-  const slideAnim = useRef(new Animated.Value(300)).current
-
   // Double-click protection
   const [isAuthenticating, setIsAuthenticating] = useState(false)
 
-  // Animate backdrop and content when modal visibility changes
+  // Reset authentication state when modal opens
   useEffect(() => {
     if (visible) {
-      // Fade in backdrop instantly (fast)
-      Animated.timing(backdropOpacity, {
-        toValue: 1,
-        duration: 200,
-        useNativeDriver: true,
-      }).start()
-
-      // Slide up content with spring animation
-      Animated.spring(slideAnim, {
-        toValue: 0,
-        tension: 65,
-        friction: 10,
-        useNativeDriver: true,
-      }).start()
-
-      // Reset authentication state when modal opens
-      setIsAuthenticating(false)
-    } else {
-      // Reset animations when modal closes
-      backdropOpacity.setValue(0)
-      slideAnim.setValue(300)
       setIsAuthenticating(false)
     }
-  }, [visible, backdropOpacity, slideAnim])
+  }, [visible])
 
   const handleServiceSelect = service => {
     // Prevent double-click: ignore if already authenticating
@@ -141,76 +116,70 @@ export const ConnectModal = ({
     {
       visible,
       transparent: true,
-      animationType: "none",
+      animationType: "fade",
       onRequestClose: onClose,
     },
     createElement(
-      Animated.View,
-      {style: [styles.backdrop, {opacity: backdropOpacity}]},
-      createElement(TouchableOpacity, {
-        style: styles.backdropTouchable,
-        activeOpacity: 1,
-        onPress: onClose,
-      }),
+      Pressable,
+      {style: styles.backdrop, onPress: onClose},
       createElement(
-        SafeAreaView,
-        {style: styles.safeArea},
+        Pressable,
+        {style: styles.modalContainer, onPress: e => e.stopPropagation()},
         createElement(
-          Animated.View,
-          {
-            style: [
-              styles.modalContent,
-              {transform: [{translateY: slideAnim}]},
-            ],
-          },
-          // Header
+          SafeAreaView,
+          {style: styles.safeArea},
           createElement(
             View,
-            {style: styles.header},
-            createElement(Text, {style: styles.title}, title),
+            {style: styles.modalContent},
+            // Header
             createElement(
-              TouchableOpacity,
-              {onPress: onClose, style: styles.closeButton},
-              createElement(Text, {style: styles.closeButtonText}, "✕")
-            )
-          ),
-          // Content
-          createElement(
-            Wrapper,
-            null,
-            isLoading &&
-              (Loading
-                ? createElement(Loading)
-                : createElement(
-                    View,
-                    {style: styles.loadingContainer},
-                    createElement(
-                      Text,
-                      {style: styles.loadingText},
-                      "Loading wallets..."
-                    )
-                  )),
-            !isLoading &&
-              services.length === 0 &&
-              (Empty
-                ? createElement(Empty)
-                : createElement(
-                    View,
-                    {style: styles.emptyContainer},
-                    createElement(
-                      Text,
-                      {style: styles.emptyText},
-                      "No wallets found"
-                    )
-                  )),
-            !isLoading &&
-              services.map((service, index) => {
-                return createElement(ServiceCard, {
-                  key: service?.provider?.address ?? service?.uid ?? index,
-                  service,
-                  onPress: () => handleServiceSelect(service),
+              View,
+              {style: styles.header},
+              createElement(Text, {style: styles.title}, title),
+              createElement(
+                TouchableOpacity,
+                {onPress: onClose, style: styles.closeButton},
+                createElement(Text, {style: styles.closeButtonText}, "✕")
+              )
+            ),
+            // Content
+            createElement(
+              Wrapper,
+              null,
+              isLoading &&
+                (Loading
+                  ? createElement(Loading)
+                  : createElement(
+                      View,
+                      {style: styles.loadingContainer},
+                      createElement(
+                        Text,
+                        {style: styles.loadingText},
+                        "Loading wallets..."
+                      )
+                    )),
+              !isLoading &&
+                services.length === 0 &&
+                (Empty
+                  ? createElement(Empty)
+                  : createElement(
+                      View,
+                      {style: styles.emptyContainer},
+                      createElement(
+                        Text,
+                        {style: styles.emptyText},
+                        "No wallets found"
+                      )
+                    )),
+              !isLoading &&
+                services.map((service, index) => {
+                  return createElement(ServiceCard, {
+                    key: service?.provider?.address ?? service?.uid ?? index,
+                    service,
+                    onPress: () => handleServiceSelect(service),
+                  })
                 })
-              })
+            )
           )
         )
       )
@@ -222,23 +191,27 @@ const styles = StyleSheet.create({
   backdrop: {
     flex: 1,
     backgroundColor: "rgba(0, 0, 0, 0.5)",
-    justifyContent: "flex-end",
+    justifyContent: "center",
+    alignItems: "center",
+    padding: 16,
   },
-  backdropTouchable: {
-    position: "absolute",
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
+  modalContainer: {
+    width: "100%",
+    maxWidth: 400,
+    maxHeight: "80%",
   },
   safeArea: {
-    maxHeight: "80%",
+    width: "100%",
   },
   modalContent: {
     backgroundColor: "#ffffff",
-    borderTopLeftRadius: 20,
-    borderTopRightRadius: 20,
+    borderRadius: 20,
     overflow: "hidden",
+    shadowColor: "#000000",
+    shadowOffset: {width: 0, height: 4},
+    shadowOpacity: 0.15,
+    shadowRadius: 12,
+    elevation: 8,
   },
   header: {
     flexDirection: "row",

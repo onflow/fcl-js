@@ -1,5 +1,73 @@
 # @onflow/fcl-ethereum-provider
 
+## 0.1.1
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @onflow/fcl@1.21.9
+  - @onflow/fcl-wc@6.0.21
+
+## 0.1.0
+
+### Minor Changes
+
+- [#2765](https://github.com/onflow/fcl-js/pull/2765) [`0fe606e92ab3103dd29ba6a60c407c438aa86d9e`](https://github.com/onflow/fcl-js/commit/0fe606e92ab3103dd29ba6a60c407c438aa86d9e) Thanks [@mfbz](https://github.com/mfbz)! - Trigger Changeset Release workflow.
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @onflow/fcl@1.21.8
+  - @onflow/fcl-wc@6.0.20
+
+## 0.0.21
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @onflow/fcl@1.21.7
+  - @onflow/fcl-wc@6.0.19
+
+## 0.0.20
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @onflow/fcl@1.21.6
+  - @onflow/fcl-wc@6.0.18
+
+## 0.0.19
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @onflow/fcl@1.21.5
+  - @onflow/fcl-wc@6.0.17
+
+## 0.0.18
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @onflow/fcl@1.21.4
+  - @onflow/fcl-wc@6.0.16
+
+## 0.0.17
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @onflow/fcl@1.21.3
+  - @onflow/fcl-wc@6.0.15
+
+## 0.0.16
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @onflow/fcl@1.21.2
+  - @onflow/fcl-wc@6.0.14
+
 ## 0.0.15
 
 ### Patch Changes
