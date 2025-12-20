@@ -27,6 +27,7 @@ import {ScheduledTransactionList} from "./ScheduledTransactionList"
 import {CONTRACT_ADDRESSES, getFlowscanAccountUrl} from "@onflow/react-core"
 import {twMerge} from "tailwind-merge"
 import type {TokenConfig, ConnectModalConfig} from "./Connect"
+import {useTheme} from "../core/theme"
 
 type BalanceType = keyof UseCrossVmTokenBalanceData
 
@@ -52,6 +53,7 @@ export const Profile: React.FC<ProfileProps> = ({
   const {user, unauthenticate} = useFlowCurrentUser()
   const [copied, setCopied] = useState(false)
   const {data: chainId} = useFlowChainId()
+  const {colors} = useTheme()
 
   // Default token configuration for FlowToken - memoized to avoid recreation
   const defaultTokens: TokenConfig[] = useMemo(() => {
@@ -181,12 +183,22 @@ export const Profile: React.FC<ProfileProps> = ({
               flow-py-12"
           >
             <div
-              className="flow-w-16 flow-h-16 flow-rounded-full flow-bg-slate-100 dark:flow-bg-slate-800
-                flow-flex flow-items-center flow-justify-center"
+              className={twMerge(
+                `flow-w-16 flow-h-16 flow-rounded-full flow-flex flow-items-center
+                flow-justify-center`,
+                colors.muted
+              )}
             >
-              <UserIcon className="flow-w-8 flow-h-8 flow-text-slate-400 dark:flow-text-slate-600" />
+              <UserIcon
+                className={twMerge("flow-w-8 flow-h-8", colors.mutedForeground)}
+              />
             </div>
-            <p className="flow-text-sm flow-text-slate-500 dark:flow-text-slate-500 flow-font-medium">
+            <p
+              className={twMerge(
+                "flow-text-sm flow-font-medium",
+                colors.mutedForeground
+              )}
+            >
               No connected wallet
             </p>
           </div>
@@ -208,13 +220,23 @@ export const Profile: React.FC<ProfileProps> = ({
         <div className="flow-flex flow-flex-col flow-gap-4">
           <div className="flow-flex flow-flex-col flow-items-center">
             <div
-              className="flow-w-16 flow-h-16 flow-rounded-full flow-bg-slate-100 dark:flow-bg-slate-800
-                flow-flex flow-items-center flow-justify-center flow-mb-3"
+              className={twMerge(
+                `flow-w-16 flow-h-16 flow-rounded-full flow-flex flow-items-center
+                flow-justify-center flow-mb-3`,
+                colors.muted
+              )}
             >
-              <UserIcon className="flow-w-8 flow-h-8 flow-text-slate-900 dark:flow-text-slate-100" />
+              <UserIcon
+                className={twMerge("flow-w-8 flow-h-8", colors.foreground)}
+              />
             </div>
             <div className="flow-flex flow-items-center flow-gap-2">
-              <div className="flow-text-base flow-font-medium flow-text-slate-900 dark:flow-text-slate-100">
+              <div
+                className={twMerge(
+                  "flow-text-base flow-font-medium",
+                  colors.foreground
+                )}
+              >
                 {displayAddress}
               </div>
               {flowscanUrl && (
@@ -222,8 +244,10 @@ export const Profile: React.FC<ProfileProps> = ({
                   href={flowscanUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flow-text-slate-500 hover:flow-text-slate-700 dark:flow-text-slate-400
-                    dark:hover:flow-text-slate-200 flow-transition-colors"
+                  className={twMerge(
+                    "flow-transition-colors hover:flow-opacity-80",
+                    colors.mutedForeground
+                  )}
                   title="View on Flowscan"
                 >
                   <ExternalLinkIcon className="flow-w-4 flow-h-4" />
@@ -235,40 +259,52 @@ export const Profile: React.FC<ProfileProps> = ({
           {showScheduledTransactions ? (
             <TabGroup>
               <TabList
-                className="flow-flex flow-gap-6 flow-border-b flow-border-slate-200
-                  dark:flow-border-slate-700"
+                className={twMerge(
+                  "flow-flex flow-gap-6 flow-border-b",
+                  colors.border
+                )}
               >
                 <Tab
-                  className="flow-relative flow-py-3 flow-px-1 flow-text-sm flow-font-medium
-                    flow-text-slate-600 dark:flow-text-slate-400 hover:flow-text-slate-900
-                    dark:hover:flow-text-slate-100 focus:flow-outline-none flow-transition-colors
-                    data-[selected]:flow-text-slate-900 data-[selected]:dark:flow-text-slate-100"
+                  className={twMerge(
+                    "flow-relative flow-py-3 flow-px-1 flow-text-sm flow-font-medium",
+                    "hover:flow-opacity-80 focus:flow-outline-none flow-transition-colors",
+                    colors.mutedForeground
+                  )}
                 >
                   {({selected}) => (
                     <>
-                      Home
+                      <span className={selected ? colors.foreground : ""}>
+                        Home
+                      </span>
                       {selected && (
                         <div
-                          className="flow-absolute flow-bottom-0 flow-left-0 flow-right-0 flow-h-0.5
-                            flow-bg-slate-900 dark:flow-bg-slate-100"
+                          className={twMerge(
+                            "flow-absolute flow-bottom-0 flow-left-0 flow-right-0 flow-h-0.5",
+                            colors.primary
+                          )}
                         />
                       )}
                     </>
                   )}
                 </Tab>
                 <Tab
-                  className="flow-relative flow-py-3 flow-px-1 flow-text-sm flow-font-medium
-                    flow-text-slate-600 dark:flow-text-slate-400 hover:flow-text-slate-900
-                    dark:hover:flow-text-slate-100 focus:flow-outline-none flow-transition-colors
-                    data-[selected]:flow-text-slate-900 data-[selected]:dark:flow-text-slate-100"
+                  className={twMerge(
+                    "flow-relative flow-py-3 flow-px-1 flow-text-sm flow-font-medium",
+                    "hover:flow-opacity-80 focus:flow-outline-none flow-transition-colors",
+                    colors.mutedForeground
+                  )}
                 >
                   {({selected}) => (
                     <>
-                      Scheduled Transactions
+                      <span className={selected ? colors.foreground : ""}>
+                        Scheduled Transactions
+                      </span>
                       {selected && (
                         <div
-                          className="flow-absolute flow-bottom-0 flow-left-0 flow-right-0 flow-h-0.5
-                            flow-bg-slate-900 dark:flow-bg-slate-100"
+                          className={twMerge(
+                            "flow-absolute flow-bottom-0 flow-left-0 flow-right-0 flow-h-0.5",
+                            colors.primary
+                          )}
                         />
                       )}
                     </>
@@ -292,30 +328,37 @@ export const Profile: React.FC<ProfileProps> = ({
                             {({open}) => (
                               <div className="flow-relative flow-h-full">
                                 <ListboxButton
-                                  className="flow-relative flow-w-full flow-h-full flow-cursor-pointer flow-rounded-md
-                                    flow-bg-white dark:flow-bg-slate-800 flow-py-2.5 flow-px-3 flow-text-left
-                                    flow-border flow-border-slate-300 dark:flow-border-slate-600
-                                    hover:flow-border-slate-400 dark:hover:flow-border-slate-500
-                                    focus:flow-outline-none focus:flow-border-slate-400
-                                    dark:focus:flow-border-slate-500 flow-transition-colors"
+                                  className={twMerge(
+                                    "flow-relative flow-w-full flow-h-full flow-cursor-pointer flow-rounded-md",
+                                    "flow-py-2.5 flow-px-3 flow-text-left flow-border",
+                                    "hover:flow-opacity-80 focus:flow-outline-none flow-transition-colors",
+                                    colors.background,
+                                    colors.border
+                                  )}
                                 >
                                   <div className="flow-flex flow-flex-col flow-justify-center flow-h-full">
                                     <span
-                                      className="flow-text-xs flow-font-medium flow-text-slate-500 dark:flow-text-slate-400
-                                        flow-mb-1"
+                                      className={twMerge(
+                                        "flow-text-xs flow-font-medium flow-mb-1",
+                                        colors.mutedForeground
+                                      )}
                                     >
                                       Token
                                     </span>
                                     <div className="flow-flex flow-items-center flow-justify-between flow-gap-2">
                                       <span
-                                        className="flow-text-sm flow-font-semibold flow-text-slate-900 dark:flow-text-slate-100
-                                          flow-truncate"
+                                        className={twMerge(
+                                          "flow-text-sm flow-font-semibold flow-truncate",
+                                          colors.foreground
+                                        )}
                                       >
                                         {selectedToken?.symbol}
                                       </span>
                                       <svg
-                                        className="flow-h-4 flow-w-4 flow-text-slate-400 dark:flow-text-slate-500
-                                          flow-flex-shrink-0"
+                                        className={twMerge(
+                                          "flow-h-4 flow-w-4 flow-flex-shrink-0",
+                                          colors.mutedForeground
+                                        )}
                                         viewBox="0 0 20 20"
                                         fill="currentColor"
                                       >
@@ -331,18 +374,23 @@ export const Profile: React.FC<ProfileProps> = ({
                                 {open && (
                                   <ListboxOptions
                                     static
-                                    className="flow-absolute flow-z-10 flow-mt-2 flow-w-48 flow-overflow-auto flow-rounded-md
-                                      flow-bg-white dark:flow-bg-slate-800 flow-py-2 flow-border flow-border-slate-300
-                                      dark:flow-border-slate-600 focus:flow-outline-none flow-max-h-64"
+                                    className={twMerge(
+                                      "flow-absolute flow-z-10 flow-mt-2 flow-w-48 flow-overflow-auto flow-rounded-md",
+                                      "flow-py-2 flow-border focus:flow-outline-none flow-max-h-64",
+                                      colors.background,
+                                      colors.border
+                                    )}
                                   >
                                     {availableTokens.map(
                                       (token: TokenConfig) => (
                                         <ListboxOption
                                           key={token.symbol}
                                           value={token}
-                                          className="flow-relative flow-cursor-pointer flow-select-none flow-py-2.5 flow-px-4
-                                            data-[focus]:flow-bg-slate-100 data-[focus]:dark:flow-bg-slate-700
-                                            flow-text-slate-900 dark:flow-text-slate-100 flow-transition-colors"
+                                          className={twMerge(
+                                            "flow-relative flow-cursor-pointer flow-select-none flow-py-2.5 flow-px-4",
+                                            "data-[focus]:flow-opacity-80 flow-transition-colors",
+                                            colors.foreground
+                                          )}
                                         >
                                           {({selected}) => (
                                             <div className="flow-flex flow-items-center flow-justify-between">
@@ -352,13 +400,21 @@ export const Profile: React.FC<ProfileProps> = ({
                                                 >
                                                   {token.name}
                                                 </div>
-                                                <div className="flow-text-xs flow-text-slate-500 dark:flow-text-slate-400 flow-mt-0.5">
+                                                <div
+                                                  className={twMerge(
+                                                    "flow-text-xs flow-mt-0.5",
+                                                    colors.mutedForeground
+                                                  )}
+                                                >
                                                   {token.symbol}
                                                 </div>
                                               </div>
                                               {selected && (
                                                 <svg
-                                                  className="flow-h-5 flow-w-5 flow-text-slate-900 dark:flow-text-slate-100"
+                                                  className={twMerge(
+                                                    "flow-h-5 flow-w-5",
+                                                    colors.foreground
+                                                  )}
                                                   viewBox="0 0 20 20"
                                                   fill="currentColor"
                                                 >
@@ -383,22 +439,33 @@ export const Profile: React.FC<ProfileProps> = ({
                       )}
 
                       <div
-                        className="flow-flex-1 flow-rounded-md flow-bg-slate-50 dark:flow-bg-slate-800/50
-                          flow-border flow-border-slate-200 dark:flow-border-slate-700 flow-px-4
-                          flow-py-2.5"
+                        className={twMerge(
+                          "flow-flex-1 flow-rounded-md flow-border flow-px-4 flow-py-2.5",
+                          colors.muted,
+                          colors.border
+                        )}
                       >
                         <div
-                          className="flow-text-xs flow-font-medium flow-text-slate-500 dark:flow-text-slate-400
-                            flow-mb-1"
+                          className={twMerge(
+                            "flow-text-xs flow-font-medium flow-mb-1",
+                            colors.mutedForeground
+                          )}
                         >
                           Balance
                         </div>
                         <div
-                          className="flow-text-xl flow-font-semibold flow-text-slate-900 dark:flow-text-slate-100
-                            flow-leading-tight"
+                          className={twMerge(
+                            "flow-text-xl flow-font-semibold flow-leading-tight",
+                            colors.foreground
+                          )}
                         >
                           {displayBalance}{" "}
-                          <span className="flow-text-sm flow-font-medium flow-text-slate-600 dark:flow-text-slate-400">
+                          <span
+                            className={twMerge(
+                              "flow-text-sm flow-font-medium",
+                              colors.mutedForeground
+                            )}
+                          >
                             {selectedToken?.symbol}
                           </span>
                         </div>
@@ -467,30 +534,37 @@ export const Profile: React.FC<ProfileProps> = ({
                         {({open}) => (
                           <div className="flow-relative flow-h-full">
                             <ListboxButton
-                              className="flow-relative flow-w-full flow-h-full flow-cursor-pointer flow-rounded-md
-                                flow-bg-white dark:flow-bg-slate-800 flow-py-2.5 flow-px-3 flow-text-left
-                                flow-border flow-border-slate-300 dark:flow-border-slate-600
-                                hover:flow-border-slate-400 dark:hover:flow-border-slate-500
-                                focus:flow-outline-none focus:flow-border-slate-400
-                                dark:focus:flow-border-slate-500 flow-transition-colors"
+                              className={twMerge(
+                                "flow-relative flow-w-full flow-h-full flow-cursor-pointer flow-rounded-md",
+                                "flow-py-2.5 flow-px-3 flow-text-left flow-border",
+                                "hover:flow-opacity-80 focus:flow-outline-none flow-transition-colors",
+                                colors.background,
+                                colors.border
+                              )}
                             >
                               <div className="flow-flex flow-flex-col flow-justify-center flow-h-full">
                                 <span
-                                  className="flow-text-xs flow-font-medium flow-text-slate-500 dark:flow-text-slate-400
-                                    flow-mb-1"
+                                  className={twMerge(
+                                    "flow-text-xs flow-font-medium flow-mb-1",
+                                    colors.mutedForeground
+                                  )}
                                 >
                                   Token
                                 </span>
                                 <div className="flow-flex flow-items-center flow-justify-between flow-gap-2">
                                   <span
-                                    className="flow-text-sm flow-font-semibold flow-text-slate-900 dark:flow-text-slate-100
-                                      flow-truncate"
+                                    className={twMerge(
+                                      "flow-text-sm flow-font-semibold flow-truncate",
+                                      colors.foreground
+                                    )}
                                   >
                                     {selectedToken?.symbol}
                                   </span>
                                   <svg
-                                    className="flow-h-4 flow-w-4 flow-text-slate-400 dark:flow-text-slate-500
-                                      flow-flex-shrink-0"
+                                    className={twMerge(
+                                      "flow-h-4 flow-w-4 flow-flex-shrink-0",
+                                      colors.mutedForeground
+                                    )}
                                     viewBox="0 0 20 20"
                                     fill="currentColor"
                                   >
@@ -506,17 +580,22 @@ export const Profile: React.FC<ProfileProps> = ({
                             {open && (
                               <ListboxOptions
                                 static
-                                className="flow-absolute flow-z-10 flow-mt-2 flow-w-48 flow-overflow-auto flow-rounded-md
-                                  flow-bg-white dark:flow-bg-slate-800 flow-py-2 flow-border flow-border-slate-300
-                                  dark:flow-border-slate-600 focus:flow-outline-none flow-max-h-64"
+                                className={twMerge(
+                                  "flow-absolute flow-z-10 flow-mt-2 flow-w-48 flow-overflow-auto flow-rounded-md",
+                                  "flow-py-2 flow-border focus:flow-outline-none flow-max-h-64",
+                                  colors.background,
+                                  colors.border
+                                )}
                               >
                                 {availableTokens.map((token: TokenConfig) => (
                                   <ListboxOption
                                     key={token.symbol}
                                     value={token}
-                                    className="flow-relative flow-cursor-pointer flow-select-none flow-py-2.5 flow-px-4
-                                      data-[focus]:flow-bg-slate-100 data-[focus]:dark:flow-bg-slate-700
-                                      flow-text-slate-900 dark:flow-text-slate-100 flow-transition-colors"
+                                    className={twMerge(
+                                      "flow-relative flow-cursor-pointer flow-select-none flow-py-2.5 flow-px-4",
+                                      "data-[focus]:flow-opacity-80 flow-transition-colors",
+                                      colors.foreground
+                                    )}
                                   >
                                     {({selected}) => (
                                       <div className="flow-flex flow-items-center flow-justify-between">
@@ -526,13 +605,21 @@ export const Profile: React.FC<ProfileProps> = ({
                                           >
                                             {token.name}
                                           </div>
-                                          <div className="flow-text-xs flow-text-slate-500 dark:flow-text-slate-400 flow-mt-0.5">
+                                          <div
+                                            className={twMerge(
+                                              "flow-text-xs flow-mt-0.5",
+                                              colors.mutedForeground
+                                            )}
+                                          >
                                             {token.symbol}
                                           </div>
                                         </div>
                                         {selected && (
                                           <svg
-                                            className="flow-h-5 flow-w-5 flow-text-slate-900 dark:flow-text-slate-100"
+                                            className={twMerge(
+                                              "flow-h-5 flow-w-5",
+                                              colors.foreground
+                                            )}
                                             viewBox="0 0 20 20"
                                             fill="currentColor"
                                           >
@@ -556,22 +643,33 @@ export const Profile: React.FC<ProfileProps> = ({
                   )}
 
                   <div
-                    className="flow-flex-1 flow-rounded-md flow-bg-slate-50 dark:flow-bg-slate-800/50
-                      flow-border flow-border-slate-200 dark:flow-border-slate-700 flow-px-4
-                      flow-py-2.5"
+                    className={twMerge(
+                      "flow-flex-1 flow-rounded-md flow-border flow-px-4 flow-py-2.5",
+                      colors.muted,
+                      colors.border
+                    )}
                   >
                     <div
-                      className="flow-text-xs flow-font-medium flow-text-slate-500 dark:flow-text-slate-400
-                        flow-mb-1"
+                      className={twMerge(
+                        "flow-text-xs flow-font-medium flow-mb-1",
+                        colors.mutedForeground
+                      )}
                     >
                       Balance
                     </div>
                     <div
-                      className="flow-text-xl flow-font-semibold flow-text-slate-900 dark:flow-text-slate-100
-                        flow-leading-tight"
+                      className={twMerge(
+                        "flow-text-xl flow-font-semibold flow-leading-tight",
+                        colors.foreground
+                      )}
                     >
                       {displayBalance}{" "}
-                      <span className="flow-text-sm flow-font-medium flow-text-slate-600 dark:flow-text-slate-400">
+                      <span
+                        className={twMerge(
+                          "flow-text-sm flow-font-medium",
+                          colors.mutedForeground
+                        )}
+                      >
                         {selectedToken?.symbol}
                       </span>
                     </div>

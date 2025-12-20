@@ -1,10 +1,12 @@
 import React, {useEffect} from "react"
+import {twMerge} from "tailwind-merge"
 import {Dialog} from "./internal/Dialog"
 import {Button} from "./internal/Button"
 import {TransactionLink} from "./TransactionLink"
 import {LoaderCircleIcon} from "../icons/LoaderCircleIcon"
 import {CircleCheckIcon} from "../icons/CircleCheckIcon"
 import {useFlowTransactionStatus} from "@onflow/react-core"
+import {useTheme} from "../core/theme"
 
 interface TransactionDialogProps {
   open: boolean
@@ -30,6 +32,7 @@ export const TransactionDialog: React.FC<TransactionDialogProps> = ({
   successDescription,
   closeOnSuccess,
 }) => {
+  const {colors} = useTheme()
   const {transactionStatus} = useFlowTransactionStatus({id: txId})
   const isSuccess =
     typeof transactionStatus?.status === "number" &&
@@ -52,7 +55,12 @@ export const TransactionDialog: React.FC<TransactionDialogProps> = ({
           {!isSuccess ? (
             <LoaderCircleIcon className="flow-animate-spin flow-text-blue-500 flow-w-12 flow-h-12" />
           ) : (
-            <CircleCheckIcon className="flow-text-green-500 flow-animate-pop flow-w-12 flow-h-12" />
+            <CircleCheckIcon
+              className={twMerge(
+                "flow-animate-pop flow-w-12 flow-h-12",
+                colors.success
+              )}
+            />
           )}
           <div className="flow-text-lg flow-font-semibold flow-text-center">
             {!isSuccess
@@ -60,7 +68,12 @@ export const TransactionDialog: React.FC<TransactionDialogProps> = ({
               : successTitle || "Transaction Successful"}
           </div>
         </div>
-        <div className="flow-text-center flow-text-gray-500 flow-text-sm">
+        <div
+          className={twMerge(
+            "flow-text-center flow-text-sm",
+            colors.mutedForeground
+          )}
+        >
           {!isSuccess
             ? pendingDescription ||
               "Your transaction is being processed. Please wait..."

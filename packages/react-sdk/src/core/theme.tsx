@@ -1,49 +1,102 @@
 import React, {createContext, useContext} from "react"
 
-export type ButtonVariant = {
-  background: string
-  text: string
-  hover: string
-  border?: string
-}
-
 export type ThemeColors = {
-  primary: ButtonVariant
-  secondary: ButtonVariant
-  outline: ButtonVariant
-  link: ButtonVariant
+  /** Primary action color (CTAs, main buttons) */
+  primary?: string
+  /** Text color on primary backgrounds */
+  primaryForeground?: string
+  /** Secondary action color (secondary buttons) */
+  secondary?: string
+  /** Text color on secondary backgrounds */
+  secondaryForeground?: string
+  /** Accent color for highlights, selected states */
+  accent?: string
+  /** Default background color (cards, modals) */
+  background?: string
+  /** Default text color */
+  foreground?: string
+  /** Muted/subtle background color */
+  muted?: string
+  /** Muted text color */
+  mutedForeground?: string
+  /** Border color */
+  border?: string
+  /** Success state color */
+  success?: string
+  /** Error state color */
+  error?: string
+  /** Link text color */
+  link?: string
 }
 
 export type Theme = {
   colors: ThemeColors
 }
 
+export type ButtonVariant = "primary" | "secondary" | "outline" | "link"
+
+export type ButtonStyles = {
+  background?: string
+  text?: string
+  hover?: string
+  border?: string
+  underline?: boolean
+}
+
+export const getButtonStyles = (
+  colors: ThemeColors,
+  variant: ButtonVariant
+): ButtonStyles => {
+  switch (variant) {
+    case "primary":
+      return {
+        background: colors.primary,
+        text: colors.primaryForeground,
+        hover: colors.accent,
+      }
+    case "secondary":
+      return {
+        background: colors.secondary,
+        text: colors.secondaryForeground,
+        hover: colors.muted,
+      }
+    case "outline":
+      return {
+        background: "flow-bg-transparent",
+        text: colors.foreground,
+        hover: colors.muted,
+        border: colors.border,
+      }
+    case "link":
+      return {
+        background: "flow-bg-transparent",
+        text: colors.link,
+        underline: true,
+      }
+    default:
+      return {
+        background: colors.primary,
+        text: colors.primaryForeground,
+        hover: colors.accent,
+      }
+  }
+}
+
 const defaultTheme: Theme = {
   colors: {
-    primary: {
-      background: "flow-bg-slate-900 dark:flow-bg-slate-100",
-      text: "flow-text-white dark:flow-text-slate-900",
-      hover: "hover:flow-bg-slate-800 dark:hover:flow-bg-slate-200",
-      border: undefined,
-    },
-    secondary: {
-      background: "flow-bg-slate-100 dark:flow-bg-slate-800",
-      text: "flow-text-slate-900 dark:flow-text-slate-100",
-      hover: "hover:flow-bg-slate-200 dark:hover:flow-bg-slate-700",
-      border: undefined,
-    },
-    outline: {
-      background: "flow-bg-transparent",
-      text: "flow-text-slate-900 dark:flow-text-slate-100",
-      hover: "hover:flow-bg-slate-100 dark:hover:flow-bg-slate-800",
-      border: "flow-border flow-border-slate-200 dark:flow-border-slate-700",
-    },
-    link: {
-      background: "flow-bg-transparent",
-      text: "flow-text-slate-900 dark:flow-text-slate-100",
-      hover: "hover:flow-underline",
-      border: undefined,
-    },
+    primary: "flow-bg-slate-900 dark:flow-bg-white",
+    primaryForeground: "flow-text-white dark:flow-text-slate-900",
+    secondary: "flow-bg-slate-100 dark:flow-bg-slate-800",
+    secondaryForeground: "flow-text-slate-900 dark:flow-text-slate-100",
+    accent: "flow-bg-slate-800 dark:flow-bg-slate-200",
+    background: "flow-bg-white dark:flow-bg-slate-800",
+    foreground: "flow-text-slate-900 dark:flow-text-slate-100",
+    muted: "flow-bg-slate-100 dark:flow-bg-slate-700",
+    mutedForeground: "flow-text-slate-500 dark:flow-text-slate-400",
+    border: "flow-border-slate-200 dark:flow-border-slate-700",
+    success: "flow-text-green-600 dark:flow-text-green-400",
+    error: "flow-text-red-600 dark:flow-text-red-400",
+    link: "flow-text-slate-900 dark:flow-text-slate-100",
   },
 }
 
