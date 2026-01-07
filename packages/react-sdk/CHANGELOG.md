@@ -1,5 +1,26 @@
 # @onflow/react-sdk
 
+## 0.20.0
+
+### Minor Changes
+
+- [#2769](https://github.com/onflow/fcl-js/pull/2769) [`55cc8ff8345e26ff015e2af5f44ddcdcf314d690`](https://github.com/onflow/fcl-js/commit/55cc8ff8345e26ff015e2af5f44ddcdcf314d690) Thanks [@chasefleming](https://github.com/chasefleming)! - Implement theming system across all components and switch to color theme system
+
+### Patch Changes
+
+- [#2750](https://github.com/onflow/fcl-js/pull/2750) [`e98815ef1163e89cdb9822b0efd5f927c75c05fc`](https://github.com/onflow/fcl-js/commit/e98815ef1163e89cdb9822b0efd5f927c75c05fc) Thanks [@chasefleming](https://github.com/chasefleming)! - Update NFT card to use internal button component
+
+## 0.19.0
+
+### Minor Changes
+
+- [#2745](https://github.com/onflow/fcl-js/pull/2745) [`706e08247a1e13eb49f01671772e2172bf664338`](https://github.com/onflow/fcl-js/commit/706e08247a1e13eb49f01671772e2172bf664338) Thanks [@mfbz](https://github.com/mfbz)! - Added react-native-sdk package, similar to react-sdk but for react-native applications. It fully supports all the same hooks available in react-sdk, plus the connect and profile components. It leverages fcl-react-native for managing blockchain interactions and it's compatible to both react-native and expo applications.
+
+### Patch Changes
+
+- Updated dependencies [[`706e08247a1e13eb49f01671772e2172bf664338`](https://github.com/onflow/fcl-js/commit/706e08247a1e13eb49f01671772e2172bf664338)]:
+  - @onflow/react-core@0.9.0
+
 ## 0.18.1
 
 ### Patch Changes
