@@ -14,7 +14,8 @@ import {TrashIcon} from "../icons/TrashIcon"
 import {FlowIcon} from "../icons/FlowIcon"
 import {ExternalLinkIcon} from "../icons/ExternalLink"
 import {twMerge} from "tailwind-merge"
-import {useFlowQueryClient} from "../provider/FlowQueryClient"
+import {useTheme} from "../core/theme"
+import {useFlowQueryClient} from "@onflow/react-core"
 import {useFlowChainId} from "@onflow/react-core"
 import {getFlowscanScheduledTxUrl} from "@onflow/react-core"
 
@@ -104,6 +105,7 @@ const ScheduledTransactionCard: React.FC<ScheduledTransactionCardProps> = ({
   onCancelSuccess,
   className,
 }) => {
+  const {colors} = useTheme()
   const {cancelTransactionAsync, isPending} =
     useFlowScheduledTransactionCancel()
   const {data: chainId} = useFlowChainId()
@@ -128,8 +130,9 @@ const ScheduledTransactionCard: React.FC<ScheduledTransactionCardProps> = ({
     <div
       className={twMerge(
         "flow-w-full flow-rounded-lg flow-relative flow-group",
-        "flow-bg-white dark:flow-bg-gray-900/50",
-        "flow-border flow-border-black/5 dark:flow-border-white/10",
+        colors.background,
+        "flow-border",
+        colors.border,
         "flow-transition-colors flow-duration-200",
         className
       )}
@@ -137,8 +140,11 @@ const ScheduledTransactionCard: React.FC<ScheduledTransactionCardProps> = ({
       <div className="flow-flex flow-items-start flow-gap-2 sm:flow-gap-3 flow-p-2 sm:flow-p-3">
         {metadata.thumbnail && (
           <div
-            className="max-sm:flow-hidden flow-flex-shrink-0 flow-w-16 flow-h-16 flow-rounded
-              flow-bg-slate-100 dark:flow-bg-slate-800 flow-overflow-hidden"
+            className={twMerge(
+              `max-sm:flow-hidden flow-flex-shrink-0 flow-w-16 flow-h-16 flow-rounded
+              flow-overflow-hidden`,
+              colors.muted
+            )}
           >
             <img
               src={metadata.thumbnail}
@@ -151,15 +157,19 @@ const ScheduledTransactionCard: React.FC<ScheduledTransactionCardProps> = ({
         <div className="flow-flex-1 flow-min-w-0 flow-pr-10 sm:flow-pr-12">
           <div className="flow-flex flow-items-center flow-gap-2 flow-mb-0.5 flow-flex-wrap">
             <h3
-              className="flow-text-sm flow-font-semibold flow-text-slate-900 dark:flow-text-white
-                flow-truncate flow-flex-shrink flow-min-w-0"
+              className={twMerge(
+                "flow-text-sm flow-font-semibold flow-truncate flow-flex-shrink flow-min-w-0",
+                colors.foreground
+              )}
               title={metadata.name || "Scheduled Transaction"}
             >
               {metadata.name || "Scheduled Transaction"}
             </h3>
             <span
-              className="flow-text-xs flow-font-mono flow-text-slate-500 dark:flow-text-slate-400
-                flow-flex-shrink-0"
+              className={twMerge(
+                "flow-text-xs flow-font-mono flow-flex-shrink-0",
+                colors.mutedForeground
+              )}
               title={`Transaction ID: ${transaction.id}`}
             >
               #{transaction.id.slice(0, 8)}
@@ -168,8 +178,10 @@ const ScheduledTransactionCard: React.FC<ScheduledTransactionCardProps> = ({
 
           {metadata.description && (
             <p
-              className="flow-text-xs flow-text-slate-500 dark:flow-text-slate-400 flow-truncate
-                flow-mb-2"
+              className={twMerge(
+                "flow-text-xs flow-truncate flow-mb-2",
+                colors.mutedForeground
+              )}
               title={metadata.description}
             >
               {metadata.description}
@@ -177,8 +189,11 @@ const ScheduledTransactionCard: React.FC<ScheduledTransactionCardProps> = ({
           )}
 
           <div
-            className="flow-flex flow-items-center flow-flex-wrap flow-gap-2 sm:flow-gap-2.5
-              flow-text-[10px] flow-text-slate-600 dark:flow-text-slate-400 flow-mt-2"
+            className={twMerge(
+              `flow-flex flow-items-center flow-flex-wrap flow-gap-2 sm:flow-gap-2.5
+              flow-text-[10px] flow-mt-2`,
+              colors.mutedForeground
+            )}
           >
             <div
               className={twMerge(
@@ -267,11 +282,13 @@ const ScheduledTransactionCard: React.FC<ScheduledTransactionCardProps> = ({
               <button
                 onClick={handleCancel}
                 disabled={isPending}
-                className="flow-h-6 flow-w-6 flow-p-0 flow-rounded-full flow-flex flow-items-center
-                  flow-justify-center flow-bg-transparent flow-border flow-border-slate-200
-                  dark:flow-border-slate-700 hover:flow-border-red-500
-                  dark:hover:flow-border-red-500 flow-transition-colors disabled:flow-opacity-50
-                  disabled:flow-cursor-not-allowed"
+                className={twMerge(
+                  "flow-h-6 flow-w-6 flow-p-0 flow-rounded-full flow-flex flow-items-center",
+                  "flow-justify-center flow-bg-transparent flow-border",
+                  colors.border,
+                  "hover:flow-border-red-500 dark:hover:flow-border-red-500",
+                  "flow-transition-colors disabled:flow-opacity-50 disabled:flow-cursor-not-allowed"
+                )}
               >
                 {isPending ? (
                   <LoaderCircleIcon className="flow-h-3 flow-w-3 flow-text-red-500 flow-animate-spin" />
@@ -286,9 +303,11 @@ const ScheduledTransactionCard: React.FC<ScheduledTransactionCardProps> = ({
             href={getFlowscanScheduledTxUrl(transaction.id, chainId) || "#"}
             target="_blank"
             rel="noopener noreferrer"
-            className="flow-h-6 flow-w-6 flow-p-0 flow-rounded-full flow-flex flow-items-center
-              flow-justify-center flow-text-slate-400 dark:flow-text-slate-500
-              hover:flow-text-slate-600 dark:hover:flow-text-slate-400 flow-transition-colors"
+            className={twMerge(
+              "flow-h-6 flow-w-6 flow-p-0 flow-rounded-full flow-flex flow-items-center",
+              "flow-justify-center flow-transition-colors",
+              colors.mutedForeground
+            )}
             title="View on Flowscan"
           >
             <ExternalLinkIcon className="flow-h-3.5 flow-w-3.5" />
@@ -318,6 +337,7 @@ export const ScheduledTransactionList: React.FC<
   style,
   flowClient,
 }) => {
+  const {colors} = useTheme()
   const queryClient = useFlowQueryClient()
 
   const {
@@ -370,20 +390,39 @@ export const ScheduledTransactionList: React.FC<
               {[1, 2, 3].map(i => (
                 <div
                   key={i}
-                  className="flow-w-full flow-rounded-lg flow-relative flow-bg-gray-50
-                    dark:flow-bg-gray-900/50 flow-border flow-border-black/5
-                    dark:flow-border-white/10 flow-animate-pulse"
+                  className={twMerge(
+                    "flow-w-full flow-rounded-lg flow-relative flow-border flow-animate-pulse",
+                    colors.muted,
+                    colors.border
+                  )}
                 >
                   <div className="flow-flex flow-items-center flow-gap-3 flow-p-3">
                     <div
-                      className="flow-flex-shrink-0 flow-w-12 flow-h-12 flow-rounded flow-bg-slate-200
-                        dark:flow-bg-slate-700"
+                      className={twMerge(
+                        "flow-flex-shrink-0 flow-w-12 flow-h-12 flow-rounded",
+                        colors.muted
+                      )}
                     ></div>
                     <div className="flow-flex-1 flow-min-w-0 flow-space-y-2">
-                      <div className="flow-bg-slate-200 dark:flow-bg-slate-700 flow-h-4 flow-rounded flow-w-1/3"></div>
-                      <div className="flow-bg-slate-200 dark:flow-bg-slate-700 flow-h-3 flow-rounded flow-w-2/3"></div>
+                      <div
+                        className={twMerge(
+                          "flow-h-4 flow-rounded flow-w-1/3",
+                          colors.muted
+                        )}
+                      ></div>
+                      <div
+                        className={twMerge(
+                          "flow-h-3 flow-rounded flow-w-2/3",
+                          colors.muted
+                        )}
+                      ></div>
                     </div>
-                    <div className="flow-bg-slate-200 dark:flow-bg-slate-700 flow-h-8 flow-w-8 flow-rounded"></div>
+                    <div
+                      className={twMerge(
+                        "flow-h-8 flow-w-8 flow-rounded",
+                        colors.muted
+                      )}
+                    ></div>
                   </div>
                 </div>
               ))}
@@ -393,13 +432,25 @@ export const ScheduledTransactionList: React.FC<
               className="flow-flex flow-flex-col flow-items-center flow-justify-center flow-h-full
                 flow-gap-3 flow-py-12"
             >
-              <AlertCircleIcon className="flow-h-16 flow-w-16 flow-text-slate-400 dark:flow-text-slate-600" />
-              <p className="flow-text-sm flow-text-slate-500 dark:flow-text-slate-500 flow-font-medium">
+              <AlertCircleIcon
+                className={twMerge(
+                  "flow-h-16 flow-w-16",
+                  colors.mutedForeground
+                )}
+              />
+              <p
+                className={twMerge(
+                  "flow-text-sm flow-font-medium",
+                  colors.mutedForeground
+                )}
+              >
                 Failed to load scheduled transactions
               </p>
               <p
-                className="flow-text-xs flow-text-slate-400 dark:flow-text-slate-600 flow-max-w-md
-                  flow-text-center"
+                className={twMerge(
+                  "flow-text-xs flow-max-w-md flow-text-center",
+                  colors.mutedForeground
+                )}
               >
                 An error occurred.
               </p>
@@ -410,11 +461,17 @@ export const ScheduledTransactionList: React.FC<
                 flow-gap-3 flow-py-12"
             >
               <div
-                className="flow-h-16 flow-w-16 flow-rounded-full flow-bg-slate-200 dark:flow-bg-slate-800
-                  flow-flex flow-items-center flow-justify-center"
+                className={twMerge(
+                  `flow-h-16 flow-w-16 flow-rounded-full flow-flex flow-items-center
+                    flow-justify-center`,
+                  colors.muted
+                )}
               >
                 <svg
-                  className="flow-h-8 flow-w-8 flow-text-slate-400 dark:flow-text-slate-600"
+                  className={twMerge(
+                    "flow-h-8 flow-w-8",
+                    colors.mutedForeground
+                  )}
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
@@ -427,7 +484,12 @@ export const ScheduledTransactionList: React.FC<
                   />
                 </svg>
               </div>
-              <p className="flow-text-sm flow-text-slate-500 dark:flow-text-slate-500 flow-font-medium">
+              <p
+                className={twMerge(
+                  "flow-text-sm flow-font-medium",
+                  colors.mutedForeground
+                )}
+              >
                 No scheduled transactions
               </p>
             </div>

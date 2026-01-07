@@ -38,3 +38,9 @@ npm install --save @onflow/fcl @onflow/types
 For a detailed guide explaining how to use `@onflow/fcl` to interact with Flow please see the [Flow App Quick Start](https://developers.flow.com/tutorials/flow-app-quickstart)
 
 Having trouble with something? Reach out to us on [Discord](https://discord.gg/k6cZ7QC), we are more than happy to help.
+
+## WalletConnect Deeplinks
+
+This package uses `wc-redirect` as the deeplink path for WalletConnect redirects (e.g., `myapp://wc-redirect`). When a wallet approves a connection or transaction, it redirects back to your app using this path.
+
+If you're using Expo Router, you may want to intercept this path to prevent unwanted navigation. See `@onflow/react-native-sdk` README for details.
