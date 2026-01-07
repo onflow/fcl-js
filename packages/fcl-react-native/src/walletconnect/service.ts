@@ -92,11 +92,18 @@ function determineWalletAppLink(
   service: any,
   storedWalletAppLink: string | null
 ): string {
-  if (method === FLOW_METHODS.FLOW_AUTHN) {
-    // For initial authn request, use service.uid
-    return service.uid
+  const uid =
+    method === FLOW_METHODS.FLOW_AUTHN
+      ? service.uid
+      : storedWalletAppLink || service.uid
+
+  // Transform uid format (e.g., "frw#authz") to deeplink URL (e.g., "frw://authz")
+  // Service UIDs use # as separator but mobile deeplinks need ://
+  if (uid && uid.includes("#") && !uid.includes("://")) {
+    return uid.replace("#", "://")
   }
-  return storedWalletAppLink || service.uid
+
+  return uid
 }
 
 function injectSessionIntoPreAuthz(

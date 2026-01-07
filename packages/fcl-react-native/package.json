@@ -1,6 +1,6 @@
 {
   "name": "@onflow/fcl-react-native",
-  "version": "1.20.1",
+  "version": "1.22.0",
   "description": "React Native JavaScript/TypeScript library for building mobile applications on the Flow blockchain.",
   "license": "Apache-2.0",
   "author": "Flow Foundation",

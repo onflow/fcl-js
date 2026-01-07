@@ -1,3 +1,3 @@
 export {FlowProvider} from "./FlowProvider"
-export {FlowQueryClientProvider, useFlowQueryClient} from "./FlowQueryClient"
+export {useFlowQueryClient} from "@onflow/react-core"
 export {DarkModeProvider, useDarkMode} from "./DarkModeProvider"
