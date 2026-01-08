@@ -39,7 +39,7 @@ message ChunkExecutionData {
 
   // Transaction results produced by executing the collection.
   //
-  // Note: these are not the same type of results returned by other RPCs. These results are sepcific
+  // Note: these are not the same type of results returned by other RPCs. These results are specific
   // to execution data. The most notable difference is they only include a boolean value to indicate
   // whether or not an error was encountered during execution, not the error itself.
   repeated ExecutionDataTransactionResult transaction_results = 4;
