@@ -56,13 +56,13 @@ const makeHandlers = (opts = {}) => ({
   },
   [SUBSCRIBE]: (ctx, letter) => {
     ctx.subscribe(letter.from)
-    ctx.send(letter.from, UPDATED, ctx.all())
+    ctx.send(letter.from, UPDATED, {...ctx.all()})
   },
   [UNSUBSCRIBE]: (ctx, letter) => {
     ctx.unsubscribe(letter.from)
   },
   [SNAPSHOT]: async (ctx, letter) => {
-    letter.reply(ctx.all())
+    letter.reply({...ctx.all()})
   },
   [TIMEOUT]: async ctx => {
     // If status is still unknown, send a timeout error
@@ -79,7 +79,7 @@ const makeHandlers = (opts = {}) => ({
     const poll = () => setTimeout(() => ctx.sendSelf(POLL), opts.pollRate)
 
     let tx
-    const prevTx = ctx.all()
+    const prevTx = {...ctx.all()}
     try {
       tx = await fetchTxStatus(ctx.self())
     } catch (e) {
@@ -96,7 +96,7 @@ const makeHandlers = (opts = {}) => ({
     }
 
     if (!isSealed(tx)) poll()
-    if (isDiff(prevTx, tx)) ctx.broadcast(UPDATED, tx)
+    if (isDiff(prevTx, tx)) ctx.broadcast(UPDATED, {...tx})
     ctx.merge(tx)
   },
 })
