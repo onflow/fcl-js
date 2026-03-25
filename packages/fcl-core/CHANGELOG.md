@@ -1,5 +1,11 @@
 # @onflow/fcl
 
+## 1.30.2
+
+### Patch Changes
+
+- [#2793](https://github.com/onflow/fcl-js/pull/2793) [`b438549005eba70ab18089abe117ed6816cc1b7f`](https://github.com/onflow/fcl-js/commit/b438549005eba70ab18089abe117ed6816cc1b7f) Thanks [@lmcmz](https://github.com/lmcmz)! - Fix `fcl.tx().onceSealed()` hanging when using legacy `sdk.transport` polling fallback
+
 ## 1.30.1
 
 ### Patch Changes
