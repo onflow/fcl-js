@@ -100,6 +100,109 @@ describe("transaction", () => {
     )
   })
 
+  test("initial subscribe value is not mutated by subsequent polls", async () => {
+    let pollCount = 0
+
+    await config.overload(
+      {
+        "accessNode.api": "http://example.com",
+        "sdk.transport": (ix, context) => {
+          const status = pollCount++ === 0 ? 1 : 4
+          return {
+            ...context.response(),
+            tag: ix.tag,
+            transactionStatus: {status, statusCode: 0, events: []},
+          }
+        },
+      },
+      async () => {
+        const tx = transaction(txId, {pollRate: 50, txNotFoundTimeout: 5000})
+        let firstValue = null
+
+        await new Promise(resolve => {
+          const unsub = tx.subscribe((val, err) => {
+            if (err || !val || val.status == null) return
+            if (!firstValue) {
+              firstValue = val
+            } else if (val.status === 4) {
+              unsub()
+              resolve()
+            }
+          })
+        })
+
+        expect(firstValue.status).toBe(1)
+      }
+    )
+  }, 15000)
+
+  test("snapshot returns a copy, not the internal state", async () => {
+    await config.overload(
+      {
+        "accessNode.api": "http://example.com",
+        "sdk.transport": (ix, context) => ({
+          ...context.response(),
+          tag: ix.tag,
+          transactionStatus: {status: 1, statusCode: 0, events: []},
+        }),
+      },
+      async () => {
+        const tx = transaction(txId, {pollRate: 50, txNotFoundTimeout: 5000})
+
+        const a = await new Promise(resolve => {
+          const unsub = tx.subscribe((val, err) => {
+            if (err || !val || val.status == null) return
+            unsub()
+            resolve(tx.snapshot())
+          })
+        })
+        const b = await tx.snapshot()
+
+        expect(a).not.toBe(b)
+        expect(a).toEqual(b)
+      }
+    )
+  }, 15000)
+
+  test("broadcast values are not shared references", async () => {
+    let pollCount = 0
+
+    await config.overload(
+      {
+        "accessNode.api": "http://example.com",
+        "sdk.transport": (ix, context) => {
+          const status = Math.min(++pollCount, 4)
+          return {
+            ...context.response(),
+            tag: ix.tag,
+            transactionStatus: {status, statusCode: 0, events: []},
+          }
+        },
+      },
+      async () => {
+        const tx = transaction(txId, {pollRate: 50, txNotFoundTimeout: 5000})
+        const received = []
+
+        await new Promise(resolve => {
+          const unsub = tx.subscribe((val, err) => {
+            if (err || !val || val.status == null) return
+            received.push(val)
+            if (val.status === 4) {
+              unsub()
+              resolve()
+            }
+          })
+        })
+
+        for (let i = 0; i < received.length; i++) {
+          for (let j = i + 1; j < received.length; j++) {
+            expect(received[i]).not.toBe(received[j])
+          }
+        }
+      }
+    )
+  }, 15000)
+
   test("timeout if no valid transaction status has been received", async () => {
     // Set timeout short so we don't have to wait long
     const txNotFoundTimeout = 100
