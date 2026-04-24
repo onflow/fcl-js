@@ -1,0 +1,21 @@
+cff-version: 1.2.0
+message: "If you use fcl-js in your research or reference it, please cite it as below."
+title: "fcl-js: Flow Client Library for JavaScript and TypeScript"
+authors:
+  - name: "Flow Foundation"
+    website: "https://flow.com"
+repository-code: "https://github.com/onflow/fcl-js"
+url: "https://flow.com"
+license: Apache-2.0
+type: software
+keywords:
+  - flow
+  - flow-network
+  - fcl
+  - flow-client-library
+  - typescript
+  - javascript
+  - sdk
+  - wallet-authentication
+  - dapp
+  - cadence
