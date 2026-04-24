@@ -118,6 +118,9 @@ const result = await fcl.query({
 console.log(result); // 13
 ```
 - *Mutate the chain*: Send arbitrary transactions with your own signatures or via a user's wallet to perform state changes on chain.
+
+> **Note:** The Cadence snippet below uses pre-1.0 syntax (`AuthAccount`, `account.borrow`, private paths). Cadence 1.0 replaced these with `auth(...) &Account`, `account.storage.borrow`, and storage-only paths. This example has not yet been updated — refer to the [Cadence migration guide](https://cadence-lang.org/docs/cadence-migration-guide) when writing new transactions.
+
 ```js
 import * as fcl from "@onflow/fcl";
 // in the browser, FCL will automatically connect to the user's wallet to request signatures to run the transaction
