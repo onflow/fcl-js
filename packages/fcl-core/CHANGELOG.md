@@ -1,5 +1,11 @@
 # @onflow/fcl
 
+## 1.30.3
+
+### Patch Changes
+
+- [#2813](https://github.com/onflow/fcl-js/pull/2813) [`4f353a6ed800597269627980541aedad57d31cd7`](https://github.com/onflow/fcl-js/commit/4f353a6ed800597269627980541aedad57d31cd7) Thanks [@jribbink](https://github.com/jribbink)! - Remove the unused `DEEPLINK/RPC` strategy and its associated redirect handling.
+
 ## 1.30.2
 
 ### Patch Changes
