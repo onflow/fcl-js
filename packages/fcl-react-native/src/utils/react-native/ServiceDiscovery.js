@@ -26,7 +26,7 @@ export const useServiceDiscovery = ({fcl}) => {
       const requestBody = {
         fclVersion: VERSION,
         userAgent: "ReactNative",
-        supportedStrategies: ["WC/RPC", "DEEPLINK/RPC"],
+        supportedStrategies: ["WC/RPC"],
       }
 
       // Fetch wallets from Discovery API

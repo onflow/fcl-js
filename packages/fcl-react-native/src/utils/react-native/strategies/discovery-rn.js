@@ -18,7 +18,7 @@ import {config} from "@onflow/config"
  * 4. This function executes → shows ConnectModal with wallet list
  * 5. User selects wallet
  * 6. Returns {status: "REDIRECT", data: walletService}
- * 7. FCL core executes the wallet service (WC/RPC or DEEPLINK/RPC)
+ * 7. FCL core executes the wallet service (WC/RPC)
  *
  * @param {object} params - Strategy execution parameters
  * @param {object} params.service - The discovery service to execute

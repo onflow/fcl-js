@@ -1,7 +1,3 @@
-import {
-  FCL_REDIRECT_URL_PARAM_NAME,
-  FCL_RESPONSE_PARAM_NAME,
-} from "../utils/constants"
 import {onMessageFromFCL} from "./on-message-from-fcl"
 
 export interface PollingResponse {
@@ -14,8 +10,8 @@ export interface PollingResponse {
 
 /**
  * @description Sends messages from a wallet or service back to the parent FCL application. This function
- * handles communication between wallet UIs (running in iframes, popups, or redirects) and the main FCL
- * application. It automatically detects the communication method (redirect, iframe, or popup) and sends
+ * handles communication between wallet UIs (running in iframes or popups) and the main FCL
+ * application. It automatically detects the communication method (iframe or popup) and sends
  * the message accordingly.
  *
  * @param type The message type identifier (e.g., "FCL:VIEW:RESPONSE", "FCL:VIEW:READY")
@@ -41,15 +37,7 @@ export interface PollingResponse {
  * })
  */
 export const sendMsgToFCL = (type: string, msg?: PollingResponse): void => {
-  const data = {...msg, type}
-
-  const urlParams = new URLSearchParams(window.location.search)
-  const redirectUrl = urlParams.get(FCL_REDIRECT_URL_PARAM_NAME)
-  if (redirectUrl) {
-    const url = new URL(redirectUrl)
-    url.searchParams.append(FCL_RESPONSE_PARAM_NAME, JSON.stringify(data))
-    window.location.href = url.href
-  } else if (window.location !== window.parent.location) {
+  if (window.location !== window.parent.location) {
     window.parent.postMessage({...msg, type}, "*")
   } else if (window.opener) {
     window.opener.postMessage({...msg, type}, "*")
