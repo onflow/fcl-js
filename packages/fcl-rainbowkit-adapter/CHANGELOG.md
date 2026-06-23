@@ -1,5 +1,14 @@
 # @onflow/fcl-rainbowkit-adapter
 
+## 0.3.3
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @onflow/fcl@1.21.11
+  - @onflow/fcl-ethereum-provider@0.1.3
+  - @onflow/fcl-wagmi-adapter@0.1.3
+
 ## 0.3.2
 
 ### Patch Changes
