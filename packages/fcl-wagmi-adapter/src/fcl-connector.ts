@@ -185,7 +185,7 @@ export function fclWagmiAdapter(params: FclWagmiAdapterParams) {
       }
       provider.on("disconnect", disconnect)
     },
-    // TODO: waht to do with error?
+    // TODO: what to do with error?
     async onDisconnect(error) {
       const provider = await this.getProvider()
 
