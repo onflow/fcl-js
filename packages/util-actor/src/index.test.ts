@@ -39,7 +39,7 @@ const counterLogic = async (ctx: ActorContext) => {
         continue __loop
 
       default:
-        console.error("Sad Message recieved by Counter", letter)
+        console.error("Sad Message received by Counter", letter)
     }
   }
 }

@@ -51,7 +51,7 @@ TODO: Write
 
 Services are abilities an account can perform. You can kind of think of them as
 a function where its behaviour and input is defined by the service. The returned
-value will be dependant on the type of service it is.
+value will be dependent on the type of service it is.
 
 ## `authn`
 

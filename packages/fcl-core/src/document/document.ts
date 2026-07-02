@@ -83,7 +83,7 @@ export async function retrieve(
   invariant(urlParts, "Failed to parse URL protocol")
 
   const resolver: any = DOCUMENT_RESOLVERS.get(protocol)
-  invariant(resolver, `No resolver found for protcol=${protocol}`)
+  invariant(resolver, `No resolver found for protocol=${protocol}`)
 
   let document = await resolver({url})
 

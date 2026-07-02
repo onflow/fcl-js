@@ -17,8 +17,8 @@ All of the configuration for FCL-Bundle currently takes place within the `packag
 |----------|----------|------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | `source` | Yes      | string     | Specify a source file entry point or an dictionary of [Output Configuration](#output-configuration) objects keyed by respective source files (for multiple builds) - see [Source Configuration](#source-configuration) for more details |
 | `main`   | No       | string     | Specify cjs bundle output path if not manually specified by [Output Configuration](#output-configuration) (as well as cjs entry point if not overridden by `package.exports`)                                                                                                                                     |
-| `module` | No       | string     | Specify esm bundle output path if not manually specified by [Output Configuration](#output-configuration) (as well as esm entry point if not overriden by `package.exports`)                                                                                                                                      |
-| `unpkg`  | No       | string     | Specify umd bundle output path if not manually specified by [Output Configuration](#output-configuration) (as well as umd entry point if not overriden by `package.exports`)                                                                                                                                      |
+| `module` | No       | string     | Specify esm bundle output path if not manually specified by [Output Configuration](#output-configuration) (as well as esm entry point if not overridden by `package.exports`)                                                                                                                                      |
+| `unpkg`  | No       | string     | Specify umd bundle output path if not manually specified by [Output Configuration](#output-configuration) (as well as umd entry point if not overridden by `package.exports`)                                                                                                                                      |
 
 > **Note:** If output paths end in ".min.js", the resulting bundle will be minified
 
@@ -82,7 +82,7 @@ A source configuration can be provided in one of three ways:
     ```
     
 ### Default Outputs
-***Note:*** if no output bundles (cjs,esm,umd) are specifified in either the root of package.json (`main`, `module`, `unpkg`) or an Output Configuration object, the bundler will produce the following defaults:
+***Note:*** if no output bundles (cjs,esm,umd) are specified in either the root of package.json (`main`, `module`, `unpkg`) or an Output Configuration object, the bundler will produce the following defaults:
  - `cjs` -> `dist/${basename(entry)}.js`
  - `esm` -> `dist/${basename(entry)}.module.js`
  - `umd` -> `dist/${basename(entry)}.umd.js`
