@@ -40,7 +40,7 @@ test("single account/key pair for all three signatory roles", async () => {
   )
 })
 
-test("single account/key pair for all three signatory roles but an additinal authorizer", async () => {
+test("single account/key pair for all three signatory roles but an additional authorizer", async () => {
   await config.overload(
     {
       "sdk.transport": TestUtils.mockSend(),
@@ -212,7 +212,7 @@ test("Deep resolve usecase - multiple layer deep resolves on account", async () 
   )
 })
 
-test.skip("Deep resolve usecase - excess resolves throw an eror", async () => {
+test.skip("Deep resolve usecase - excess resolves throw an error", async () => {
   await config.overload(
     {
       "sdk.transport": TestUtils.mockSend(),
