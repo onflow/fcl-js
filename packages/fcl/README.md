@@ -152,7 +152,7 @@ const newUser: CurrentUser = {
 }
 ```
 
-For all type definitions available, see [this file](../typedefs/src/index.ts)
+For all type definitions available, see [the typedefs package source](https://github.com/onflow/fcl-js/blob/master/packages/typedefs/src/index.ts)
 
 ## Next Steps
 
