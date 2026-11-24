@@ -3,9 +3,6 @@ import fetchTransport from "cross-fetch"
 import {safeParseJSON} from "./utils"
 import {combineURLs} from "../utils/combine-urls"
 
-const AbortController =
-  globalThis.AbortController || require("abort-controller")
-
 export class HTTPRequestError extends Error {
   constructor({
     error,

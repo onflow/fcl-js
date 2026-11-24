@@ -62,7 +62,6 @@
     "@onflow/util-semver": "1.0.4",
     "@onflow/util-template": "1.2.4",
     "@onflow/util-uid": "1.2.4",
-    "abort-controller": "^3.0.0",
     "cross-fetch": "^4.0.0",
     "uuid": "^11.1.0"
   }

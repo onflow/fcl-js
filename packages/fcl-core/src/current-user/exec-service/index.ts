@@ -8,9 +8,6 @@ import {checkWalletConnectEnabled} from "./wc-check"
 import {Service, CurrentUser} from "@onflow/typedefs"
 import {FCLContext} from "../../context"
 
-const AbortController =
-  globalThis.AbortController || require("abort-controller")
-
 export interface ExecStrategyParams {
   service: Service
   body: Record<string, any>
